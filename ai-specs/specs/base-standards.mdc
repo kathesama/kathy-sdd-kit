@@ -1,0 +1,45 @@
+# Base Development Standards
+
+## Core Principles
+
+1. **Spec-first**: Never write code without a validated Implementation Spec
+2. **TDD**: Write failing tests before implementation (RED → GREEN → REFACTOR)
+3. **Small tasks**: Baby steps, one thing at a time, never skip ahead
+4. **Type safety**: Fully typed code always (TypeScript / Java generics)
+5. **English only**: All code, comments, commits and docs in English
+6. **90%+ coverage**: Unit + integration tests across all layers
+7. **Incremental changes**: Small, focused, reviewable PRs
+
+## SDD Workflow
+
+```
+User Story
+  → /enrich-us              (Decision-Closed Refinement)
+  → Technical Contract      (High-Level agreement, in Confluence)
+  → /plan-backend-ticket    (Implementation Spec generated)
+  → /develop-backend        (Agent implements following spec)
+  → /write-pr-report        (PR description generated)
+  → Feature for PR → Feature Published
+```
+
+## Commit Convention (Conventional Commits)
+
+- feat: new feature
+- fix: bug fix
+- docs: documentation only
+- test: tests without logic change
+- refactor: refactor without new feature
+- chore: maintenance tasks
+- ci: CI/CD changes
+
+Format: `type(scope): description`
+Example: `feat(auth): add JWT refresh token endpoint`
+
+## Definition of Done
+
+- [ ] Implementation Spec exists and was followed
+- [ ] Tests written and passing (≥80% coverage)
+- [ ] Documentation updated
+- [ ] PR report generated
+- [ ] No undocumented technical debt
+- [ ] Code review approved

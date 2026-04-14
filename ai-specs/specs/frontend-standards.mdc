@@ -1,0 +1,46 @@
+# Frontend Development Standards
+
+## Stack
+
+- React 18 + TypeScript + Vite
+- React Query for server state
+- Zustand for client state (when needed)
+- React Router v6
+- Tailwind CSS + shadcn/ui
+- React Hook Form + Zod for forms
+- i18next for internationalization scaffolding
+
+## Component Rules
+
+- Functional components always
+- One component per file
+- Props typed with TypeScript (never `any`)
+- Separate logic into custom hooks
+- Pure components when possible
+- Co-locate tests with components
+
+## Performance
+
+- Initial bundle < 250KB
+- Lazy loading for routes
+- Core Web Vitals in green
+- Optimized images
+
+## Testing
+
+- Vitest + React Testing Library
+- Test behavior, not implementation details
+- Minimum coverage: 80%
+- No testing internal implementation details
+
+## Accessibility
+
+- WCAG AA minimum
+- Semantic HTML always
+- `aria-labels` where needed
+- Keyboard navigation functional
+- Color contrast compliant
+
+## Package Manager
+
+- PNPM always (not npm or yarn)

@@ -1,0 +1,52 @@
+# Backend Development Standards
+
+## Stack
+
+- Java 21 + Spring Boot 3.x + Gradle
+- WebFlux (reactive) or MVC depending on service needs
+- JPA/Hibernate + Flyway/Liquibase for migrations
+- Spring Security with JWT/OAuth2
+- OpenAPI 3.0 for API contracts
+
+## Architecture (Hexagonal)
+
+```
+domain/          → entities, value objects, domain services (no external deps)
+application/     → use cases, ports (interfaces)
+infrastructure/  → adapters (DB, HTTP, Kafka, etc.)
+```
+
+- Domain layer has ZERO external dependencies
+- Application layer orchestrates use cases via ports
+- Infrastructure layer implements ports
+
+## API Standards
+
+- REST with versioning: `/api/v1/...`
+- Consistent responses: `{ data, error, metadata }`
+- Correct HTTP status codes always
+- Validation with Bean Validation (`@Valid`)
+- Errors following RFC 7807 (Problem Details)
+- OpenAPI spec updated after every API change
+
+## Testing
+
+- Unit: JUnit 5 + Mockito (domain and application layers)
+- Integration: `@SpringBootTest` + Testcontainers
+- API: MockMvc or WebTestClient
+- Minimum coverage: 80%
+
+## Security
+
+- OWASP Top 10 always in mind
+- Secrets via environment variables, never hardcoded
+- CORS configured per environment
+- No sensitive data in logs
+- Signed Docker images, pinned base images
+
+## Observability
+
+- Structured JSON logs
+- Correlation IDs in every request
+- OpenTelemetry for tracing
+- Health endpoints: `/actuator/health`
