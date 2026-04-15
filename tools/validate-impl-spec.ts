@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 
 type SectionName =
   | "Acceptance Criteria"
@@ -28,6 +29,26 @@ function info(message: string): void {
 
 function getRepoRoot(): string {
   return process.cwd();
+}
+
+function getCurrentBranch(repoRoot: string): string | null {
+  try {
+    return execFileSync("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
+      cwd: repoRoot,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return null;
+  }
+}
+
+function extractTicketFromBranch(branchName: string | null): string | null {
+  if (!branchName) {
+    return null;
+  }
+  const match = branchName.match(/[A-Z]+-\d+/);
+  return match?.[0] ?? null;
 }
 
 function readFile(filePath: string): string {
@@ -95,8 +116,13 @@ function findDuplicates(values: string[]): string[] {
     .map(([value]) => value);
 }
 
-function resolveImplSpecPath(input: string, repoRoot: string): string {
-  const normalized = input.trim();
+function resolveImplSpecPath(input: string | undefined, repoRoot: string): string {
+  const normalized = input?.trim() || extractTicketFromBranch(getCurrentBranch(repoRoot));
+
+  if (!normalized) {
+    fail("usage: validate-impl-spec.ts <ticket-key-or-impl-spec-path>");
+  }
+
   const asAbsolute = path.isAbsolute(normalized)
     ? normalized
     : path.resolve(repoRoot, normalized);
@@ -165,9 +191,6 @@ function compareCoverage(
 
 function main(): void {
   const input = process.argv[2];
-  if (!input) {
-    fail("usage: validate-impl-spec.ts <ticket-key-or-impl-spec-path>");
-  }
 
   const repoRoot = getRepoRoot();
   const filePath = resolveImplSpecPath(input, repoRoot);
