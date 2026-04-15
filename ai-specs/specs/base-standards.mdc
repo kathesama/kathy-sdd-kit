@@ -3,7 +3,7 @@
 ## Core Principles
 
 1. **Spec-first**: Never write code without a validated Implementation Spec
-2. **TDD**: Write failing tests before implementation (RED → GREEN → REFACTOR)
+2. **TDD**: Write failing tests before implementation (RED -> GREEN -> REFACTOR)
 3. **Small tasks**: Baby steps, one thing at a time, never skip ahead
 4. **Type safety**: Fully typed code always (TypeScript / Java generics)
 5. **English only**: All code, comments, commits and docs in English
@@ -14,12 +14,12 @@
 
 ```
 User Story
-  → /enrich-us              (Decision-Closed Refinement)
-  → Technical Contract      (High-Level agreement, in Confluence)
-  → /plan-backend-ticket    (Implementation Spec generated)
-  → /develop-backend        (Agent implements following spec)
-  → /write-pr-report        (PR description generated)
-  → Feature for PR → Feature Published
+  -> /enrich-us              (Decision-Closed Refinement)
+  -> Technical Contract      (High-Level agreement, in Confluence)
+  -> /plan-backend-ticket    (Implementation Spec generated)
+  -> /develop-backend        (Agent implements following spec)
+  -> /write-pr-report        (PR description generated)
+  -> Feature for PR -> Feature Published
 ```
 
 ## Commit Convention (Conventional Commits)
@@ -38,8 +38,32 @@ Example: `feat(auth): add JWT refresh token endpoint`
 ## Definition of Done
 
 - [ ] Implementation Spec exists and was followed
-- [ ] Tests written and passing (≥80% coverage)
+- [ ] Every explicit acceptance criterion is mapped to implementation and validation
+- [ ] Tests written and passing (>=80% coverage)
 - [ ] Documentation updated
 - [ ] PR report generated
+- [ ] Acceptance criteria coverage report included with evidence
 - [ ] No undocumented technical debt
 - [ ] Code review approved
+
+## Acceptance Criteria Contract
+
+- Acceptance criteria are mandatory delivery constraints, not background context
+- Every explicit acceptance criterion must appear in the Implementation Spec with a stable ID (`AC-01`, `AC-02`, ...)
+- Every acceptance criterion must have:
+  - an implementation mapping
+  - a validation plan
+  - completion evidence before the task is declared done
+- A task cannot be marked complete unless every explicit acceptance criterion is either:
+  - **Covered** with concrete evidence, or
+  - **Not Covered** with an explicit blocker or decision recorded
+- Generic claims such as "ticket complete" or "tests passed" are not valid substitutes for per-AC evidence
+
+## Required Implementation Spec Sections
+
+Every Implementation Spec must include these sections:
+
+- **Acceptance Criteria**: table with `ID`, `Criterion`, `Validation Type`, `Source`
+- **Implementation Mapping**: table mapping each AC to files/modules and planned changes
+- **Validation Plan**: table mapping each AC to a test, check, or verification method
+- **Completion Evidence**: table with final status and evidence per AC

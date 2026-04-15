@@ -14,16 +14,18 @@ Load project-specific context from:
 
 ## Available Skills
 
-- `/enrich-us [description]` → Enrich a user story with acceptance criteria and edge cases
-- `/plan-backend-ticket [ID]` → Generate a backend implementation plan
-- `/plan-frontend-ticket [ID]` → Generate a frontend implementation plan
-- `/develop-backend @[plan].md` → Implement following the backend plan
-- `/develop-frontend @[plan].md` → Implement following the frontend plan
-- `/write-pr-report @[IMPL].md` → Generate PR description from spec
+- `/enrich-us [description]` -> Enrich a user story with acceptance criteria and edge cases
+- `/plan-backend-ticket [ID]` -> Generate a backend implementation plan with AC-to-implementation and AC-to-validation mapping
+- `/plan-frontend-ticket [ID]` -> Generate a frontend implementation plan with AC-to-implementation and AC-to-validation mapping
+- `/verify-ac-enforcement` -> Verify that the kit still blocks AC coverage regressions
+- `/develop-backend @[plan].md` -> Implement following the backend plan
+- `/develop-frontend @[plan].md` -> Implement following the frontend plan
+- `/write-pr-report @[IMPL].md` -> Generate PR description from spec
 
 ## Rules
 
 - Never write code without a validated Implementation Spec
-- Always follow TDD: RED → GREEN → REFACTOR
+- Always follow TDD: RED -> GREEN -> REFACTOR
+- Treat acceptance criteria as delivery contract items with explicit evidence
 - All commits must follow Conventional Commits
 - Keep PRs small and focused
