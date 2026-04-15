@@ -32,7 +32,7 @@ ai-specs/                    <- canonical source of truth
     plan-frontend-ticket/    <- /plan-frontend-ticket
     verify-ac-enforcement/   <- kit self-check for AC coverage regressions
     write-pr-report/         <- /write-pr-report
-  changes/                   <- generated feature plans per project
+  changes/                   <- canonical examples/templates, not per-ticket workspace
 
 .claude/                     <- Claude Code configuration
 .cursor/                     <- Cursor configuration
@@ -43,6 +43,26 @@ docs/
 
 CLAUDE.md                    <- Claude Code entry point
 ```
+
+## Local workspace convention
+
+Projects that consume this kit should keep ticket artifacts in a local, gitignored workspace:
+
+```text
+.ai-specs/
+  changes/
+    {TICKET}/
+      {TICKET}-enriched.md
+      {TICKET}-impl-backend.md
+      {TICKET}-impl-frontend.md
+      PR-{TICKET}.md
+```
+
+Recommended usage:
+
+- `.sdd-kit/` remains the shared framework and source of truth
+- `.ai-specs/` is local working state for the current repository
+- `PR-{TICKET}.md` is generated locally from the current `.ai-specs` state and does not need to be committed
 
 ## How to use it in a new project
 
@@ -72,9 +92,9 @@ cp kathy-sdd-kit/docs/doc_architecture.md your-project/docs/
 ```text
 1. /enrich-us [description]           -> enrich the user story and close decisions
 2. Create TC in Confluence            -> Technical Contract approved
-3. /plan-backend-ticket [ID]          -> generate Implementation Spec in ai-specs/changes/ using specs/implementation-spec-template.md
+3. /plan-backend-ticket [ID]          -> generate Implementation Spec in .ai-specs/changes/{TICKET}/ using .sdd-kit templates
 4. /develop-backend @[plan].md        -> implement following the spec
-5. /write-pr-report @[IMPL].md        -> generate PR description
+5. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
 6. PR -> Review -> Merge              -> feature published
 ```
 

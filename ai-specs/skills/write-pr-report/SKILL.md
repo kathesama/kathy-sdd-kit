@@ -10,9 +10,13 @@ Generate a complete, human-readable PR description from the implemented changes 
 /write-pr-report @[IMPL-spec].md
 ```
 
+Default output location:
+
+` .ai-specs/changes/{TICKET}/PR-{TICKET}.md `
+
 ## Output
 
-A PR description containing:
+A PR description generated from the current local `.ai-specs/changes/{TICKET}/` state and containing:
 
 - **Summary**: what was implemented and why (human readable, not a commit list)
 - **Changes**: files modified/created/deleted with brief explanation
@@ -25,6 +29,9 @@ A PR description containing:
 ## Rules
 
 - Summary must be human readable - not a list of commits
+- Prefer `.ai-specs/changes/{TICKET}/` as the primary source of truth over commit history
+- Resolve the current ticket from the provided file, or from the active branch/ticket key when no file is provided
+- Use the enriched story, implementation spec, and completion evidence from the same `{TICKET}` folder
 - Every change must map back to an acceptance criterion from the spec
 - Never omit an acceptance criterion from the PR report
 - If an acceptance criterion is partial or blocked, state it explicitly with the reason

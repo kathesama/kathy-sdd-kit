@@ -15,6 +15,10 @@ Generate a frontend Implementation Spec that treats acceptance criteria as a del
 /plan-frontend-ticket [ticket-id or enriched story reference]
 ```
 
+Default output location:
+
+` .ai-specs/changes/{TICKET}/{TICKET}-impl-frontend.md `
+
 ## Required Inputs
 
 Before writing the plan, read:
@@ -29,7 +33,7 @@ If any explicit acceptance criterion is missing, unclear, or untestable, stop an
 
 ## Output
 
-A frontend Implementation Spec saved to `ai-specs/changes/[ID]-impl-frontend.md` containing:
+A frontend Implementation Spec saved to `.ai-specs/changes/{TICKET}/{TICKET}-impl-frontend.md` containing:
 
 - **Story Context**
 - **Scope** (`In Scope`, `Out of Scope`)
@@ -42,6 +46,7 @@ A frontend Implementation Spec saved to `ai-specs/changes/[ID]-impl-frontend.md`
 ## Rules
 
 - Use `ai-specs/specs/implementation-spec-template.md` as the mandatory structure
+- Read the template from the shared kit (for example `.sdd-kit/ai-specs/specs/implementation-spec-template.md` in a consuming repo)
 - Every explicit AC must appear in the plan exactly once as a tracked contract item
 - Every AC must map to implementation work and at least one validation entry
 - Frontend plans must follow `frontend-standards.mdc`, accessibility rules, and design-system constraints
