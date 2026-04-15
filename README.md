@@ -8,6 +8,7 @@ Based on the [LIDR Academy](https://github.com/LIDR-academy/manual-SDD) framewor
 - Development standards: base, backend, and frontend
 - Specialized agents for Claude Code, Cursor, and Codex
 - Reusable skills: `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`, `verify-ac-enforcement`, and `write-pr-report`
+- Reusable skills: `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`, `validate-impl-spec`, `verify-ac-enforcement`, and `write-pr-report`
 - Acceptance criteria enforcement as a verifiable delivery contract
 - Per-project architecture context template
 - Structure ready to import into any project
@@ -30,6 +31,7 @@ ai-specs/                    <- canonical source of truth
     enrich-user-story/       <- /enrich-us
     plan-backend-ticket/     <- /plan-backend-ticket
     plan-frontend-ticket/    <- /plan-frontend-ticket
+    validate-impl-spec/      <- run structural validation for implementation specs
     verify-ac-enforcement/   <- kit self-check for AC coverage regressions
     write-pr-report/         <- /write-pr-report
   changes/                   <- canonical examples/templates, not per-ticket workspace
@@ -94,8 +96,9 @@ cp kathy-sdd-kit/docs/doc_architecture.md your-project/docs/
 2. Create TC in Confluence            -> Technical Contract approved
 3. /plan-backend-ticket [ID]          -> generate Implementation Spec in .ai-specs/changes/{TICKET}/ using .sdd-kit templates
 4. /develop-backend @[plan].md        -> implement following the spec
-5. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
-6. PR -> Review -> Merge              -> feature published
+5. /validate-impl-spec [ID or path]   -> validate AC mapping before execution/QA/PR
+6. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
+7. PR -> Review -> Merge              -> feature published
 ```
 
 ## Available commands
@@ -105,6 +108,7 @@ cp kathy-sdd-kit/docs/doc_architecture.md your-project/docs/
 | `/enrich-us [desc]` | Enrich a user story |
 | `/plan-backend-ticket [ID]` | Generate a backend implementation plan |
 | `/plan-frontend-ticket [ID]` | Generate a frontend implementation plan |
+| `/validate-impl-spec [ID or path]` | Validate structural AC coverage of an implementation spec |
 | `/verify-ac-enforcement` | Validate that the kit still enforces AC coverage end-to-end |
 | `/develop-backend @[plan].md` | Implement following the backend plan |
 | `/develop-frontend @[plan].md` | Implement following the frontend plan |

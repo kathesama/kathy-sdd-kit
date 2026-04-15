@@ -17,6 +17,7 @@ Load project-specific context from:
 - `/enrich-us [description]` -> Enrich a user story with acceptance criteria and edge cases
 - `/plan-backend-ticket [ID]` -> Generate a backend implementation plan with AC-to-implementation and AC-to-validation mapping
 - `/plan-frontend-ticket [ID]` -> Generate a frontend implementation plan with AC-to-implementation and AC-to-validation mapping
+- `/validate-impl-spec [ID or path]` -> Run the structural validator for implementation specs
 - `/verify-ac-enforcement` -> Verify that the kit still blocks AC coverage regressions
 - `/develop-backend @[plan].md` -> Implement following the backend plan
 - `/develop-frontend @[plan].md` -> Implement following the frontend plan
