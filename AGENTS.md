@@ -70,7 +70,11 @@ runtime artifacts, or service configuration for a ticket, agents MUST complete
 the planning gate.
 
 1. Resolve `TICKET`.
-2. Resolve the workspace with the kit tool:
+2. Inspect the parent work item and any linked child work items, subtasks,
+   checklist items, or implementation tasks exposed by the consuming project's
+   tracker. In-scope child work items that refine behavior are part of the
+   delivery contract unless explicitly documented as out of scope.
+3. Resolve the workspace with the kit tool:
 
    ```powershell
    sh .sdd-kit/tools/resolve-ticket-workspace.sh {TICKET}
@@ -82,19 +86,23 @@ the planning gate.
    sh tools/resolve-ticket-workspace.sh {TICKET}
    ```
 
-3. Create `.ai-specs/changes/{TICKET}/` if missing.
-4. Generate the implementation plan for the requested surface:
+4. Create `.ai-specs/changes/{TICKET}/` if missing.
+5. Generate the implementation plan for the requested surface:
    - Backend: `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md`
    - Frontend: `.ai-specs/changes/{TICKET}/{TICKET}-impl-frontend.md`
-5. Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`.
-6. Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` if missing.
-7. Validate that every explicit acceptance criterion appears in both specs:
+6. Add a `Related Work Items` section to the plan and companion spec. Every
+   in-scope child work item with technical requirements must map to an AC,
+   validation item, or documented blocker.
+7. Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`.
+8. Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` if missing.
+9. Validate that every explicit acceptance criterion appears in both specs:
 
    ```powershell
    sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
    ```
 
-8. Present the plan summary and STOP for approval.
+10. Present the plan summary and STOP for approval, including related work
+    items considered and any out-of-scope decisions.
 
 Generating a plan is not approval to execute the plan. Implementation is
 forbidden until the user explicitly answers `approve`.

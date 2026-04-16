@@ -43,6 +43,12 @@ instructions.
   project. Examples: `JAP-160`, `ENG-123`, `GH-42`, `160`.
 - If the user provides ambiguous shorthand, resolve it using the consuming
   project's ticket policy before creating artifacts.
+- Before planning, inspect the parent work item and any linked child work items,
+  subtasks, checklist items, or implementation tasks exposed by the consuming
+  project's tracker.
+- Plans and companion specs must include `Related Work Items`. Every in-scope
+  child work item with technical requirements must map to an AC, validation
+  item, or documented blocker.
 - Kit tools are POSIX `sh` scripts. Invoke them with `sh`; on Windows, use Git
   Bash or Git for Windows `sh.exe` if `sh` is not on `PATH`.
 - Keep all ticket artifacts under `.ai-specs/changes/{TICKET}/`.
@@ -59,6 +65,7 @@ instructions.
   explicitly answers `approve`.
 - Treat acceptance criteria as delivery contract items.
 - Implementation specs must map each acceptance criterion to implementation and validation evidence.
+- Do not mark a parent ticket ready if an in-scope child work item remains uncovered.
 - Run the smallest relevant validation for the change.
 - Preserve repository style and existing architecture.
 - Keep changes limited to the requested task.

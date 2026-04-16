@@ -78,6 +78,8 @@ Recommended usage:
 - `{TICKET}` is the canonical ticket/work-item key for the consuming project
 - Examples: `JAP-160`, `ENG-123`, `GH-42`, `160`, `task-160`
 - If a user gives ambiguous shorthand, resolve it using the consuming project's ticket policy before writing artifacts
+- Before planning, inspect the parent work item and any linked child work items, subtasks, checklist items, or implementation tasks
+- Plans and companion specs must include `Related Work Items`; in-scope child work items with technical requirements must map to ACs, validation, or blockers
 - Do not use branch names or branch descriptions in artifact paths
 - `PR-{TICKET}.md` is generated locally from the current `.ai-specs` state and does not need to be committed
 - Root `AGENTS.md` activates the kit for Codex and compatible agents
@@ -202,15 +204,16 @@ If the kit is installed as `.sdd-kit`, the template inside `.sdd-kit/.github/` i
 1. /enrich-us [description]           -> enrich the user story and close decisions
 2. Create TC in Confluence            -> Technical Contract approved
 3. /resolve-ticket-workspace [TICKET] -> resolve canonical ticket paths
-4. /plan-backend-ticket [TICKET]      -> generate plan/spec/changelog in .ai-specs/changes/{TICKET}/
-5. /validate-impl-spec [TICKET]       -> validate AC mapping in plan and companion spec
-6. Approval gate                       -> stop and ask approve/change/deny
-7. /develop-backend @[plan].md         -> only after explicit approve
-8. /qa-ticket [ID or IMPL].md          -> validate AC evidence, tests, and risks
-9. /pr-code-review [ID or IMPL].md     -> review correctness, security, CI/readiness, and PR evidence
-10. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
-11. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
-12. PR -> Review -> Merge              -> feature published
+4. Inspect parent + child work items   -> map subtasks/checklists into scope, ACs, validation, or blockers
+5. /plan-backend-ticket [TICKET]      -> generate plan/spec/changelog in .ai-specs/changes/{TICKET}/
+6. /validate-impl-spec [TICKET]       -> validate AC mapping in plan and companion spec
+7. Approval gate                       -> stop and ask approve/change/deny
+8. /develop-backend @[plan].md         -> only after explicit approve
+9. /qa-ticket [ID or IMPL].md          -> validate AC evidence, tests, and risks
+10. /pr-code-review [ID or IMPL].md     -> review correctness, security, CI/readiness, and PR evidence
+11. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
+12. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
+13. PR -> Review -> Merge              -> feature published
 ```
 
 ## Planning Approval Gate
@@ -246,6 +249,10 @@ Generating the plan is not approval to execute the plan. Agents must not write
 tests, production code, migrations, styles, or configuration until the user
 explicitly answers `approve`.
 
+Planning must also show the parent and related child work items considered. Any
+in-scope child work item that refines behavior must map to an AC, validation
+entry, or documented blocker before the approval gate.
+
 ## Available commands
 
 | Command | Description |
@@ -266,6 +273,8 @@ explicitly answers `approve`.
 ## Acceptance Criteria Contract
 
 - Every story must have acceptance criteria with stable IDs (`AC-01`, `AC-02`, ...)
+- Parent and child work items must be inspected before planning when the tracker exposes them
+- In-scope child work items that refine behavior must be represented in ACs, validation, or blockers
 - The plan must map each AC to explicit implementation and validation
 - A task cannot be marked done without evidence per AC
 - The PR report must include status and evidence for every acceptance criterion

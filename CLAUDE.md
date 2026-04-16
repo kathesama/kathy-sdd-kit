@@ -40,6 +40,8 @@ Skill sources live under `.sdd-kit/ai-specs/skills/`.
 
 - Never write code without a validated Implementation Spec
 - `TICKET` is the canonical ticket/work-item key for the consuming project; resolve ambiguous shorthand before creating artifacts
+- Before planning, inspect the parent work item and linked child work items, subtasks, checklist items, or implementation tasks exposed by the consuming project's tracker
+- Plans and companion specs must include `Related Work Items`; every in-scope child work item with technical requirements must map to an AC, validation item, or documented blocker
 - Generate `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md` or `{TICKET}-impl-frontend.md`
 - Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`
 - Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` before implementation

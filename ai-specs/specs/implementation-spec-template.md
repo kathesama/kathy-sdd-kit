@@ -6,6 +6,19 @@
 - **Objective**:
 - **Related Technical Contract**:
 
+## Related Work Items
+
+| Key | Type | Status | Scope Decision | Plan Impact |
+|---|---|---|---|---|
+|  |  |  |  |  |
+
+Rules:
+
+- Include the parent work item and any linked child work items, subtasks, checklist items, or implementation tasks.
+- In-scope child work items that refine behavior must map to an AC, validation item, or documented blocker.
+- Administrative-only child work items may be listed with `No implementation impact`.
+- If a child work item is out of scope, record the explicit reason.
+
 ## Scope
 
 ### In Scope
