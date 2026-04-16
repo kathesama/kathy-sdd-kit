@@ -62,3 +62,43 @@ A frontend Implementation Spec saved to `.ai-specs/changes/{TICKET}/{TICKET}-imp
 - Identify design-system/token/storybook implications
 - Define component, integration, and visual/manual validation per AC
 - Call out bundle-size, dependency, and UX risks where relevant
+
+## Architecture / Design Decision Check
+
+Before writing frontend implementation steps, inspect existing ADRs, design-system docs, or frontend architecture notes when the task affects:
+
+- route structure or navigation
+- shared state management
+- design-system components or tokens
+- API/data-fetching contracts
+- authentication or permission-gated UI
+- deployment/runtime behavior
+
+If a decision record exists, the plan must conform to it and reference it in risk notes or story context.
+If no decision record exists and the change is architectural, add a planning note recommending an ADR or explicit design decision before implementation.
+
+## UX, Accessibility, and Evidence Planning
+
+For frontend work, the plan must identify:
+
+- impacted viewport sizes and responsive behavior
+- keyboard and screen-reader expectations
+- loading, empty, error, and permission states
+- visual evidence required for review, such as screenshots or Storybook states
+- manual checks that cannot be automated
+- required component, integration, E2E, or visual regression tests
+
+Reject or revise plans that require UI behavior changes without accessibility and validation evidence.
+
+## Frontend Security Impact Planning
+
+Before finalizing the plan, check whether the change touches:
+
+- authentication or authorization UI
+- user input validation
+- file upload/download
+- PII or sensitive data display
+- external links, embedded content, or third-party scripts
+- payment, billing, permissions, or ownership
+
+If touched, include explicit risks, mitigations, and validation evidence in the implementation mapping and validation plan.

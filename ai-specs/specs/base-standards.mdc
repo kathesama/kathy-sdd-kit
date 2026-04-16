@@ -18,6 +18,8 @@ User Story
   -> Technical Contract      (High-Level agreement, in Confluence)
   -> /plan-backend-ticket    (Implementation Spec generated)
   -> /develop-backend        (Agent implements following spec)
+  -> /qa-ticket              (Acceptance criteria evidence validated)
+  -> /pr-code-review         (Correctness, security, readiness reviewed)
   -> /write-pr-report        (PR description generated)
   -> Feature for PR -> Feature Published
 ```
@@ -41,6 +43,8 @@ Example: `feat(auth): add JWT refresh token endpoint`
 - [ ] Every explicit acceptance criterion is mapped to implementation and validation
 - [ ] Tests written and passing (>=80% coverage)
 - [ ] Documentation updated
+- [ ] QA report generated with AC evidence verdict
+- [ ] PR code review generated or review gaps documented
 - [ ] PR report generated
 - [ ] Acceptance criteria coverage report included with evidence
 - [ ] No undocumented technical debt

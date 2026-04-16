@@ -62,3 +62,44 @@ A backend Implementation Spec saved to `.ai-specs/changes/{TICKET}/{TICKET}-impl
 - Identify persistence, messaging, and migration impacts
 - Define unit and integration test coverage per AC
 - Call out security, observability, and rollback risks where relevant
+
+## Architecture / ADR Check
+
+Before writing backend implementation steps, inspect existing project ADRs or decision records when the task affects:
+
+- architecture boundaries
+- public API contracts
+- persistence model or migrations
+- messaging/event flow
+- deployment/runtime behavior
+- cross-service integration
+
+If an ADR exists, the plan must conform to it and reference it in risk notes or story context.
+If no ADR exists and the change is architectural, add a planning note recommending an ADR or explicit decision record before implementation.
+
+## API Contract Planning
+
+For backend/API work, the plan must identify:
+
+- endpoints added, removed, or changed
+- request and response DTOs
+- status codes and error responses
+- pagination, filtering, sorting, or versioning impacts
+- backwards compatibility risks
+- required contract, integration, or regression tests
+
+Reject or revise plans that change API behavior without contract impact notes.
+
+## Security Impact Planning
+
+Before finalizing the plan, check whether the change touches:
+
+- authentication or authorization
+- user input validation
+- secrets or runtime configuration
+- file upload/download
+- PII or sensitive data
+- external service calls
+- payment, billing, permissions, or ownership
+
+If touched, include explicit risks, mitigations, and validation evidence in the implementation mapping and validation plan.

@@ -1,0 +1,74 @@
+# Agent Rules
+
+## Repository Discovery
+
+- Before editing, inspect the repository structure and existing conventions.
+- Prefer local docs, existing scripts, package config, and nearby code over assumptions.
+- If the repository has framework-specific instructions, follow them before generic rules.
+- If project-specific ADRs exist, check relevant ADRs before changing architecture, contracts, or cross-service behavior.
+
+## Optional Naming Glossary
+
+- If the repository has `docs/GLOSSARY.md`, read it before naming any class, field, or concept that crosses a service boundary.
+- Canonical names defined there are mandatory when the glossary exists.
+- Prohibited variants listed there must not appear in new code when the glossary exists.
+- If a cross-boundary concept is missing from an existing glossary, add it before implementation.
+- If the repository does not have `docs/GLOSSARY.md`, continue without blocking on glossary checks.
+
+## Execution
+
+- Keep changes limited to the requested task.
+- Do not touch unrelated services, modules, or packages unless the task requires it.
+- Do not refactor unrelated files.
+- Do not update generated files unless the task or tooling requires it.
+- Preserve repository style, naming, formatting, logging, and error-handling conventions.
+- Do not ask for unnecessary confirmations.
+- Execute validation commands directly when needed.
+- Only interrupt on real blocking errors.
+- Do not create commits or pull requests unless explicitly requested.
+- Do not run git commands except `git diff` or `git status` unless explicitly requested or required for recovery.
+
+## Validation
+
+- Run the smallest relevant validation command for the change.
+- Prefer repository-provided scripts over ad hoc commands.
+- If validation cannot be run, document why and what should be run manually.
+- Do not claim work is complete without either running validation or stating the validation gap.
+
+## Secrets and Safety
+
+- Never print, commit, or persist secrets, tokens, passphrases, API keys, or credentials.
+- Do not add real credentials to examples, tests, fixtures, or documentation.
+- Use placeholders for secrets.
+- Before destructive operations, confirm the intended target path, branch, or resource.
+
+## Optional Project Files
+
+- If `.github/pull_request_template.md` exists, preserve its structure when generating PR descriptions.
+- If `docs/GLOSSARY.md` exists, use it for cross-boundary naming.
+- If ADRs exist, use them when changing architecture, contracts, persistence, messaging, or deployment behavior.
+- If a test, lint, validation, or preflight script exists, prefer it over raw tool commands.
+
+## Branch Task Log
+
+- At the end of each subtask, update `.ai-specs/changes/{BRANCH_KEY}/{BRANCH_KEY}-CHANGELOG.md`.
+- If the file does not exist, create it with the branch header.
+- `BRANCH_KEY` comes from the current branch name.
+- Never overwrite previous sections; append only.
+- Use the changelog as the primary implementation evidence for PR reports when present.
+- Keep changelog entries factual: files changed, validation results, risks, follow-ups, and concise implementation notes.
+
+Required structure:
+
+```md
+# {BRANCH_KEY} {branch description}
+
+## {SUBTASK_KEY}: {subtask title}
+**Status:** Done
+**Commit message:** {BRANCH_KEY} tipo(scope): descripcion corta
+### Files created
+### Files modified
+### Summary
+### Notes
+---
+```

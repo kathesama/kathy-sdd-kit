@@ -7,7 +7,7 @@ Based on the [LIDR Academy](https://github.com/LIDR-academy/manual-SDD) framewor
 
 - Development standards: base, backend, and frontend
 - Specialized agents for Claude Code, Cursor, and Codex
-- Reusable skills: `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`, `resolve-ticket-workspace`, `validate-impl-spec`, `close-ticket-workflow`, `verify-ac-enforcement`, and `write-pr-report`
+- Reusable skills: `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`, `resolve-ticket-workspace`, `validate-impl-spec`, `qa-ticket`, `pr-code-review`, `close-ticket-workflow`, `verify-ac-enforcement`, and `write-pr-report`
 - Acceptance criteria enforcement as a verifiable delivery contract
 - Per-project architecture context template
 - Structure ready to import into any project
@@ -32,6 +32,8 @@ ai-specs/                    <- canonical source of truth
     plan-frontend-ticket/    <- /plan-frontend-ticket
     resolve-ticket-workspace/ <- resolve current ticket workspace paths
     validate-impl-spec/      <- run structural validation for implementation specs
+    qa-ticket/               <- validate AC evidence, tests, risks, and readiness
+    pr-code-review/          <- pre-PR review for correctness, security, CI, and readiness
     close-ticket-workflow/   <- correct closure order before PR
     verify-ac-enforcement/   <- kit self-check for AC coverage regressions
     write-pr-report/         <- /write-pr-report
@@ -40,6 +42,8 @@ ai-specs/                    <- canonical source of truth
 .claude/                     <- Claude Code configuration
 .cursor/                     <- Cursor configuration
 .codex/                      <- Codex / Copilot configuration
+.github/
+  pull_request_template.md   <- optional PR template to copy into consuming repositories
 
 docs/
   doc_architecture.md        <- project technical context
@@ -58,6 +62,8 @@ Projects that consume this kit should keep ticket artifacts in a local, gitignor
       {TICKET}-enriched.md
       {TICKET}-impl-backend.md
       {TICKET}-impl-frontend.md
+      QA-{TICKET}.md
+      REVIEW-{TICKET}.md
       PR-{TICKET}.md
 ```
 
@@ -77,6 +83,8 @@ cp -r .sdd-kit/ai-specs ./
 cp -r .sdd-kit/.claude ./
 cp .sdd-kit/CLAUDE.md ./
 cp .sdd-kit/docs/doc_architecture.md ./docs/
+mkdir -p .github
+cp .sdd-kit/.github/pull_request_template.md ./.github/pull_request_template.md
 # Edit docs/doc_architecture.md with the real project architecture
 ```
 
@@ -87,8 +95,22 @@ cp -r kathy-sdd-kit/ai-specs your-project/
 cp -r kathy-sdd-kit/.claude your-project/
 cp kathy-sdd-kit/CLAUDE.md your-project/
 cp kathy-sdd-kit/docs/doc_architecture.md your-project/docs/
+mkdir -p your-project/.github
+cp kathy-sdd-kit/.github/pull_request_template.md your-project/.github/pull_request_template.md
 # Edit docs/doc_architecture.md with the real project architecture
 ```
+
+## PR template
+
+The kit includes `.github/pull_request_template.md` as a starter template.
+
+GitHub and `/write-pr-report` use the template from the consuming repository root:
+
+```text
+<PROJECT_ROOT>/.github/pull_request_template.md
+```
+
+If the kit is installed as `.sdd-kit`, the template inside `.sdd-kit/.github/` is only a source copy. Copy it to the project root `.github/` folder if you want GitHub and `/write-pr-report` to use it.
 
 ## Full SDD flow
 
@@ -99,9 +121,11 @@ cp kathy-sdd-kit/docs/doc_architecture.md your-project/docs/
 4. /develop-backend @[plan].md        -> implement following the spec
 5. /resolve-ticket-workspace [ID]     -> resolve current ticket paths from input or branch
 6. /validate-impl-spec [ID or path]   -> validate AC mapping before execution/QA/PR
-7. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
-8. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
-9. PR -> Review -> Merge              -> feature published
+7. /qa-ticket [ID or IMPL].md         -> validate AC evidence, tests, and risks
+8. /pr-code-review [ID or IMPL].md    -> review correctness, security, CI/readiness, and PR evidence
+9. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
+10. /close-ticket-workflow [ID]       -> perform final closure sequence before PR
+11. PR -> Review -> Merge             -> feature published
 ```
 
 ## Available commands
@@ -113,6 +137,8 @@ cp kathy-sdd-kit/docs/doc_architecture.md your-project/docs/
 | `/plan-frontend-ticket [ID]` | Generate a frontend implementation plan |
 | `/resolve-ticket-workspace [ID]` | Resolve local `.ai-specs` paths from input or branch |
 | `/validate-impl-spec [ID or path]` | Validate structural AC coverage of an implementation spec |
+| `/qa-ticket [ID or path]` | Validate implementation evidence against story/spec acceptance criteria |
+| `/pr-code-review [ID or path]` | Review local changes for correctness, security, tests, CI/readiness, and PR evidence |
 | `/close-ticket-workflow [ID]` | Apply the correct end-of-ticket validation and PR sequence |
 | `/verify-ac-enforcement` | Validate that the kit still enforces AC coverage end-to-end |
 | `/develop-backend @[plan].md` | Implement following the backend plan |
