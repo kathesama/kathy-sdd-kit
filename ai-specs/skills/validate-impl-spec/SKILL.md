@@ -7,7 +7,7 @@ description: Use when an implementation spec exists and you need an automated st
 
 ## Purpose
 
-Run the TypeScript validator that enforces structural completeness of an implementation spec before implementation, QA, or PR reporting.
+Run the POSIX `sh` validator that enforces structural completeness of an implementation spec before implementation, QA, or PR reporting.
 
 ## Usage
 
@@ -21,7 +21,7 @@ Preferred inputs:
 Run:
 
 ```bash
-npx tsx .sdd-kit/tools/validate-impl-spec.ts <ticket-key-or-impl-spec-path>
+sh .sdd-kit/tools/validate-impl-spec.sh <ticket-key-or-impl-plan-path>
 ```
 
 Run it from the consumer repository root.
@@ -29,9 +29,11 @@ Run it from the consumer repository root.
 ## What the validator checks
 
 - required sections exist:
+  - `Related Work Items`
   - `Acceptance Criteria`
   - `Implementation Mapping`
   - `Validation Plan`
+  - `Delivery Plan`
   - `Completion Evidence`
 - every `AC-XX` from `Acceptance Criteria` appears in:
   - `Implementation Mapping`
@@ -42,6 +44,7 @@ Run it from the consumer repository root.
   - `Covered`
   - `Partial`
   - `Not Covered`
+- the companion `{TICKET}-implementation-spec.md` has the same AC set as the primary implementation plan
 
 ## Ticket resolution behavior
 
@@ -56,6 +59,7 @@ If both files exist, require the exact path to avoid ambiguity.
 
 - Do not claim the plan is structurally complete without running the validator
 - If validation fails, report the exact missing AC IDs and section names
+- If `sh` is not on `PATH` on Windows, use Git for Windows `sh.exe`
 - Use the validator before:
   - implementation starts
   - final QA

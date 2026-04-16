@@ -144,7 +144,7 @@ validate_spec_file() {
   out_file=$2
   [ -f "$file_path" ] || fail "required implementation spec file not found: $file_path"
 
-  for section in "Acceptance Criteria" "Implementation Mapping" "Validation Plan" "Delivery Plan" "Completion Evidence"; do
+  for section in "Related Work Items" "Acceptance Criteria" "Implementation Mapping" "Validation Plan" "Delivery Plan" "Completion Evidence"; do
     ensure_section_exists "$file_path" "$section"
   done
 

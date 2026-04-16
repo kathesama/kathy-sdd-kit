@@ -21,7 +21,7 @@ Preferred inputs:
 Run:
 
 ```bash
-npx tsx .sdd-kit/tools/resolve-ticket-workspace.ts [ticket-key]
+sh .sdd-kit/tools/resolve-ticket-workspace.sh [ticket-key]
 ```
 
 Run it from the consumer repository root.
@@ -36,11 +36,14 @@ The tool returns JSON containing:
 - `enrichedPath`
 - `implBackendPath`
 - `implFrontendPath`
+- `implementationSpecPath`
+- `changelogPath`
 - `prPath`
 - `existingFiles`
 
 ## Rules
 
-- Prefer branch-derived ticket resolution when the branch already contains the Jira key
+- Prefer branch-derived ticket resolution when the branch already contains the consuming project's canonical ticket key
 - If the branch does not contain a ticket key, require explicit ticket input
+- If `sh` is not on `PATH` on Windows, use Git for Windows `sh.exe`
 - Use this resolver before planning, validation, and PR generation when the workspace path is ambiguous

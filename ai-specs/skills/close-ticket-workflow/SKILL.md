@@ -18,13 +18,13 @@ Use this skill near the end of a story, before saying the ticket is ready.
 1. Resolve the workspace:
 
 ```bash
-npx tsx .sdd-kit/tools/resolve-ticket-workspace.ts [ticket-key]
+sh .sdd-kit/tools/resolve-ticket-workspace.sh [ticket-key]
 ```
 
 2. Validate the implementation spec structurally:
 
 ```bash
-npx tsx .sdd-kit/tools/validate-impl-spec.ts [ticket-key-or-impl-spec-path]
+sh .sdd-kit/tools/validate-impl-spec.sh [ticket-key-or-impl-plan-path]
 ```
 
 3. Review `Completion Evidence` in the implementation spec.
