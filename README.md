@@ -64,6 +64,8 @@ Projects that consume this kit should keep ticket artifacts in a local, gitignor
       {TICKET}-enriched.md
       {TICKET}-impl-backend.md
       {TICKET}-impl-frontend.md
+      {TICKET}-implementation-spec.md
+      {TICKET}-CHANGELOG.md
       QA-{TICKET}.md
       REVIEW-{TICKET}.md
       PR-{TICKET}.md
@@ -73,10 +75,27 @@ Recommended usage:
 
 - `.sdd-kit/` remains the shared framework and source of truth
 - `.ai-specs/` is local working state for the current repository
+- `{TICKET}` is the canonical ticket/work-item key for the consuming project
+- Examples: `JAP-160`, `ENG-123`, `GH-42`, `160`, `task-160`
+- If a user gives ambiguous shorthand, resolve it using the consuming project's ticket policy before writing artifacts
+- Do not use branch names or branch descriptions in artifact paths
 - `PR-{TICKET}.md` is generated locally from the current `.ai-specs` state and does not need to be committed
 - Root `AGENTS.md` activates the kit for Codex and compatible agents
 - Root `CLAUDE.md` remains the project-specific Claude Code context and should link `.sdd-kit/CLAUDE.md`
 - Never replace an existing root `CLAUDE.md` with the kit file; append the kit include instead
+
+## Tool runtime
+
+The kit assumes Git is installed. Shell tools are POSIX `sh` scripts and should
+be invoked explicitly with `sh`:
+
+```bash
+sh .sdd-kit/tools/resolve-ticket-workspace.sh {TICKET}
+sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
+```
+
+On Windows, Git for Windows provides `sh.exe` through Git Bash. Avoid relying on
+direct script execution from PowerShell; invoke tools through `sh`.
 
 ## How to use it in a new project
 
@@ -182,16 +201,50 @@ If the kit is installed as `.sdd-kit`, the template inside `.sdd-kit/.github/` i
 ```text
 1. /enrich-us [description]           -> enrich the user story and close decisions
 2. Create TC in Confluence            -> Technical Contract approved
-3. /plan-backend-ticket [ID]          -> generate Implementation Spec in .ai-specs/changes/{TICKET}/ using .sdd-kit templates
-4. /develop-backend @[plan].md        -> implement following the spec
-5. /resolve-ticket-workspace [ID]     -> resolve current ticket paths from input or branch
-6. /validate-impl-spec [ID or path]   -> validate AC mapping before execution/QA/PR
-7. /qa-ticket [ID or IMPL].md         -> validate AC evidence, tests, and risks
-8. /pr-code-review [ID or IMPL].md    -> review correctness, security, CI/readiness, and PR evidence
-9. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
-10. /close-ticket-workflow [ID]       -> perform final closure sequence before PR
-11. PR -> Review -> Merge             -> feature published
+3. /resolve-ticket-workspace [TICKET] -> resolve canonical ticket paths
+4. /plan-backend-ticket [TICKET]      -> generate plan/spec/changelog in .ai-specs/changes/{TICKET}/
+5. /validate-impl-spec [TICKET]       -> validate AC mapping in plan and companion spec
+6. Approval gate                       -> stop and ask approve/change/deny
+7. /develop-backend @[plan].md         -> only after explicit approve
+8. /qa-ticket [ID or IMPL].md          -> validate AC evidence, tests, and risks
+9. /pr-code-review [ID or IMPL].md     -> review correctness, security, CI/readiness, and PR evidence
+10. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
+11. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
+12. PR -> Review -> Merge              -> feature published
 ```
+
+## Planning Approval Gate
+
+Planning and implementation are separate phases.
+
+`/plan-backend-ticket` and `/plan-frontend-ticket` must create:
+
+```text
+.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md
+.ai-specs/changes/{TICKET}/{TICKET}-impl-frontend.md
+.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md
+.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md
+```
+
+Only the relevant backend or frontend plan is required for a single-surface
+ticket. The companion `{TICKET}-implementation-spec.md` and changelog are always
+required.
+
+After these files are generated, run:
+
+```bash
+sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
+```
+
+Then stop and ask the user for one of:
+
+- `approve` - execute the plan exactly as written
+- `change` - revise the planning artifacts, then present the gate again
+- `deny` - stop ticket execution
+
+Generating the plan is not approval to execute the plan. Agents must not write
+tests, production code, migrations, styles, or configuration until the user
+explicitly answers `approve`.
 
 ## Available commands
 
@@ -201,7 +254,7 @@ If the kit is installed as `.sdd-kit`, the template inside `.sdd-kit/.github/` i
 | `/plan-backend-ticket [ID]` | Generate a backend implementation plan |
 | `/plan-frontend-ticket [ID]` | Generate a frontend implementation plan |
 | `/resolve-ticket-workspace [ID]` | Resolve local `.ai-specs` paths from input or branch |
-| `/validate-impl-spec [ID or path]` | Validate structural AC coverage of an implementation spec |
+| `/validate-impl-spec [ID or path]` | Validate structural AC coverage of the implementation plan and companion spec |
 | `/qa-ticket [ID or path]` | Validate implementation evidence against story/spec acceptance criteria |
 | `/pr-code-review [ID or path]` | Review local changes for correctness, security, tests, CI/readiness, and PR evidence |
 | `/close-ticket-workflow [ID]` | Apply the correct end-of-ticket validation and PR sequence |

@@ -39,6 +39,24 @@ instructions.
 
 ## Workflow Expectations
 
+- Resolve `TICKET` as the canonical ticket/work-item key for the consuming
+  project. Examples: `JAP-160`, `ENG-123`, `GH-42`, `160`.
+- If the user provides ambiguous shorthand, resolve it using the consuming
+  project's ticket policy before creating artifacts.
+- Kit tools are POSIX `sh` scripts. Invoke them with `sh`; on Windows, use Git
+  Bash or Git for Windows `sh.exe` if `sh` is not on `PATH`.
+- Keep all ticket artifacts under `.ai-specs/changes/{TICKET}/`.
+- Before implementation, use the workspace resolver:
+  - In a consuming repo: `sh .sdd-kit/tools/resolve-ticket-workspace.sh {TICKET}`
+  - In this kit repo: `sh tools/resolve-ticket-workspace.sh {TICKET}`
+- Before implementation, generate and validate:
+  - `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md` or `{TICKET}-impl-frontend.md`
+  - `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`
+  - `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md`
+- Run `validate-impl-spec.sh {TICKET}` after planning artifacts are written.
+- After planning validation, stop and ask for `approve`, `change`, or `deny`.
+- Do not write tests, production code, migrations, or config until the user
+  explicitly answers `approve`.
 - Treat acceptance criteria as delivery contract items.
 - Implementation specs must map each acceptance criterion to implementation and validation evidence.
 - Run the smallest relevant validation for the change.

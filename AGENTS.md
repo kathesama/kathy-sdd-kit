@@ -46,6 +46,68 @@ Use project-local context from the consuming repository first when it exists:
 
 # Common Agent Rules
 
+## SDD Ticket Identity
+
+- `TICKET` is the canonical ticket/work-item key for the consuming project.
+- It must be stable, unique within the project, and filesystem-safe.
+- Examples: `JAP-160`, `ENG-123`, `GH-42`, `160`, `task-160`.
+- If the user gives an ambiguous shorthand such as "160", resolve it using the consuming project's ticket policy before creating artifacts.
+- Never use the branch name, branch slug, summary, or description as `TICKET`.
+- Never append branch descriptions to `.ai-specs/changes/{TICKET}/` paths.
+- The current branch may be recorded as secondary metadata only.
+- Consuming projects may override this section with a stricter policy, such as requiring Jira keys like `JAP-160`.
+
+## SDD Tool Runtime
+
+- Kit tools are POSIX `sh` scripts under `.sdd-kit/tools/`.
+- Invoke them explicitly with `sh`, not by executing the file directly.
+- On Windows, run them from Git Bash, or call Git for Windows `sh.exe` if `sh` is not on `PATH`.
+
+## Mandatory SDD Planning Gate
+
+Before creating or modifying production code, tests, migrations, generated
+runtime artifacts, or service configuration for a ticket, agents MUST complete
+the planning gate.
+
+1. Resolve `TICKET`.
+2. Resolve the workspace with the kit tool:
+
+   ```powershell
+   sh .sdd-kit/tools/resolve-ticket-workspace.sh {TICKET}
+   ```
+
+   If the kit is being edited directly, use:
+
+   ```powershell
+   sh tools/resolve-ticket-workspace.sh {TICKET}
+   ```
+
+3. Create `.ai-specs/changes/{TICKET}/` if missing.
+4. Generate the implementation plan for the requested surface:
+   - Backend: `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md`
+   - Frontend: `.ai-specs/changes/{TICKET}/{TICKET}-impl-frontend.md`
+5. Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`.
+6. Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` if missing.
+7. Validate that every explicit acceptance criterion appears in both specs:
+
+   ```powershell
+   sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
+   ```
+
+8. Present the plan summary and STOP for approval.
+
+Generating a plan is not approval to execute the plan. Implementation is
+forbidden until the user explicitly answers `approve`.
+
+Allowed planning gate responses:
+
+- `approve` — execute the plan exactly as written.
+- `change` — revise the plan/spec first, then present the approval gate again.
+- `deny` — stop ticket execution and do not modify code.
+
+If the response is `change` or anything other than an explicit `approve`, do not
+start implementation.
+
 ## Repository Discovery
 
 - Before editing, inspect the repository structure and existing conventions.
@@ -97,9 +159,10 @@ Use project-local context from the consuming repository first when it exists:
 
 ## Branch Task Log
 
-- At the end of each subtask, update `.ai-specs/changes/{BRANCH_KEY}/{BRANCH_KEY}-CHANGELOG.md`.
+- At the end of each subtask, update `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md`.
 - If the file does not exist, create it with the branch header.
-- `BRANCH_KEY` comes from the current branch name.
+- `TICKET` comes from the resolved canonical ticket/work-item key.
+- Do not derive changelog paths from the branch name.
 - Never overwrite previous sections; append only.
 - Use the changelog as the primary implementation evidence for PR reports when present.
 - Keep changelog entries factual: files changed, validation results, risks, follow-ups, and concise implementation notes.
@@ -107,11 +170,11 @@ Use project-local context from the consuming repository first when it exists:
 Required structure:
 
 ```md
-# {BRANCH_KEY} {branch description}
+# {TICKET} {branch description}
 
 ## {SUBTASK_KEY}: {subtask title}
 **Status:** Done
-**Commit message:** {BRANCH_KEY} tipo(scope): descripcion corta
+**Commit message:** {TICKET} tipo(scope): descripcion corta
 ### Files created
 ### Files modified
 ### Summary

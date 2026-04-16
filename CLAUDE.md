@@ -39,6 +39,12 @@ Skill sources live under `.sdd-kit/ai-specs/skills/`.
 ## Rules
 
 - Never write code without a validated Implementation Spec
+- `TICKET` is the canonical ticket/work-item key for the consuming project; resolve ambiguous shorthand before creating artifacts
+- Generate `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md` or `{TICKET}-impl-frontend.md`
+- Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`
+- Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` before implementation
+- Run `/validate-impl-spec [TICKET]` after planning
+- Stop after planning and ask for `approve`, `change`, or `deny`; implementation requires explicit `approve`
 - Always follow TDD: RED -> GREEN -> REFACTOR
 - Treat acceptance criteria as delivery contract items with explicit evidence
 - All commits must follow Conventional Commits
