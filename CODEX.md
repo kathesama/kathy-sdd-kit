@@ -60,12 +60,14 @@ instructions.
   - `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`
   - `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md`
 - Run `validate-impl-spec.sh {TICKET}` after planning artifacts are written.
+- Run `validate-pr-content.sh {TICKET}` after generating `PR-{TICKET}.md`.
 - After planning validation, stop and ask for `approve`, `change`, or `deny`.
 - Do not write tests, production code, migrations, or config until the user
   explicitly answers `approve`.
 - Treat acceptance criteria as delivery contract items.
 - Implementation specs must map each acceptance criterion to implementation and validation evidence.
 - Do not mark a parent ticket ready if an in-scope child work item remains uncovered.
+- Do not mark PR content ready if it has checked commands, CI status, commits, or AC coverage without matching local evidence.
 - Run the smallest relevant validation for the change.
 - Preserve repository style and existing architecture.
 - Keep changes limited to the requested task.

@@ -46,9 +46,11 @@ Skill sources live under `.sdd-kit/ai-specs/skills/`.
 - Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`
 - Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` before implementation
 - Run `/validate-impl-spec [TICKET]` after planning
+- Run `sh .sdd-kit/tools/validate-pr-content.sh [TICKET]` after generating `PR-{TICKET}.md`
 - Stop after planning and ask for `approve`, `change`, or `deny`; implementation requires explicit `approve`
 - Always follow TDD: RED -> GREEN -> REFACTOR
 - Treat acceptance criteria as delivery contract items with explicit evidence
+- Do not mark PR content ready when checked commands, CI status, commits, or AC coverage lack matching local evidence
 - All commits must follow Conventional Commits
 - Keep PRs small and focused
 - Keep ticket artifacts in `.ai-specs/changes/`, not in `.sdd-kit/ai-specs/changes/`

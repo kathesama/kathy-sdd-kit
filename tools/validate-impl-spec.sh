@@ -84,6 +84,10 @@ contains_line() {
   grep -Fxq "$needle" "$file_path"
 }
 
+trim() {
+  printf '%s' "$1" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+}
+
 ensure_section_exists() {
   file_path=$1
   section=$2
@@ -126,6 +130,31 @@ validate_completion_statuses() {
 $invalid"
 }
 
+validate_completion_evidence() {
+  file_path=$1
+  invalid=$(section_rows "$file_path" "Completion Evidence" | awk -F'|' '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    {
+      ac = trim($2)
+      status = trim($3)
+      evidence = trim($4)
+      normalized = tolower(evidence)
+      if (evidence == "") {
+        print ac ": empty evidence"
+      } else if (status == "Covered" && normalized ~ /^(done|implemented|complete|completed|covered|n\/a|-|tbd|todo|pending)$/) {
+        print ac ": weak covered evidence: " evidence
+      } else if ((status == "Partial" || status == "Not Covered") && normalized !~ /(block|decision|out of scope|follow[- ]?up|pending implementation|pending approval|not started|planned)/) {
+        print ac ": missing blocker or decision evidence: " evidence
+      }
+    }
+  ')
+  [ -z "$invalid" ] || fail "invalid Completion Evidence details in $file_path:
+$invalid"
+}
+
 validate_delivery_plan_refs() {
   file_path=$1
   canonical_file=$2
@@ -139,15 +168,95 @@ validate_delivery_plan_refs() {
 $missing"
 }
 
+validate_related_work_items() {
+  file_path=$1
+  canonical_ticket=$2
+  section_file=$(mktemp)
+  section_rows "$file_path" "Related Work Items" > "$section_file"
+  [ -s "$section_file" ] || {
+    rm -f "$section_file"
+    fail "Related Work Items must contain at least one row in $file_path"
+  }
+
+  parent_found=$(awk -F'|' -v ticket="$canonical_ticket" '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    trim($2) == ticket { found = 1 }
+    END { print found ? "yes" : "no" }
+  ' "$section_file")
+  [ "$parent_found" = "yes" ] || {
+    rm -f "$section_file"
+    fail "Related Work Items must include parent ticket $canonical_ticket in $file_path"
+  }
+
+  invalid_scope=$(awk -F'|' '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    {
+      key = trim($2)
+      scope = trim($5)
+      if (key == "") {
+        print "<empty key>: empty key"
+      } else if (scope == "Needs clarification") {
+        print key ": Needs clarification must be resolved before validation"
+      } else if (scope != "In scope" && scope != "Out of scope" && scope != "No implementation impact" && scope != "Blocked") {
+        print key ": invalid Scope Decision \"" scope "\""
+      }
+    }
+  ' "$section_file")
+  [ -z "$invalid_scope" ] || {
+    rm -f "$section_file"
+    fail "invalid Related Work Items scope decisions in $file_path:
+$invalid_scope"
+  }
+
+  plan_text=$(mktemp)
+  {
+    section_text "$file_path" "Acceptance Criteria"
+    section_text "$file_path" "Implementation Mapping"
+    section_text "$file_path" "Validation Plan"
+    section_text "$file_path" "Delivery Plan"
+  } > "$plan_text"
+
+  missing_in_scope=$(awk -F'|' -v ticket="$canonical_ticket" '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    {
+      key = trim($2)
+      scope = trim($5)
+      if (key != "" && key != ticket && scope == "In scope") {
+        print key
+      }
+    }
+  ' "$section_file" | while IFS= read -r related_key; do
+    [ -n "$related_key" ] || continue
+    if ! grep -Fq "$related_key" "$plan_text"; then
+      printf '%s\n' "$related_key"
+    fi
+  done)
+
+  rm -f "$section_file" "$plan_text"
+  [ -z "$missing_in_scope" ] || fail "in-scope Related Work Items missing from ACs, mapping, validation, or delivery plan in $file_path:
+$missing_in_scope"
+}
+
 validate_spec_file() {
   file_path=$1
   out_file=$2
+  canonical_ticket=$3
   [ -f "$file_path" ] || fail "required implementation spec file not found: $file_path"
 
   for section in "Related Work Items" "Acceptance Criteria" "Implementation Mapping" "Validation Plan" "Delivery Plan" "Completion Evidence"; do
     ensure_section_exists "$file_path" "$section"
   done
 
+  validate_related_work_items "$file_path" "$canonical_ticket"
   ac_ids_for_section "$file_path" "Acceptance Criteria" > "$out_file"
   ensure_unique_ids "$out_file"
   mapping_file=$(mktemp)
@@ -161,6 +270,7 @@ validate_spec_file() {
   ensure_coverage "$out_file" "$validation_file" "Validation Plan"
   ensure_coverage "$out_file" "$completion_file" "Completion Evidence"
   validate_completion_statuses "$file_path"
+  validate_completion_evidence "$file_path"
   validate_delivery_plan_refs "$file_path" "$out_file"
 
   rm -f "$mapping_file" "$validation_file" "$completion_file"
@@ -214,8 +324,8 @@ primary_ids=$(mktemp)
 companion_ids=$(mktemp)
 trap 'rm -f "$primary_ids" "$companion_ids"' EXIT HUP INT TERM
 
-validate_spec_file "$primary_path" "$primary_ids"
-validate_spec_file "$implementation_spec_path" "$companion_ids"
+validate_spec_file "$primary_path" "$primary_ids" "$ticket"
+validate_spec_file "$implementation_spec_path" "$companion_ids" "$ticket"
 
 missing_in_companion=$(while IFS= read -r ac_id; do
   [ -n "$ac_id" ] || continue

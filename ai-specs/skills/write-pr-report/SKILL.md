@@ -93,6 +93,22 @@ For the template currently used by this kit:
 - **Pre-merge checklist**: check an item only when the changelog/evidence supports it; leave uncertain items unchecked
 - **Definition of Done checklist**: mark all applicable DoD items from `base-standards.mdc` when evidence supports them
 
+## PR Content Validation
+
+After writing `PR-{TICKET}.md`, run:
+
+```bash
+sh .sdd-kit/tools/validate-pr-content.sh {TICKET}
+```
+
+If running inside the kit repository itself, use:
+
+```bash
+sh tools/validate-pr-content.sh {TICKET}
+```
+
+Fix any validation failure before reporting the PR content as ready.
+
 ## Rules
 
 - Summary must be human readable - not a list of commits
@@ -104,9 +120,11 @@ For the template currently used by this kit:
 - Read every changelog subtask section and merge duplicate file entries into a single Changes section
 - Use changelog `Summary` and `Notes` sections to explain intent, risks, and follow-up work
 - Use changelog `Commit message` entries only for traceability, not as PR summary prose
+- Do not list `Key commits` unless real commit hashes are available; otherwise use suggested commit messages or state that no commits were created
 - Use the enriched story, implementation spec, and completion evidence from the same `{TICKET}` folder
 - Every change must map back to an acceptance criterion from the spec
 - Never omit an acceptance criterion from the PR report
 - If an acceptance criterion is partial or blocked, state it explicitly with the reason
+- Check only validation commands and CI items with matching evidence in the ticket folder
 - Always include the Confluence spec link
 - Output in English

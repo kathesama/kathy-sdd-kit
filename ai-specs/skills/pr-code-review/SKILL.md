@@ -81,6 +81,14 @@ Verify that:
 - validation commands are recorded or gaps are stated
 - generated PR content does not hide `Partial`, `Not Covered`, or `Blocked` ACs
 
+Run the PR content validator when `PR-{TICKET}.md` exists:
+
+```bash
+sh .sdd-kit/tools/validate-pr-content.sh {TICKET}
+```
+
+If the validator fails, treat the failure as a PR-readiness finding.
+
 ## Output
 
 Create or update `.ai-specs/changes/{TICKET}/REVIEW-{TICKET}.md` with:

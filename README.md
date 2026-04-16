@@ -32,6 +32,7 @@ ai-specs/                    <- canonical source of truth
     plan-frontend-ticket/    <- /plan-frontend-ticket
     resolve-ticket-workspace/ <- resolve current ticket workspace paths
     validate-impl-spec/      <- run structural validation for implementation specs
+    validate-pr-content/     <- validate generated PR content against local evidence
     qa-ticket/               <- validate AC evidence, tests, risks, and readiness
     pr-code-review/          <- pre-PR review for correctness, security, CI, and readiness
     close-ticket-workflow/   <- correct closure order before PR
@@ -94,6 +95,7 @@ be invoked explicitly with `sh`:
 ```bash
 sh .sdd-kit/tools/resolve-ticket-workspace.sh {TICKET}
 sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
+sh .sdd-kit/tools/validate-pr-content.sh {TICKET}
 ```
 
 On Windows, Git for Windows provides `sh.exe` through Git Bash. Avoid relying on
@@ -212,8 +214,9 @@ If the kit is installed as `.sdd-kit`, the template inside `.sdd-kit/.github/` i
 9. /qa-ticket [ID or IMPL].md          -> validate AC evidence, tests, and risks
 10. /pr-code-review [ID or IMPL].md     -> review correctness, security, CI/readiness, and PR evidence
 11. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
-12. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
-13. PR -> Review -> Merge              -> feature published
+12. /validate-pr-content [TICKET]      -> verify PR content does not invent evidence
+13. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
+14. PR -> Review -> Merge              -> feature published
 ```
 
 ## Planning Approval Gate
@@ -262,6 +265,7 @@ entry, or documented blocker before the approval gate.
 | `/plan-frontend-ticket [ID]` | Generate a frontend implementation plan |
 | `/resolve-ticket-workspace [ID]` | Resolve local `.ai-specs` paths from input or branch |
 | `/validate-impl-spec [ID or path]` | Validate structural AC coverage of the implementation plan and companion spec |
+| `/validate-pr-content [ID or path]` | Validate generated PR content against local SDD evidence |
 | `/qa-ticket [ID or path]` | Validate implementation evidence against story/spec acceptance criteria |
 | `/pr-code-review [ID or path]` | Review local changes for correctness, security, tests, CI/readiness, and PR evidence |
 | `/close-ticket-workflow [ID]` | Apply the correct end-of-ticket validation and PR sequence |
@@ -278,6 +282,7 @@ entry, or documented blocker before the approval gate.
 - The plan must map each AC to explicit implementation and validation
 - A task cannot be marked done without evidence per AC
 - The PR report must include status and evidence for every acceptance criterion
+- Checked PR validation and CI items must have matching evidence in the local ticket folder
 
 ## Based on
 
