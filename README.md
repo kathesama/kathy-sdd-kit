@@ -48,7 +48,9 @@ ai-specs/                    <- canonical source of truth
 docs/
   doc_architecture.md        <- project technical context
 
-CLAUDE.md                    <- Claude Code entry point
+AGENTS.md                    <- agent bootstrap to copy into consuming repository root
+CLAUDE.md                    <- Claude Code SDD bootstrap loaded from the submodule
+CODEX.md                     <- Codex SDD bootstrap loaded from AGENTS.md
 ```
 
 ## Local workspace convention
@@ -72,6 +74,9 @@ Recommended usage:
 - `.sdd-kit/` remains the shared framework and source of truth
 - `.ai-specs/` is local working state for the current repository
 - `PR-{TICKET}.md` is generated locally from the current `.ai-specs` state and does not need to be committed
+- Root `AGENTS.md` activates the kit for Codex and compatible agents
+- Root `CLAUDE.md` remains the project-specific Claude Code context and should link `.sdd-kit/CLAUDE.md`
+- Never replace an existing root `CLAUDE.md` with the kit file; append the kit include instead
 
 ## How to use it in a new project
 
@@ -79,25 +84,85 @@ Recommended usage:
 ```bash
 cd your-project
 git submodule add https://github.com/kathesama/kathy-sdd-kit .sdd-kit
-cp -r .sdd-kit/ai-specs ./
-cp -r .sdd-kit/.claude ./
-cp .sdd-kit/CLAUDE.md ./
-cp .sdd-kit/docs/doc_architecture.md ./docs/
+cp .sdd-kit/AGENTS.md ./AGENTS.md
 mkdir -p .github
 cp .sdd-kit/.github/pull_request_template.md ./.github/pull_request_template.md
-# Edit docs/doc_architecture.md with the real project architecture
+# For Claude Code, DO NOT replace an existing CLAUDE.md.
+# Add this line to the root CLAUDE.md:
+# @.sdd-kit/CLAUDE.md
+#
+# If the project has no CLAUDE.md yet, create one with project context plus that include.
 ```
 
 **Option B - direct copy**
 ```bash
-git clone https://github.com/kathesama/kathy-sdd-kit
-cp -r kathy-sdd-kit/ai-specs your-project/
-cp -r kathy-sdd-kit/.claude your-project/
-cp kathy-sdd-kit/CLAUDE.md your-project/
-cp kathy-sdd-kit/docs/doc_architecture.md your-project/docs/
-mkdir -p your-project/.github
-cp kathy-sdd-kit/.github/pull_request_template.md your-project/.github/pull_request_template.md
-# Edit docs/doc_architecture.md with the real project architecture
+cd your-project
+git clone https://github.com/kathesama/kathy-sdd-kit .sdd-kit
+cp .sdd-kit/AGENTS.md ./AGENTS.md
+mkdir -p .github
+cp .sdd-kit/.github/pull_request_template.md ./.github/pull_request_template.md
+# For Claude Code, DO NOT replace an existing CLAUDE.md.
+# Add this line to the root CLAUDE.md:
+# @.sdd-kit/CLAUDE.md
+#
+# If the project has no CLAUDE.md yet, create one with project context plus that include.
+```
+
+## Agent entrypoints
+
+The kit is designed so consuming projects copy only the root entrypoints they
+need and keep reusable SDD assets inside `.sdd-kit/`.
+
+### Codex and compatible agents
+
+Copy `.sdd-kit/AGENTS.md` to the consuming repository root:
+
+```text
+<PROJECT_ROOT>/AGENTS.md
+```
+
+`AGENTS.md` tells Codex to load `.sdd-kit/CODEX.md` and to use framework files
+from `.sdd-kit/ai-specs/`.
+
+### Claude Code
+
+Claude Code loads the consuming repository's root `CLAUDE.md` automatically.
+That file should remain project-specific: architecture, ADRs, services, ports,
+stack, and local constraints.
+
+Do not overwrite an existing root `CLAUDE.md` with `.sdd-kit/CLAUDE.md`.
+Replacing it would remove project context. To add the reusable SDD workflow,
+append this include to the root `CLAUDE.md`:
+
+```md
+## SDD Kit
+
+This project uses kathy-sdd-kit.
+
+@.sdd-kit/CLAUDE.md
+```
+
+If the consuming project has no `CLAUDE.md`, create one at the root with the
+project context first and the kit include after it:
+
+```md
+# Project Context
+
+Describe the architecture, ADRs, services, stack, and local constraints here.
+
+## SDD Kit
+
+@.sdd-kit/CLAUDE.md
+```
+
+### Local ticket workspace
+
+Do not copy `.sdd-kit/ai-specs/` into the project root for normal submodule
+usage. The submodule copy is the framework source. Create only project-local
+ticket artifacts under:
+
+```text
+<PROJECT_ROOT>/.ai-specs/changes/
 ```
 
 ## PR template

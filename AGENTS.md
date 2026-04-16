@@ -1,4 +1,50 @@
-# Agent Rules
+# Agent Entrypoint
+
+This repository uses `kathy-sdd-kit` as a portable SDD framework.
+
+When this file is copied to the root of a consuming project, the consuming
+project must keep the kit mounted at:
+
+```text
+.sdd-kit/
+```
+
+The kit is the framework source. Project-specific ticket artifacts must live in
+the consuming repository under:
+
+```text
+.ai-specs/changes/
+```
+
+Do not write ticket artifacts under `.sdd-kit/ai-specs/changes/`.
+
+## Tool-Specific Bootstrap
+
+- If you are Codex, load and follow `.sdd-kit/CODEX.md`.
+- If you are Claude Code and this file is loaded, also load and follow `.sdd-kit/CLAUDE.md`.
+- If the tool cannot auto-load referenced files, read the relevant file directly before starting SDD work.
+
+## SDD Framework References
+
+Before planning, implementing, reviewing, or closing SDD work, use the kit files
+from the submodule:
+
+- `.sdd-kit/ai-specs/specs/base-standards.mdc`
+- `.sdd-kit/ai-specs/specs/backend-standards.mdc` for backend work
+- `.sdd-kit/ai-specs/specs/frontend-standards.mdc` for frontend work
+- `.sdd-kit/ai-specs/specs/implementation-spec-template.md` for implementation specs
+- `.sdd-kit/ai-specs/skills/` for reusable SDD workflows
+- `.sdd-kit/ai-specs/.agents/` for role-specific agent guidance
+
+Use project-local context from the consuming repository first when it exists:
+
+- `CLAUDE.md` for Claude Code project context
+- `docs/doc_architecture.md`
+- `docs/adr/`
+- `docs/GLOSSARY.md`
+- local package, build, test, and script configuration
+
+# Common Agent Rules
 
 ## Repository Discovery
 

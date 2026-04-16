@@ -1,16 +1,25 @@
 # Claude Configuration
 
-> Single source of truth: ai-specs/
-> This file is the entry point for Claude Code in any project using kathy-sdd-kit.
+> SDD framework source: `.sdd-kit/`
+> Project-local SDD workspace: `.ai-specs/`
+> This file complements the consuming project's root `CLAUDE.md`.
 
-@ai-specs/specs/base-standards.mdc
-@ai-specs/specs/backend-standards.mdc
-@ai-specs/specs/frontend-standards.mdc
+@.sdd-kit/ai-specs/specs/base-standards.mdc
+@.sdd-kit/ai-specs/specs/backend-standards.mdc
+@.sdd-kit/ai-specs/specs/frontend-standards.mdc
 
 ## Project Context
 
-Load project-specific context from:
-@docs/doc_architecture.md
+Load project-specific context from the consuming repository when present:
+
+- Root `CLAUDE.md`
+- `docs/doc_architecture.md`
+- `docs/adr/`
+- `docs/GLOSSARY.md`
+- local package, build, test, and script configuration
+
+The root `CLAUDE.md` should own project architecture and ADR context. This file
+owns reusable SDD workflow guidance.
 
 ## Available Skills
 
@@ -25,6 +34,8 @@ Load project-specific context from:
 - `/develop-frontend @[plan].md` -> Implement following the frontend plan
 - `/write-pr-report @[IMPL].md` -> Generate PR description from spec
 
+Skill sources live under `.sdd-kit/ai-specs/skills/`.
+
 ## Rules
 
 - Never write code without a validated Implementation Spec
@@ -32,3 +43,4 @@ Load project-specific context from:
 - Treat acceptance criteria as delivery contract items with explicit evidence
 - All commits must follow Conventional Commits
 - Keep PRs small and focused
+- Keep ticket artifacts in `.ai-specs/changes/`, not in `.sdd-kit/ai-specs/changes/`
