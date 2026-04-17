@@ -1,0 +1,43 @@
+name: SDD Kit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-kit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check shell syntax
+        run: |
+          sh -n tools/resolve-ticket-workspace.sh
+          sh -n tools/validate-impl-spec.sh
+          sh -n tools/validate-pr-content.sh
+
+      - name: Validate implementation spec examples
+        run: |
+          sh tools/validate-impl-spec.sh examples/backend-ticket/JAP-100/JAP-100-impl-backend.md
+          sh tools/validate-impl-spec.sh examples/frontend-ticket/WEB-42/WEB-42-impl-frontend.md
+
+      - name: Validate PR content example
+        run: |
+          sh tools/validate-pr-content.sh examples/pr-content/valid/PR-PRX-200.md
+
+      - name: Verify negative implementation spec fixture fails
+        run: |
+          if sh tools/validate-impl-spec.sh examples/invalid/missing-related-work-items/BAD-100-impl-backend.md; then
+            echo "Expected invalid implementation spec fixture to fail"
+            exit 1
+          fi
+
+      - name: Verify negative PR content fixture fails
+        run: |
+          if sh tools/validate-pr-content.sh examples/pr-content/invalid/PR-PRBAD-200.md; then
+            echo "Expected invalid PR content fixture to fail"
+            exit 1
+          fi

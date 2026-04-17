@@ -53,10 +53,13 @@ docs/
   tool-runtime.md            <- shell runtime and Windows guidance
   roles-and-responsibilities.md <- human and agent role boundaries
   tracker-policy.md          <- generic ticket/work-item key policy examples
+  adopting-sdd-kit.md        <- professional guide for adding the kit to an existing repo
 
 examples/
   backend-ticket/            <- complete backend planning example
   frontend-ticket/           <- complete frontend planning example
+  pr-content/                <- valid and invalid generated PR content examples
+  invalid/                   <- fixtures expected to fail validation
   review-fix-ticket/         <- pattern for turning review findings into ACs
 
 AGENTS.md                    <- agent bootstrap to copy into consuming repository root
@@ -116,6 +119,10 @@ See `docs/tool-runtime.md` for supported shell environments and PowerShell
 examples.
 
 ## How to use it in a new project
+
+For existing repositories, start with `docs/adopting-sdd-kit.md`. It describes
+the recommended rollout, entrypoint merge strategy, ticket policy, local
+workspace handling, and pilot-ticket checklist.
 
 **Option A - git submodule (recommended for updates)**
 ```bash
@@ -279,6 +286,10 @@ GitHub and `/write-pr-report` use the template from the consuming repository roo
 
 If the kit is installed as `.sdd-kit`, the template inside `.sdd-kit/.github/` is only a source copy. Copy it to the project root `.github/` folder if you want GitHub and `/write-pr-report` to use it.
 
+The starter template uses `Suggested commit messages`, not `Key commits`,
+because agents often prepare PR content before commits exist. Use real commit
+hashes only when they are available.
+
 ## Full SDD flow
 
 ```text
@@ -369,10 +380,19 @@ Reference examples live under `examples/`:
 
 - `examples/backend-ticket/JAP-100/`
 - `examples/frontend-ticket/WEB-42/`
+- `examples/pr-content/valid/`
+- `examples/pr-content/invalid/`
+- `examples/invalid/missing-related-work-items/`
 - `examples/review-fix-ticket/JAP-160/`
 
 They are documentation examples, not local ticket artifacts. Do not copy them
 into `.ai-specs/changes/` unless adapting them for a real ticket.
+
+## Kit CI
+
+The kit source includes `.github/workflows/sdd-kit.yml`. It validates shell
+syntax, valid examples, and negative fixtures expected to fail. This CI belongs
+to the kit repository itself; consuming projects do not need to copy it.
 
 ## Based on
 

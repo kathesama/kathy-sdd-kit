@@ -1,0 +1,20 @@
+# PRX-200 Implementation Spec
+
+## Story Context
+
+- **Story / Ticket**: PRX-200
+- **Objective**: Provide a valid PR content example for the SDD kit.
+- **Related Technical Contract**: Example only.
+- **SDD Kit Version**: 0.4.0
+
+## Acceptance Criteria
+
+| ID | Criterion | Validation Type | Source |
+|---|---|---|---|
+| AC-01 | Valid PR content maps AC coverage to local evidence | automated_test | explicit |
+
+## Completion Evidence
+
+| AC | Status | Evidence |
+|---|---|---|
+| AC-01 | Covered | `sh tools/validate-pr-content.sh examples/pr-content/valid/PR-PRX-200.md` passed |

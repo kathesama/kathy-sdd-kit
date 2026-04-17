@@ -65,7 +65,7 @@ Common template mappings:
 - **Summary**: concise implementation explanation from changelog summaries and implementation spec
 - **Change Type**: selected from implemented work, not from commit prefixes alone
 - **Scope**: affected areas such as Java, Python, CI/CD, Docs, Infrastructure, Config, Tests
-- **Tickets / References**: Jira key and notable commit traceability
+- **Tickets / References**: ticket key/reference and suggested commit messages or real commit traceability when available
 - **What was done**: concise behavior/module implementation bullets
 - **Changes**: files created, modified, and deleted with brief explanations from changelog sections
 - **Testing / Validation**: validation commands, test files, and covered scenarios from changelog and evidence files
@@ -81,7 +81,7 @@ For the template currently used by this kit:
 - **Summary**: fill the `AUTO-SUMMARY` block with 2-4 concise technical bullets or one short paragraph
 - **Change Type**: check every applicable type and leave non-applicable items unchecked
 - **Scope**: check every affected scope and leave non-applicable items unchecked
-- **Tickets / References**: fill `Issue / Task` with the ticket key/reference when available and include TC/IMPL links when available; use `Key commits` only for notable commits from changelog traceability
+- **Tickets / References**: fill `Issue / Task` with the ticket key/reference when available and include TC/IMPL links when available; use `Suggested commit messages` for changelog commit-message suggestions unless real commit hashes are available
 - **What was done**: put concise behavior/module implementation bullets here, sourced from changelog `Summary`
 - **Changes**: group detailed file-level changes under `Files created`, `Files modified`, and `Files deleted`
 - **Testing**: summarize test files, assertions, and scenarios covered
@@ -120,7 +120,7 @@ Fix any validation failure before reporting the PR content as ready.
 - Read every changelog subtask section and merge duplicate file entries into a single Changes section
 - Use changelog `Summary` and `Notes` sections to explain intent, risks, and follow-up work
 - Use changelog `Commit message` entries only for traceability, not as PR summary prose
-- Do not list `Key commits` unless real commit hashes are available; otherwise use suggested commit messages or state that no commits were created
+- Do not present suggested commit messages as real commits. Use the template's `Suggested commit messages` field unless real commit hashes are available.
 - Use the enriched story, implementation spec, and completion evidence from the same `{TICKET}` folder
 - Every change must map back to an acceptance criterion from the spec
 - Never omit an acceptance criterion from the PR report

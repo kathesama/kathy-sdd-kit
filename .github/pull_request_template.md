@@ -29,7 +29,7 @@ N/A
 
 ## Tickets / References
 - Issue / Task:
-- Key commits:
+- Suggested commit messages:
 
 ## What was done
 -
