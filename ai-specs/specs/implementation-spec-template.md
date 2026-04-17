@@ -5,6 +5,7 @@
 - **Story / Ticket**:
 - **Objective**:
 - **Related Technical Contract**:
+- **SDD Kit Version**:
 
 ## Related Work Items
 

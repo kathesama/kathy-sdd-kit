@@ -18,6 +18,11 @@ the consuming repository under:
 
 Do not write ticket artifacts under `.sdd-kit/ai-specs/changes/`.
 
+When this file is copied to a consuming repository root, the project may add
+local override sections for ticket policy, security, workflow, or repository
+constraints. Preserve those local override sections when updating this file from
+a newer `.sdd-kit/AGENTS.md`; do not replace them blindly.
+
 ## Tool-Specific Bootstrap
 
 - If you are Codex, load and follow `.sdd-kit/CODEX.md`.
@@ -35,6 +40,10 @@ from the submodule:
 - `.sdd-kit/ai-specs/specs/implementation-spec-template.md` for implementation specs
 - `.sdd-kit/ai-specs/skills/` for reusable SDD workflows
 - `.sdd-kit/ai-specs/.agents/` for role-specific agent guidance
+- `.sdd-kit/VERSION` for the kit version to record in generated specs
+- `.sdd-kit/docs/tool-runtime.md` for shell runtime guidance
+- `.sdd-kit/docs/roles-and-responsibilities.md` for role boundaries
+- `.sdd-kit/docs/tracker-policy.md` for tracker-neutral ticket key examples
 
 Use project-local context from the consuming repository first when it exists:
 
@@ -90,18 +99,19 @@ the planning gate.
 5. Generate the implementation plan for the requested surface:
    - Backend: `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md`
    - Frontend: `.ai-specs/changes/{TICKET}/{TICKET}-impl-frontend.md`
-6. Add a `Related Work Items` section to the plan and companion spec. Every
+6. Record the SDD kit version from `.sdd-kit/VERSION` in the plan and companion spec.
+7. Add a `Related Work Items` section to the plan and companion spec. Every
    in-scope child work item with technical requirements must map to an AC,
    validation item, or documented blocker.
-7. Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`.
-8. Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` if missing.
-9. Validate that every explicit acceptance criterion appears in both specs:
+8. Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`.
+9. Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` if missing.
+10. Validate that every explicit acceptance criterion appears in both specs:
 
    ```powershell
    sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
    ```
 
-10. Present the plan summary and STOP for approval, including related work
+11. Present the plan summary and STOP for approval, including related work
     items considered and any out-of-scope decisions.
 
 Generating a plan is not approval to execute the plan. Implementation is

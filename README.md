@@ -3,6 +3,8 @@
 Portable **Spec-Driven Development (SDD)** kit for personal projects.
 Based on the [LIDR Academy](https://github.com/LIDR-academy/manual-SDD) framework.
 
+Current kit version: `0.4.0` (`VERSION`).
+
 ## What is included?
 
 - Development standards: base, backend, and frontend
@@ -48,6 +50,14 @@ ai-specs/                    <- canonical source of truth
 
 docs/
   doc_architecture.md        <- project technical context
+  tool-runtime.md            <- shell runtime and Windows guidance
+  roles-and-responsibilities.md <- human and agent role boundaries
+  tracker-policy.md          <- generic ticket/work-item key policy examples
+
+examples/
+  backend-ticket/            <- complete backend planning example
+  frontend-ticket/           <- complete frontend planning example
+  review-fix-ticket/         <- pattern for turning review findings into ACs
 
 AGENTS.md                    <- agent bootstrap to copy into consuming repository root
 CLAUDE.md                    <- Claude Code SDD bootstrap loaded from the submodule
@@ -84,6 +94,7 @@ Recommended usage:
 - Do not use branch names or branch descriptions in artifact paths
 - `PR-{TICKET}.md` is generated locally from the current `.ai-specs` state and does not need to be committed
 - Root `AGENTS.md` activates the kit for Codex and compatible agents
+- Root `AGENTS.md` may contain consuming-project overrides. Do not overwrite it blindly after installation.
 - Root `CLAUDE.md` remains the project-specific Claude Code context and should link `.sdd-kit/CLAUDE.md`
 - Never replace an existing root `CLAUDE.md` with the kit file; append the kit include instead
 
@@ -100,6 +111,9 @@ sh .sdd-kit/tools/validate-pr-content.sh {TICKET}
 
 On Windows, Git for Windows provides `sh.exe` through Git Bash. Avoid relying on
 direct script execution from PowerShell; invoke tools through `sh`.
+
+See `docs/tool-runtime.md` for supported shell environments and PowerShell
+examples.
 
 ## How to use it in a new project
 
@@ -131,6 +145,35 @@ cp .sdd-kit/.github/pull_request_template.md ./.github/pull_request_template.md
 # If the project has no CLAUDE.md yet, create one with project context plus that include.
 ```
 
+## Updating The Kit
+
+When updating the `.sdd-kit` submodule, review the consumer entrypoints too.
+
+Recommended update checklist:
+
+1. Update the submodule or cloned `.sdd-kit` folder.
+2. Review `.sdd-kit/AGENTS.md` against the repository root `AGENTS.md`.
+3. If the root `AGENTS.md` has no project-specific overrides, refresh it:
+
+   ```bash
+   cp .sdd-kit/AGENTS.md ./AGENTS.md
+   ```
+
+4. If the root `AGENTS.md` has project-specific overrides, merge the kit changes
+   manually and preserve the local override sections.
+5. Do not replace root `CLAUDE.md`. Confirm it still includes:
+
+   ```md
+   @.sdd-kit/CLAUDE.md
+   ```
+
+6. If the project uses PR report generation, confirm
+   `.github/pull_request_template.md` exists or intentionally remains absent.
+
+The kit does not provide an automatic entrypoint updater by default because
+consumer repositories may customize `AGENTS.md`. Blind replacement can remove
+local ticket policy, security, workflow, or repository-specific rules.
+
 ## Agent entrypoints
 
 The kit is designed so consuming projects copy only the root entrypoints they
@@ -146,6 +189,9 @@ Copy `.sdd-kit/AGENTS.md` to the consuming repository root:
 
 `AGENTS.md` tells Codex to load `.sdd-kit/CODEX.md` and to use framework files
 from `.sdd-kit/ai-specs/`.
+
+If the consuming project adds local rules to root `AGENTS.md`, keep them in a
+clearly marked project override section and preserve them when updating the kit.
 
 ### Claude Code
 
@@ -177,6 +223,39 @@ Describe the architecture, ADRs, services, stack, and local constraints here.
 
 @.sdd-kit/CLAUDE.md
 ```
+
+## Versioning
+
+The kit source has a `VERSION` file. Plans and implementation specs should
+record the SDD kit version used to create them:
+
+```md
+- **SDD Kit Version**: 0.4.0
+```
+
+This helps teams diagnose behavior differences when repositories update the
+submodule at different times.
+
+## Roles
+
+The expected human and agent roles are documented in
+`docs/roles-and-responsibilities.md`.
+
+In short:
+
+- Human approver owns scope and approval decisions.
+- Planner creates and validates plan/spec/changelog, then stops.
+- Developer executes only after approval.
+- QA validates behavior against the delivery contract.
+- Code review validates technical quality.
+- PR report agent generates PR content from local evidence only.
+
+## Ticket Tracker Policy
+
+The default ticket policy is provider-agnostic. `{TICKET}` means the canonical
+work-item key for the consuming project. See `docs/tracker-policy.md` for
+examples across Jira, Linear, GitHub Issues, Salesforce work items, Azure DevOps,
+Shortcut, YouTrack, Asana, Trello, and internal trackers.
 
 ### Local ticket workspace
 
@@ -283,6 +362,17 @@ entry, or documented blocker before the approval gate.
 - A task cannot be marked done without evidence per AC
 - The PR report must include status and evidence for every acceptance criterion
 - Checked PR validation and CI items must have matching evidence in the local ticket folder
+
+## Examples
+
+Reference examples live under `examples/`:
+
+- `examples/backend-ticket/JAP-100/`
+- `examples/frontend-ticket/WEB-42/`
+- `examples/review-fix-ticket/JAP-160/`
+
+They are documentation examples, not local ticket artifacts. Do not copy them
+into `.ai-specs/changes/` unless adapting them for a real ticket.
 
 ## Based on
 

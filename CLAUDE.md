@@ -21,6 +21,13 @@ Load project-specific context from the consuming repository when present:
 The root `CLAUDE.md` should own project architecture and ADR context. This file
 owns reusable SDD workflow guidance.
 
+Reusable kit references:
+
+- `.sdd-kit/VERSION` for the version to record in generated specs
+- `.sdd-kit/docs/tool-runtime.md` for shell runtime guidance
+- `.sdd-kit/docs/roles-and-responsibilities.md` for role boundaries
+- `.sdd-kit/docs/tracker-policy.md` for provider-neutral ticket key policy
+
 ## Available Skills
 
 - `/enrich-us [description]` -> Enrich a user story with acceptance criteria and edge cases
@@ -44,6 +51,7 @@ Skill sources live under `.sdd-kit/ai-specs/skills/`.
 - Plans and companion specs must include `Related Work Items`; every in-scope child work item with technical requirements must map to an AC, validation item, or documented blocker
 - Generate `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md` or `{TICKET}-impl-frontend.md`
 - Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`
+- Record the SDD kit version from `.sdd-kit/VERSION` in generated specs
 - Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` before implementation
 - Run `/validate-impl-spec [TICKET]` after planning
 - Run `sh .sdd-kit/tools/validate-pr-content.sh [TICKET]` after generating `PR-{TICKET}.md`

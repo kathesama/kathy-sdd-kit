@@ -22,6 +22,10 @@ read the relevant framework files from the submodule:
 - `.sdd-kit/ai-specs/specs/implementation-spec-template.md` when creating or validating implementation specs
 - `.sdd-kit/ai-specs/skills/{skill-name}/SKILL.md` for the requested SDD workflow
 - `.sdd-kit/ai-specs/.agents/{agent-name}.md` when acting as a specialized SDD agent
+- `.sdd-kit/VERSION` when generating planning artifacts
+- `.sdd-kit/docs/tool-runtime.md` when shell invocation or Windows runtime is unclear
+- `.sdd-kit/docs/roles-and-responsibilities.md` when role ownership is unclear
+- `.sdd-kit/docs/tracker-policy.md` when project ticket policy is not defined
 
 ## Project Context Precedence
 
@@ -59,6 +63,7 @@ instructions.
   - `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md` or `{TICKET}-impl-frontend.md`
   - `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`
   - `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md`
+- Record the SDD kit version from `.sdd-kit/VERSION` in generated implementation specs.
 - Run `validate-impl-spec.sh {TICKET}` after planning artifacts are written.
 - Run `validate-pr-content.sh {TICKET}` after generating `PR-{TICKET}.md`.
 - After planning validation, stop and ask for `approve`, `change`, or `deny`.
