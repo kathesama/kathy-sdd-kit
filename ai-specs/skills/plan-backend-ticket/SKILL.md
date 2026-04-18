@@ -88,11 +88,12 @@ A backend plan saved to `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md` co
 - **Implementation Mapping** from each AC to files/modules and planned changes
 - **Validation Plan** mapping each AC to a concrete test/check
 - **Delivery Plan** with numbered steps referencing AC IDs
+- **Execution Notes for Implementer** capturing implementation-critical context for a different agent
 - **Completion Evidence** table prepared for final fill-in
 
 Also create `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md` with
 the same AC contract, implementation mapping, validation plan, delivery plan,
-and empty/pending completion evidence.
+execution notes, and empty/pending completion evidence.
 
 Both the backend plan and companion implementation spec must record the SDD kit
 version used to generate them.

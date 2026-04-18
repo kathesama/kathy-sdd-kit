@@ -55,6 +55,12 @@
 3. Wire export service event publication (`AC-01`).
 4. Validate payload fields from JAP-101 (`AC-02`, `JAP-101`).
 
+## Execution Notes for Implementer
+
+- Use the existing export service event publisher conventions from the consuming repository.
+- Keep JAP-101 payload validation scoped to export ID, actor ID, and timestamp.
+- Do not create broker topics or change export API contracts in this example.
+
 ## Completion Evidence
 
 | AC | Status | Evidence |

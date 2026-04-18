@@ -103,15 +103,17 @@ the planning gate.
 7. Add a `Related Work Items` section to the plan and companion spec. Every
    in-scope child work item with technical requirements must map to an AC,
    validation item, or documented blocker.
-8. Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`.
-9. Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` if missing.
-10. Validate that every explicit acceptance criterion appears in both specs:
+8. Add an `Execution Notes for Implementer` section to the plan and companion
+   spec with implementation-critical context needed by a different agent.
+9. Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`.
+10. Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` if missing.
+11. Validate that every explicit acceptance criterion appears in both specs:
 
    ```powershell
    sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
    ```
 
-11. Present the plan summary and STOP for approval, including related work
+12. Present the plan summary and STOP for approval, including related work
     items considered and any out-of-scope decisions.
 
 Generating a plan is not approval to execute the plan. Implementation is

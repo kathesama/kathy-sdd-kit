@@ -52,6 +52,12 @@
 2. Implement banner states (`AC-01`).
 3. Add WEB-43 accessibility behavior and manual check evidence (`AC-02`, `WEB-43`).
 
+## Execution Notes for Implementer
+
+- Use the existing export feature component patterns from the consuming repository.
+- Keep WEB-43 accessibility work scoped to keyboard reachability and screen-reader announcement behavior.
+- Do not change backend export status APIs in this example.
+
 ## Completion Evidence
 
 | AC | Status | Evidence |

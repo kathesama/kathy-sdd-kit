@@ -34,6 +34,7 @@ Run it from the consumer repository root.
   - `Implementation Mapping`
   - `Validation Plan`
   - `Delivery Plan`
+  - `Execution Notes for Implementer`
   - `Completion Evidence`
 - every `AC-XX` from `Acceptance Criteria` appears in:
   - `Implementation Mapping`

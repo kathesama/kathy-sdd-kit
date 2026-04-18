@@ -83,6 +83,18 @@ Rules:
 - Every step must reference the AC IDs it covers
 - Plan steps must be concrete enough to execute without reinterpretation
 
+## Execution Notes for Implementer
+
+-
+
+Rules:
+
+- Capture implementation-critical context that is not obvious from the ACs.
+- Include exact package/module targets when names are abbreviated elsewhere.
+- Identify pilot services, first migration targets, feature flags, adapters, or runtime handoff assumptions.
+- Record explicit non-goals that prevent scope creep during execution.
+- Do not duplicate the Delivery Plan; this section should reduce ambiguity for a different agent executing the spec later.
+
 ## Completion Evidence
 
 | AC | Status | Evidence |

@@ -70,4 +70,5 @@ Every Implementation Spec must include these sections:
 - **Acceptance Criteria**: table with `ID`, `Criterion`, `Validation Type`, `Source`
 - **Implementation Mapping**: table mapping each AC to files/modules and planned changes
 - **Validation Plan**: table mapping each AC to a test, check, or verification method
+- **Execution Notes for Implementer**: exact execution context needed by a different agent to implement without reconstructing intent
 - **Completion Evidence**: table with final status and evidence per AC
