@@ -27,6 +27,7 @@ Reusable kit references:
 - `.sdd-kit/docs/tool-runtime.md` for shell runtime guidance
 - `.sdd-kit/docs/roles-and-responsibilities.md` for role boundaries
 - `.sdd-kit/docs/tracker-policy.md` for provider-neutral ticket key policy
+- `.sdd-kit/ai-specs/specs/changelog-template.md` for ticket changelog structure
 
 ## Available Skills
 
@@ -35,6 +36,7 @@ Reusable kit references:
 - `/plan-frontend-ticket [ID]` -> Generate a frontend implementation plan with AC-to-implementation and AC-to-validation mapping
 - `/resolve-ticket-workspace [ID]` -> Resolve the current local `.ai-specs` workspace from input or branch
 - `/validate-impl-spec [ID or path]` -> Run the structural validator for implementation specs
+- `sh .sdd-kit/tools/validate-changelog.sh [ID or path]` -> Run the structural validator for ticket changelog evidence
 - `/close-ticket-workflow [ID]` -> Apply the correct closure order before generating PR content
 - `/verify-ac-enforcement` -> Verify that the kit still blocks AC coverage regressions
 - `/develop-backend @[plan].md` -> Implement following the backend plan
@@ -49,11 +51,16 @@ Skill sources live under `.sdd-kit/ai-specs/skills/`.
 - `TICKET` is the canonical ticket/work-item key for the consuming project; resolve ambiguous shorthand before creating artifacts
 - Before planning, inspect the parent work item and linked child work items, subtasks, checklist items, or implementation tasks exposed by the consuming project's tracker
 - Plans and companion specs must include `Related Work Items`; every in-scope child work item with technical requirements must map to an AC, validation item, or documented blocker
+- Planning artifacts must use the exact required level-2 headings from `implementation-spec-template.md`; do not rename sections to synonyms such as `AC-to-Implementation Mapping`, `Delivery Roadmap`, or `Completion Evidence Template`
+- In `Related Work Items`, `Scope Decision` must be exactly `In scope`, `Out of scope`, `No implementation impact`, or `Blocked`
+- In planning-stage `Completion Evidence`, use validator statuses only: `Covered`, `Partial`, or `Not Covered`; unimplemented ACs should be `Not Covered` with evidence like `Pending implementation after approval.`
 - Generate `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md` or `{TICKET}-impl-frontend.md`
 - Generate `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`
 - Record the SDD kit version from `.sdd-kit/VERSION` in generated specs
 - Create `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md` before implementation
+- Changelog files are append-only execution evidence, not planning summaries; follow `ai-specs/specs/changelog-template.md` exactly and never rewrite previous changelog entries
 - Run `/validate-impl-spec [TICKET]` after planning
+- Run `sh .sdd-kit/tools/validate-changelog.sh [TICKET]` after planning and before PR reporting
 - Run `sh .sdd-kit/tools/validate-pr-content.sh [TICKET]` after generating `PR-{TICKET}.md`
 - Stop after planning and ask for `approve`, `change`, or `deny`; implementation requires explicit `approve`
 - Always follow TDD: RED -> GREEN -> REFACTOR

@@ -29,6 +29,7 @@ Read, when present:
 - enriched story from `.ai-specs/changes/{TICKET}/`
 - completion evidence and validation output from `.ai-specs/changes/{TICKET}/`
 - relevant project docs, ADRs, glossary, or standards referenced by the spec
+- `.sdd-kit/ai-specs/specs/changelog-template.md` or `ai-specs/specs/changelog-template.md` when changelog structure is unclear
 
 If the ticket cannot be resolved from input, branch, or local `.ai-specs` state, stop and report the missing input.
 
@@ -90,4 +91,6 @@ Ready | Not ready
 - Do not treat "tests passed" as AC evidence unless the relevant test/check is named.
 - If evidence is missing, mark the AC as `Partial`, `Not Covered`, or `Blocked`.
 - Use the changelog as primary implementation evidence when present.
+- Treat changelog sections that look like planning summaries, design documents, QA reports, PR reports, or AC matrices as invalid evidence unless they also follow the required changelog entry format.
+- Do not rewrite the changelog during QA; report malformed changelog evidence as a gap.
 - Output in English.

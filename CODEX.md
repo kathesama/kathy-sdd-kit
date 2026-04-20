@@ -26,6 +26,7 @@ read the relevant framework files from the submodule:
 - `.sdd-kit/docs/tool-runtime.md` when shell invocation or Windows runtime is unclear
 - `.sdd-kit/docs/roles-and-responsibilities.md` when role ownership is unclear
 - `.sdd-kit/docs/tracker-policy.md` when project ticket policy is not defined
+- `.sdd-kit/ai-specs/specs/changelog-template.md` when creating or appending ticket changelog evidence
 
 ## Project Context Precedence
 
@@ -53,6 +54,15 @@ instructions.
 - Plans and companion specs must include `Related Work Items`. Every in-scope
   child work item with technical requirements must map to an AC, validation
   item, or documented blocker.
+- Planning artifacts must use the exact required level-2 headings from
+  `implementation-spec-template.md`; do not rename sections to synonyms such as
+  `AC-to-Implementation Mapping`, `Delivery Roadmap`, or
+  `Completion Evidence Template`.
+- In `Related Work Items`, `Scope Decision` must be exactly `In scope`,
+  `Out of scope`, `No implementation impact`, or `Blocked`.
+- In planning-stage `Completion Evidence`, use validator statuses only:
+  `Covered`, `Partial`, or `Not Covered`; unimplemented ACs should be
+  `Not Covered` with evidence like `Pending implementation after approval.`
 - Kit tools are POSIX `sh` scripts. Invoke them with `sh`; on Windows, use Git
   Bash or Git for Windows `sh.exe` if `sh` is not on `PATH`.
 - Keep all ticket artifacts under `.ai-specs/changes/{TICKET}/`.
@@ -63,8 +73,13 @@ instructions.
   - `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md` or `{TICKET}-impl-frontend.md`
   - `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md`
   - `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md`
+- Changelog files are append-only execution evidence, not planning summaries.
+  Follow `ai-specs/specs/changelog-template.md` exactly and never rewrite
+  previous changelog entries.
 - Record the SDD kit version from `.sdd-kit/VERSION` in generated implementation specs.
 - Run `validate-impl-spec.sh {TICKET}` after planning artifacts are written.
+- Run `validate-changelog.sh {TICKET}` after planning artifacts are written
+  and before using changelog evidence for QA or PR reporting.
 - Run `validate-pr-content.sh {TICKET}` after generating `PR-{TICKET}.md`.
 - After planning validation, stop and ask for `approve`, `change`, or `deny`.
 - Do not write tests, production code, migrations, or config until the user

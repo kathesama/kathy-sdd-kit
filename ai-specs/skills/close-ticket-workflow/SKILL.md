@@ -28,11 +28,18 @@ sh .sdd-kit/tools/validate-impl-spec.sh [ticket-key-or-impl-plan-path]
 ```
 
 3. Review `Completion Evidence` in the implementation spec.
-4. If any AC is `Partial` or `Not Covered`, surface that explicitly.
-5. Run `/qa-ticket [ticket-key-or-impl-spec-path]` to validate implementation evidence against the story/spec.
-6. Run `/pr-code-review [ticket-key-or-impl-spec-path]` to review correctness, risk, security, and PR readiness.
-7. Generate `PR-{TICKET}.md` from the current `.ai-specs/changes/{TICKET}/` state.
-8. Validate generated PR content:
+4. Validate `{TICKET}-CHANGELOG.md`:
+
+```bash
+sh .sdd-kit/tools/validate-changelog.sh [ticket-key-or-changelog-path]
+```
+
+Malformed planning summaries or AC matrices are not valid implementation evidence.
+5. If any AC is `Partial` or `Not Covered`, surface that explicitly.
+6. Run `/qa-ticket [ticket-key-or-impl-spec-path]` to validate implementation evidence against the story/spec.
+7. Run `/pr-code-review [ticket-key-or-impl-spec-path]` to review correctness, risk, security, and PR readiness.
+8. Generate `PR-{TICKET}.md` from the current `.ai-specs/changes/{TICKET}/` state.
+9. Validate generated PR content:
 
 ```bash
 sh .sdd-kit/tools/validate-pr-content.sh [ticket-key]
@@ -45,5 +52,6 @@ sh .sdd-kit/tools/validate-pr-content.sh [ticket-key]
 - Do not say the ticket is ready if QA verdict is `Fail` or `Blocked`
 - Do not hide unresolved `pr-code-review` findings
 - Do not hide `Partial` or `Not Covered` acceptance criteria in the PR content
+- Do not use malformed changelog sections as implementation evidence
 - Prefer the local `.ai-specs` workspace over commit history as the source of truth
 - If backend and frontend implementation specs both exist, choose the one relevant to the current closure step or state the split explicitly

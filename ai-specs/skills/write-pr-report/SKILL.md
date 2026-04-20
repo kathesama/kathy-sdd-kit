@@ -118,6 +118,7 @@ Fix any validation failure before reporting the PR content as ready.
 - Resolve the current ticket from the provided file, or from the active branch/ticket key when no file is provided
 - If `{TICKET}-CHANGELOG.md` is missing, state that the PR report is based on the remaining ticket folder evidence
 - Read every changelog subtask section and merge duplicate file entries into a single Changes section
+- Ignore changelog content that is not in the required subtask-entry format from `ai-specs/specs/changelog-template.md`; report malformed changelog sections as a source evidence gap
 - Use changelog `Summary` and `Notes` sections to explain intent, risks, and follow-up work
 - Use changelog `Commit message` entries only for traceability, not as PR summary prose
 - Do not present suggested commit messages as real commits. Use the template's `Suggested commit messages` field unless real commit hashes are available.

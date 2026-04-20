@@ -196,6 +196,70 @@ Acceptance criteria:
 - one generic validation line covers all ACs
 - no one can tell how recovery or error visibility will be checked
 
+## Scenario 7: Planner uses human-friendly headings that the validator rejects
+
+### Input story
+
+```text
+As a platform engineer, I want per-user external tokens in OpenBao so that action tools can fetch delegated OAuth credentials safely.
+
+Acceptance criteria:
+1. User token namespace is documented.
+2. Missing credentials return authorization-style failures.
+3. Cross-user token access is blocked.
+```
+
+### Pressure
+
+- planner writes `AC-to-Implementation Mapping` instead of `Implementation Mapping`
+- planner writes `Delivery Roadmap` instead of `Delivery Plan`
+- planner writes `Completion Evidence Template` with `[Pending]` statuses
+- planner uses `Foundation` or `Reference` as `Related Work Items` scope decisions
+
+### Expected pass
+
+- both `{TICKET}-impl-backend.md` / `{TICKET}-impl-frontend.md` and `{TICKET}-implementation-spec.md` use the exact validator headings
+- `Related Work Items` includes the parent ticket and uses only `In scope`, `Out of scope`, `No implementation impact`, or `Blocked`
+- planning-stage `Completion Evidence` uses `Not Covered` with explicit pending-approval evidence
+- `validate-impl-spec.sh {TICKET}` passes before the approval gate is presented
+
+### Expected fail
+
+- validator fails on missing section names or invalid scope decisions
+- completion evidence uses `[Pending]`, `Todo`, `Done`, `N/A`, `-`, or empty evidence
+- the agent asks for approval even though `validate-impl-spec.sh` failed
+
+## Scenario 8: Changelog becomes a second plan
+
+### Input story
+
+```text
+As a tool service, I want user-token lookup helpers so that action tools can fetch delegated credentials.
+
+Acceptance criteria:
+1. Token lookup is scoped by user.
+2. Raw tokens are never logged.
+```
+
+### Pressure
+
+- planner creates a long changelog with `Key Planning Decisions`, `Changes by Component`, `Acceptance Criteria Mapping`, and `Next Steps`
+- changelog says `Status: Ready for Implementation Approval`
+- changelog uses design checkmarks or planned component changes as if they were implementation evidence
+
+### Expected pass
+
+- changelog has only the ticket header and one factual planning entry during planning
+- each entry follows the required sections: `Status`, `Commit message`, `Files created`, `Files modified`, `Summary`, `Notes`
+- previous changelog entries are not rewritten
+- planned work is not marked as implemented
+
+### Expected fail
+
+- changelog is used as a narrative plan, design summary, QA report, PR report, or AC matrix
+- changelog entries omit required subsections
+- QA or PR report treats malformed changelog text as implementation evidence
+
 ## Pass criteria for the kit
 
 The kit is behaving correctly when:

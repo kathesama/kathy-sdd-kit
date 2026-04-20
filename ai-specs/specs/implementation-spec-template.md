@@ -15,7 +15,9 @@
 
 Rules:
 
+- The parent ticket itself must appear as a row.
 - Include the parent work item and any linked child work items, subtasks, checklist items, or implementation tasks.
+- `Scope Decision` must be exactly one of: `In scope`, `Out of scope`, `No implementation impact`, `Blocked`.
 - In-scope child work items that refine behavior must map to an AC, validation item, or documented blocker.
 - Administrative-only child work items may be listed with `No implementation impact`.
 - If a child work item is out of scope, record the explicit reason.
@@ -99,7 +101,7 @@ Rules:
 
 | AC | Status | Evidence |
 |---|---|---|
-| AC-01 | Covered |  |
+| AC-01 | Not Covered | Pending implementation after approval. |
 
 Allowed statuses:
 
@@ -110,4 +112,24 @@ Allowed statuses:
 Rules:
 
 - Do not mark the task done unless every explicit AC has final evidence
+- During planning, use `Not Covered` with evidence such as `Pending implementation after approval.`
+- Do not use unchecked placeholders such as `[Pending]`, `Todo`, `Done`, `N/A`, or `-`
 - If an AC is `Partial` or `Not Covered`, record the blocker or explicit decision
+
+## Validator Contract
+
+The structural validator matches headings and enum values literally. Do not
+rename these sections or replace them with synonyms.
+
+Required level-2 sections:
+
+1. `## Related Work Items`
+2. `## Acceptance Criteria`
+3. `## Implementation Mapping`
+4. `## Validation Plan`
+5. `## Delivery Plan`
+6. `## Execution Notes for Implementer`
+7. `## Completion Evidence`
+
+Do not use alternate section names such as `AC-to-Implementation Mapping`,
+`Delivery Roadmap`, `Completion Evidence Template`, or `Related Tickets`.
