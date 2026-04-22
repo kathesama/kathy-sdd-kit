@@ -158,28 +158,58 @@ When updating the `.sdd-kit` submodule, review the consumer entrypoints too.
 
 Recommended update checklist:
 
-1. Update the submodule or cloned `.sdd-kit` folder.
-2. Review `.sdd-kit/AGENTS.md` against the repository root `AGENTS.md`.
-3. If the root `AGENTS.md` has no project-specific overrides, refresh it:
+1. Update the submodule pointer in the consuming repository:
+
+   ```bash
+   git submodule update --remote .sdd-kit
+   git status --short
+   git diff --submodule
+   ```
+
+   If the consuming repository pins the kit to a specific commit:
+
+   ```bash
+   git -C .sdd-kit fetch
+   git -C .sdd-kit checkout <kit-commit>
+   git status --short
+   git diff --submodule
+   ```
+
+   Commit the resulting `.sdd-kit` pointer change in the consuming repository
+   according to that repository's normal review process.
+
+2. If the kit was installed as a direct clone instead of a submodule, update it:
+
+   ```bash
+   git -C .sdd-kit pull --ff-only
+   ```
+
+3. Review `.sdd-kit/AGENTS.md` against the repository root `AGENTS.md`.
+4. If the root `AGENTS.md` has no project-specific overrides, refresh it:
 
    ```bash
    cp .sdd-kit/AGENTS.md ./AGENTS.md
    ```
 
-4. If the root `AGENTS.md` has project-specific overrides, merge the kit changes
+5. If the root `AGENTS.md` has project-specific overrides, merge the kit changes
    manually and preserve the local override sections.
-5. Do not replace root `CLAUDE.md`. Confirm it still includes:
+6. Do not replace root `CLAUDE.md`. Confirm it still includes:
 
    ```md
    @.sdd-kit/CLAUDE.md
    ```
 
-6. If the project uses PR report generation, confirm
+7. If the project uses PR report generation, confirm
    `.github/pull_request_template.md` exists or intentionally remains absent.
 
 The kit does not provide an automatic entrypoint updater by default because
 consumer repositories may customize `AGENTS.md`. Blind replacement can remove
 local ticket policy, security, workflow, or repository-specific rules.
+
+Do not make durable framework changes inside a consuming repository's mounted
+`.sdd-kit/` folder. Make those changes in the `kathy-sdd-kit` source repository,
+publish/review them there, and then update each consuming repository's
+submodule pointer.
 
 ## Agent entrypoints
 

@@ -138,7 +138,40 @@ The pilot should test the workflow, not just the code.
 
 ## Updating The Kit
 
-When updating `.sdd-kit`, review root entrypoints:
+When updating `.sdd-kit`, first move the consuming repository to the desired
+kit revision, then review root entrypoints.
+
+For projects that installed the kit as a submodule:
+
+```bash
+git submodule update --remote .sdd-kit
+git status --short
+git diff --submodule
+```
+
+If the project pins the kit to a specific commit instead of the remote branch,
+update it explicitly:
+
+```bash
+git -C .sdd-kit fetch
+git -C .sdd-kit checkout <kit-commit>
+git status --short
+git diff --submodule
+```
+
+Then commit the submodule pointer change in the consuming repository according
+to that repository's normal review process. Do not edit files directly inside
+`.sdd-kit/` in the consuming repository unless the task is explicitly to test or
+debug the kit. Make durable kit changes in the `kathy-sdd-kit` source
+repository, then update the submodule pointer here.
+
+For projects that installed the kit as a direct clone instead of a submodule:
+
+```bash
+git -C .sdd-kit pull --ff-only
+```
+
+After the kit revision is updated, review root entrypoints:
 
 1. Review `.sdd-kit/AGENTS.md` against root `AGENTS.md`.
 2. Preserve project-specific override sections.
