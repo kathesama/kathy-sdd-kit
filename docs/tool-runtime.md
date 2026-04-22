@@ -10,7 +10,7 @@ the SDD gate.
 |---|---|
 | macOS / Linux | `sh .sdd-kit/tools/<tool>.sh ...` |
 | Git Bash on Windows | `sh .sdd-kit/tools/<tool>.sh ...` |
-| PowerShell with Git for Windows | `& 'C:\Program Files\Git\bin\sh.exe' .sdd-kit/tools/<tool>.sh ...` |
+| PowerShell with Git for Windows | Prefer `& 'C:\Program Files\Git\bin\sh.exe' .sdd-kit/tools/<tool>.sh ...` when stdout/stderr must be captured |
 | WSL | `sh .sdd-kit/tools/<tool>.sh ...` from the WSL-mounted repository path |
 
 ## Required Tools
@@ -40,13 +40,20 @@ sh tools/validate-pr-content.sh {TICKET}
 
 ## Windows Notes
 
-Do not rely on direct script execution from PowerShell:
+PowerShell may be able to execute `.sh` scripts directly when the file
+association is configured:
 
 ```powershell
 .\.sdd-kit\tools\validate-impl-spec.sh JAP-160
 ```
 
-Use Git Bash or call Git's `sh.exe` explicitly:
+This can be convenient for local use, and the process exit code may still be
+valid. However, stdout/stderr can be routed through the associated application
+instead of the current PowerShell pipeline, which makes tool output hard to
+capture in agents, CI, or wrapper scripts.
+
+When output must be captured reliably, use Git Bash or call Git's `sh.exe`
+explicitly:
 
 ```powershell
 & 'C:\Program Files\Git\bin\sh.exe' .sdd-kit/tools/validate-impl-spec.sh JAP-160
@@ -59,3 +66,24 @@ where.exe sh
 ```
 
 or open Git Bash and run the normal `sh .sdd-kit/tools/...` command.
+
+### CRLF Troubleshooting
+
+The kit keeps shell scripts with LF line endings. If a consuming repository or
+Windows checkout converts `.sh` files to CRLF, explicit Bash execution can fail
+with errors such as:
+
+```text
+/usr/bin/env: 'sh\r': No such file or directory
+set: -\r: invalid option
+```
+
+Normalize line endings in the checkout, or use an in-memory fallback when you
+need to inspect output without editing files:
+
+```powershell
+bash.exe -lc "cd /mnt/d/projects/example && tr -d '\r' < .sdd-kit/tools/validate-impl-spec.sh | bash -s JAP-160"
+```
+
+Use the correct WSL path for the repository. This fallback is diagnostic only;
+the preferred fix is keeping `.sh` files checked out with LF.
