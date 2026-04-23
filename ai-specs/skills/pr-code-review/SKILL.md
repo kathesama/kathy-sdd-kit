@@ -44,6 +44,26 @@ Prioritize findings in this order:
 6. Architecture, contract, or maintainability risks
 7. PR template/evidence gaps
 
+## Mandatory Regression Review
+
+Code review must challenge the implementation plan, not only verify compliance
+with it. Treat the plan as a hypothesis and inspect the actual diff for
+behavior that may regress compared with the previous implementation.
+
+For every changed behavior, ask:
+
+- What used to succeed that could now fail?
+- Did the change alter batching, streaming, pagination, chunking, tokenization, or cleanup loop boundaries?
+- Did the change materialize a full input set that was previously processed incrementally?
+- Did the change add CPU/GPU work, extra inference, model/tokenizer loads, blocking I/O, or N+1 calls?
+- Did an observability-only change add metric cardinality, side-effect timing, or failure modes that can break the request path?
+- Did a side-channel or internal contract change accidentally leak into a public API, persisted schema, or event schema?
+
+When a performance or side-effect AC claims "no meaningful degradation",
+"no external contract change", or similar, require evidence that covers memory,
+batching/streaming behavior, and side-effect failure timing, not just the happy
+path metric or response assertion.
+
 ## Security Impact Review
 
 Check whether the change touches:
@@ -80,6 +100,7 @@ Verify that:
 - risks and mitigations are documented
 - validation commands are recorded or gaps are stated
 - generated PR content does not hide `Partial`, `Not Covered`, or `Blocked` ACs
+- performance/observability claims have regression evidence or explicit risk notes for memory, batching, cardinality, and side-effect timing
 
 Run the PR content validator when `PR-{TICKET}.md` exists:
 
@@ -127,5 +148,7 @@ Ready | Not ready
 - Findings must be actionable and evidence-backed.
 - Do not approve readiness when blocking findings remain.
 - Do not duplicate QA; reference QA results and focus on review risks.
+- Do not approve solely because the implementation follows the plan; plans may contain incomplete assumptions.
+- Treat full-input materialization, lost batching/streaming behavior, unbounded loops, and metric cardinality growth as review risks even when tests pass.
 - Do not invent tests, CI results, or ticket links.
 - Output in English.

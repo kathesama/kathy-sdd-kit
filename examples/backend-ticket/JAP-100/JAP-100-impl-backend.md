@@ -5,7 +5,7 @@
 - **Story / Ticket**: JAP-100
 - **Objective**: Add a backend audit event publisher for completed exports.
 - **Related Technical Contract**: Example only.
-- **SDD Kit Version**: 0.4.0
+- **SDD Kit Version**: 0.4.1
 
 ## Related Work Items
 

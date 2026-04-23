@@ -5,7 +5,7 @@
 - **Story / Ticket**: PRX-200
 - **Objective**: Provide a valid PR content example for the SDD kit.
 - **Related Technical Contract**: Example only.
-- **SDD Kit Version**: 0.4.0
+- **SDD Kit Version**: 0.4.1
 
 ## Acceptance Criteria
 

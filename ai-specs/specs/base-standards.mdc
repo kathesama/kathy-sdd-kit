@@ -63,6 +63,20 @@ Example: `feat(auth): add JWT refresh token endpoint`
   - **Not Covered** with an explicit blocker or decision recorded
 - Generic claims such as "ticket complete" or "tests passed" are not valid substitutes for per-AC evidence
 
+## Regression Review Contract
+
+- QA and code review must treat the implementation plan as a hypothesis, not proof.
+- Final QA/review must include a regression-oriented pass over the actual diff and changed behavior.
+- For every changed behavior, compare the new path against the previous path and ask what could now fail that used to succeed.
+- For performance, observability, and side-effect-only changes, review all resource dimensions affected by the implementation, not only the named AC. At minimum check:
+  - memory and materialization of large inputs
+  - batching, streaming, pagination, and backpressure behavior
+  - latency and extra CPU/GPU inference
+  - metric label cardinality and side-effect timing
+  - retries, idempotency, and partial failure behavior when relevant
+- If an AC says a change is "non-degrading", "transparent", "side-channel only", "no contract change", or similar, QA/review must require either targeted evidence or an explicit risk note covering the prior behavior that could regress.
+- Tests should include at least one boundary or scale-shaped case when the implementation changes batching, streaming, pagination, chunking, tokenization, query limits, retry loops, or cleanup batch size.
+
 ## Required Implementation Spec Sections
 
 Every Implementation Spec must include these sections:

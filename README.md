@@ -3,7 +3,7 @@
 Portable **Spec-Driven Development (SDD)** kit for personal projects.
 Based on the [LIDR Academy](https://github.com/LIDR-academy/manual-SDD) framework.
 
-Current kit version: `0.4.0` (`VERSION`).
+Current kit version: `0.4.1` (`VERSION`).
 
 ## What is included?
 
@@ -35,8 +35,8 @@ ai-specs/                    <- canonical source of truth
     resolve-ticket-workspace/ <- resolve current ticket workspace paths
     validate-impl-spec/      <- run structural validation for implementation specs
     validate-pr-content/     <- validate generated PR content against local evidence
-    qa-ticket/               <- validate AC evidence, tests, risks, and readiness
-    pr-code-review/          <- pre-PR review for correctness, security, CI, and readiness
+    qa-ticket/               <- validate AC evidence, regression risks, tests, and readiness
+    pr-code-review/          <- pre-PR review for correctness, regressions, security, CI, and readiness
     close-ticket-workflow/   <- correct closure order before PR
     verify-ac-enforcement/   <- kit self-check for AC coverage regressions
     write-pr-report/         <- /write-pr-report
@@ -267,7 +267,7 @@ The kit source has a `VERSION` file. Plans and implementation specs should
 record the SDD kit version used to create them:
 
 ```md
-- **SDD Kit Version**: 0.4.0
+- **SDD Kit Version**: 0.4.1
 ```
 
 This helps teams diagnose behavior differences when repositories update the
@@ -331,8 +331,8 @@ hashes only when they are available.
 6. /validate-impl-spec [TICKET]       -> validate AC mapping in plan and companion spec
 7. Approval gate                       -> stop and ask approve/change/deny
 8. /develop-backend @[plan].md         -> only after explicit approve
-9. /qa-ticket [ID or IMPL].md          -> validate AC evidence, tests, and risks
-10. /pr-code-review [ID or IMPL].md     -> review correctness, security, CI/readiness, and PR evidence
+9. /qa-ticket [ID or IMPL].md          -> validate AC evidence, regression risks, tests, and readiness
+10. /pr-code-review [ID or IMPL].md     -> review correctness, regressions, security, CI/readiness, and PR evidence
 11. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
 12. /validate-pr-content [TICKET]      -> verify PR content does not invent evidence
 13. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
@@ -386,8 +386,8 @@ entry, or documented blocker before the approval gate.
 | `/resolve-ticket-workspace [ID]` | Resolve local `.ai-specs` paths from input or branch |
 | `/validate-impl-spec [ID or path]` | Validate structural AC coverage of the implementation plan and companion spec |
 | `/validate-pr-content [ID or path]` | Validate generated PR content against local SDD evidence |
-| `/qa-ticket [ID or path]` | Validate implementation evidence against story/spec acceptance criteria |
-| `/pr-code-review [ID or path]` | Review local changes for correctness, security, tests, CI/readiness, and PR evidence |
+| `/qa-ticket [ID or path]` | Validate implementation evidence against story/spec acceptance criteria, including regression-oriented risks |
+| `/pr-code-review [ID or path]` | Review local changes for correctness, regressions, security, tests, CI/readiness, and PR evidence |
 | `/close-ticket-workflow [ID]` | Apply the correct end-of-ticket validation and PR sequence |
 | `/verify-ac-enforcement` | Validate that the kit still enforces AC coverage end-to-end |
 | `/develop-backend @[plan].md` | Implement following the backend plan |

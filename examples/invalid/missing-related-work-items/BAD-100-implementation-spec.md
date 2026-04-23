@@ -5,7 +5,7 @@
 - **Story / Ticket**: BAD-100
 - **Objective**: Invalid fixture missing Related Work Items.
 - **Related Technical Contract**: Example only.
-- **SDD Kit Version**: 0.4.0
+- **SDD Kit Version**: 0.4.1
 
 ## Acceptance Criteria
 

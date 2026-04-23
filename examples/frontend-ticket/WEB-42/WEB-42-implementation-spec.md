@@ -5,7 +5,7 @@
 - **Story / Ticket**: WEB-42
 - **Objective**: Add an accessible export status banner.
 - **Related Technical Contract**: Example only.
-- **SDD Kit Version**: 0.4.0
+- **SDD Kit Version**: 0.4.1
 
 ## Related Work Items
 

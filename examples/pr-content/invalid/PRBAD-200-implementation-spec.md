@@ -5,7 +5,7 @@
 - **Story / Ticket**: PRBAD-200
 - **Objective**: Provide an invalid PR content example for the SDD kit.
 - **Related Technical Contract**: Example only.
-- **SDD Kit Version**: 0.4.0
+- **SDD Kit Version**: 0.4.1
 
 ## Acceptance Criteria
 

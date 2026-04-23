@@ -39,8 +39,28 @@ If the ticket cannot be resolved from input, branch, or local `.ai-specs` state,
 2. Read every explicit acceptance criterion from the story/spec.
 3. Compare each AC against implementation mapping, completion evidence, changelog entries, and tests.
 4. Verify that validation evidence is concrete: command output, test name, screenshot, manual check, or reviewer-observable behavior.
-5. Identify partial coverage, missing tests, missing evidence, unaddressed risks, and follow-up work.
-6. Produce a QA report in the ticket folder.
+5. Run a regression-oriented pass over the changed behavior, independent of the plan's assumptions.
+6. Identify partial coverage, missing tests, missing evidence, unaddressed risks, and follow-up work.
+7. Produce a QA report in the ticket folder.
+
+## Regression QA Pass
+
+QA must verify not only "does this match the plan?" but also "what did this plan fail to consider?"
+
+For each changed behavior, compare the previous and new execution paths and check for regressions in:
+
+- memory and large-input materialization
+- batching, streaming, pagination, and backpressure
+- latency, CPU/GPU work, and extra inference/model calls
+- metric label cardinality and side-effect ordering
+- idempotency, retries, partial failures, and race windows when relevant
+- unchanged public API, persisted schema, event schema, and response contracts
+
+When the implementation changes batching, streaming, pagination, tokenization,
+chunking, cleanup loops, retry loops, query limits, or side-effect-only
+instrumentation, require at least one targeted boundary/scale-shaped test or
+record a concrete residual risk. Do not mark `Pass` solely because the plan's
+expected tests pass.
 
 ## Verdicts
 
@@ -89,6 +109,8 @@ Ready | Not ready
 - Do not mark `Pass` without concrete evidence for every explicit AC.
 - Do not merge distinct ACs into one QA row.
 - Do not treat "tests passed" as AC evidence unless the relevant test/check is named.
+- Do not let the implementation plan's proposed approach suppress regression review; plans can contain incomplete assumptions.
+- Do not mark performance/observability side-channel changes as `Pass` until memory, batching, cardinality, and side-effect timing have been considered.
 - If evidence is missing, mark the AC as `Partial`, `Not Covered`, or `Blocked`.
 - Use the changelog as primary implementation evidence when present.
 - Treat changelog sections that look like planning summaries, design documents, QA reports, PR reports, or AC matrices as invalid evidence unless they also follow the required changelog entry format.
