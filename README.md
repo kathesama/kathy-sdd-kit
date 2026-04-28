@@ -8,8 +8,10 @@ Current kit version: `0.4.1` (`VERSION`).
 ## What is included?
 
 - Development standards: base, backend, and frontend
+- Agent behavior standards for assumption management, simplicity, surgical changes, and verification discipline
+- Optional engineering rule packs for architecture, DDD, enterprise patterns, refactoring, production readiness, and data-intensive work
 - Specialized agents for Claude Code, Cursor, and Codex
-- Reusable skills: `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`, `resolve-ticket-workspace`, `validate-impl-spec`, `qa-ticket`, `pr-code-review`, `close-ticket-workflow`, `verify-ac-enforcement`, and `write-pr-report`
+- Reusable skills: `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`, `select-engineering-rules`, `agent-work-discipline`, `resolve-ticket-workspace`, `validate-impl-spec`, `qa-ticket`, `pr-code-review`, `close-ticket-workflow`, `verify-ac-enforcement`, and `write-pr-report`
 - Acceptance criteria enforcement as a verifiable delivery contract
 - Per-project architecture context template
 - Structure ready to import into any project
@@ -20,9 +22,12 @@ Current kit version: `0.4.1` (`VERSION`).
 ai-specs/                    <- canonical source of truth
   specs/
     base-standards.mdc       <- general rules
+    agent-behavior-standards.mdc <- agent work discipline for scoped, simple, verifiable changes
     backend-standards.mdc    <- Java/Spring Boot standards
     frontend-standards.mdc   <- React/TypeScript standards
     implementation-spec-template.md <- canonical plan template
+  rules/
+    engineering/             <- optional on-demand engineering rule packs
   .agents/
     backend-agent.md
     frontend-agent.md
@@ -32,6 +37,8 @@ ai-specs/                    <- canonical source of truth
     enrich-user-story/       <- /enrich-us
     plan-backend-ticket/     <- /plan-backend-ticket
     plan-frontend-ticket/    <- /plan-frontend-ticket
+    select-engineering-rules/ <- choose task-scoped rule packs
+    agent-work-discipline/   <- baseline agent behavior discipline
     resolve-ticket-workspace/ <- resolve current ticket workspace paths
     validate-impl-spec/      <- run structural validation for implementation specs
     validate-pr-content/     <- validate generated PR content against local evidence
@@ -89,6 +96,8 @@ Recommended usage:
 
 - `.sdd-kit/` remains the shared framework and source of truth
 - `.ai-specs/` is local working state for the current repository
+- `agent-behavior-standards.mdc` is always-on discipline for scoped, simple, verifiable agent work
+- `ai-specs/rules/engineering/` rule packs are optional and loaded only when selected for the task
 - `{TICKET}` is the canonical ticket/work-item key for the consuming project
 - Examples: `JAP-160`, `ENG-123`, `GH-42`, `160`, `task-160`
 - If a user gives ambiguous shorthand, resolve it using the consuming project's ticket policy before writing artifacts
@@ -110,6 +119,7 @@ be invoked explicitly with `sh`:
 sh .sdd-kit/tools/resolve-ticket-workspace.sh {TICKET}
 sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
 sh .sdd-kit/tools/validate-pr-content.sh {TICKET}
+sh .sdd-kit/tools/validate-engineering-rules.sh
 ```
 
 On Windows, Git for Windows provides `sh.exe` through Git Bash. Avoid relying on
@@ -327,16 +337,17 @@ hashes only when they are available.
 2. Create TC in Confluence            -> Technical Contract approved
 3. /resolve-ticket-workspace [TICKET] -> resolve canonical ticket paths
 4. Inspect parent + child work items   -> map subtasks/checklists into scope, ACs, validation, or blockers
-5. /plan-backend-ticket [TICKET]      -> generate plan/spec/changelog in .ai-specs/changes/{TICKET}/
-6. /validate-impl-spec [TICKET]       -> validate AC mapping in plan and companion spec
-7. Approval gate                       -> stop and ask approve/change/deny
-8. /develop-backend @[plan].md         -> only after explicit approve
-9. /qa-ticket [ID or IMPL].md          -> validate AC evidence, regression risks, tests, and readiness
-10. /pr-code-review [ID or IMPL].md     -> review correctness, regressions, security, CI/readiness, and PR evidence
-11. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
-12. /validate-pr-content [TICKET]      -> verify PR content does not invent evidence
-13. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
-14. PR -> Review -> Merge              -> feature published
+5. /select-engineering-rules [context] -> choose optional task-scoped technical lenses
+6. /plan-backend-ticket [TICKET]      -> generate plan/spec/changelog in .ai-specs/changes/{TICKET}/
+7. /validate-impl-spec [TICKET]       -> validate AC mapping in plan and companion spec
+8. Approval gate                       -> stop and ask approve/change/deny
+9. /develop-backend @[plan].md         -> only after explicit approve
+10. /qa-ticket [ID or IMPL].md          -> validate AC evidence, regression risks, tests, and readiness
+11. /pr-code-review [ID or IMPL].md     -> review correctness, regressions, security, CI/readiness, and PR evidence
+12. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
+13. /validate-pr-content [TICKET]      -> verify PR content does not invent evidence
+14. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
+15. PR -> Review -> Merge              -> feature published
 ```
 
 ## Planning Approval Gate
@@ -383,6 +394,8 @@ entry, or documented blocker before the approval gate.
 | `/enrich-us [desc]` | Enrich a user story |
 | `/plan-backend-ticket [ID]` | Generate a backend implementation plan |
 | `/plan-frontend-ticket [ID]` | Generate a frontend implementation plan |
+| `/select-engineering-rules [context]` | Select optional engineering rule packs for planning, QA, or review |
+| `/agent-work-discipline` | Apply baseline agent behavior discipline for scoped, simple, verifiable changes |
 | `/resolve-ticket-workspace [ID]` | Resolve local `.ai-specs` paths from input or branch |
 | `/validate-impl-spec [ID or path]` | Validate structural AC coverage of the implementation plan and companion spec |
 | `/validate-pr-content [ID or path]` | Validate generated PR content against local SDD evidence |
@@ -404,6 +417,19 @@ entry, or documented blocker before the approval gate.
 - The PR report must include status and evidence for every acceptance criterion
 - Checked PR validation and CI items must have matching evidence in the local ticket folder
 
+## Agent Behavior and Engineering Rule Packs
+
+`agent-behavior-standards.mdc` is the baseline behavior layer for agents. It
+requires agents to surface material assumptions, avoid speculative work, keep
+changes surgical, and verify before claiming completion.
+
+Engineering rule packs live under `ai-specs/rules/engineering/` and are loaded
+on demand through `select-engineering-rules`. They provide focused technical
+lenses for Clean Architecture, Domain-Driven Design, Patterns of Enterprise
+Application Architecture, Refactoring, Release It!, and Designing
+Data-Intensive Applications. They do not override acceptance criteria, ADRs, or
+project-local instructions.
+
 ## Examples
 
 Reference examples live under `examples/`:
@@ -414,6 +440,7 @@ Reference examples live under `examples/`:
 - `examples/pr-content/invalid/`
 - `examples/invalid/missing-related-work-items/`
 - `examples/review-fix-ticket/JAP-160/`
+- `examples/engineering-rules/JAP-210-rule-selection.md`
 
 They are documentation examples, not local ticket artifacts. Do not copy them
 into `.ai-specs/changes/` unless adapting them for a real ticket.
@@ -430,3 +457,5 @@ to the kit repository itself; consuming projects do not need to copy it.
 - [LIDR manual-SDD](https://github.com/LIDR-academy/manual-SDD)
 - [claude-mem](https://github.com/thedotmack/claude-mem)
 - [superpowers](https://github.com/obra/superpowers)
+- [agent-rules-books](https://github.com/ciembor/agent-rules-books)
+- [andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills)

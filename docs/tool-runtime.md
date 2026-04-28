@@ -28,6 +28,7 @@ Git for Windows provides the required shell and utilities through Git Bash.
 sh .sdd-kit/tools/resolve-ticket-workspace.sh {TICKET}
 sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
 sh .sdd-kit/tools/validate-pr-content.sh {TICKET}
+sh .sdd-kit/tools/validate-engineering-rules.sh
 ```
 
 When editing the kit repository itself, run from the kit root:
@@ -36,6 +37,7 @@ When editing the kit repository itself, run from the kit root:
 sh tools/resolve-ticket-workspace.sh {TICKET}
 sh tools/validate-impl-spec.sh {TICKET}
 sh tools/validate-pr-content.sh {TICKET}
+sh tools/validate-engineering-rules.sh
 ```
 
 ## Windows Notes

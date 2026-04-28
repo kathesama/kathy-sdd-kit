@@ -18,6 +18,11 @@ jobs:
           sh -n tools/resolve-ticket-workspace.sh
           sh -n tools/validate-impl-spec.sh
           sh -n tools/validate-pr-content.sh
+          sh -n tools/validate-engineering-rules.sh
+
+      - name: Validate engineering rules and agent behavior standards
+        run: |
+          sh tools/validate-engineering-rules.sh
 
       - name: Validate implementation spec examples
         run: |

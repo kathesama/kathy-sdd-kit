@@ -29,6 +29,8 @@ Read, when present:
 - `.github/pull_request_template.md`
 - changed files, validation output, and CI logs provided by the user
 - relevant project docs, standards, ADRs, and glossary
+- `agent-behavior-standards.mdc` from the kit when reviewing diff scope and verification discipline
+- selected engineering rule packs recorded in the implementation spec, plan, QA report, or changelog
 
 If no diff or changed-file context is available, state that review is limited to available evidence.
 
@@ -42,7 +44,8 @@ Prioritize findings in this order:
 4. Missing or weak tests
 5. CI, validation, or release-readiness gaps
 6. Architecture, contract, or maintainability risks
-7. PR template/evidence gaps
+7. Engineering rule pack risks selected for the ticket
+8. PR template/evidence gaps
 
 ## Mandatory Regression Review
 
@@ -139,6 +142,10 @@ Ready | Ready with risks | Not ready
 - AC evidence:
 - Risks:
 
+## Engineering Rule Packs
+- Selected:
+- Notes:
+
 ## Recommendation
 Ready | Not ready
 ```
@@ -149,6 +156,8 @@ Ready | Not ready
 - Do not approve readiness when blocking findings remain.
 - Do not duplicate QA; reference QA results and focus on review risks.
 - Do not approve solely because the implementation follows the plan; plans may contain incomplete assumptions.
+- Apply selected engineering rule packs as review lenses; if an obvious architecture, domain, data, refactoring, or production-readiness risk lacks a selected pack, record that as a review gap.
+- Flag speculative features, drive-by refactors, formatting churn, and unrelated cleanup that violate `agent-behavior-standards.mdc`.
 - Treat full-input materialization, lost batching/streaming behavior, unbounded loops, and metric cardinality growth as review risks even when tests pass.
 - Do not invent tests, CI results, or ticket links.
 - Output in English.

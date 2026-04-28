@@ -17,9 +17,11 @@ Before SDD planning, implementation, review, QA, PR-report, or closure work,
 read the relevant framework files from the submodule:
 
 - `.sdd-kit/ai-specs/specs/base-standards.mdc`
+- `.sdd-kit/ai-specs/specs/agent-behavior-standards.mdc`
 - `.sdd-kit/ai-specs/specs/backend-standards.mdc` for backend work
 - `.sdd-kit/ai-specs/specs/frontend-standards.mdc` for frontend work
 - `.sdd-kit/ai-specs/specs/implementation-spec-template.md` when creating or validating implementation specs
+- `.sdd-kit/ai-specs/rules/engineering/README.md` when selecting optional engineering rule packs
 - `.sdd-kit/ai-specs/skills/{skill-name}/SKILL.md` for the requested SDD workflow
 - `.sdd-kit/ai-specs/.agents/{agent-name}.md` when acting as a specialized SDD agent
 - `.sdd-kit/VERSION` when generating planning artifacts
@@ -86,6 +88,9 @@ instructions.
   explicitly answers `approve`.
 - Treat acceptance criteria as delivery contract items.
 - Implementation specs must map each acceptance criterion to implementation and validation evidence.
+- Follow `agent-behavior-standards.mdc`: state material assumptions, keep changes simple and surgical, and verify before making completion claims.
+- Use `select-engineering-rules` only when the task needs an architecture, domain, enterprise pattern, refactoring, production-readiness, or data-consistency lens.
+- Load engineering rule packs on demand; do not treat all rule packs as always-on instructions.
 - Do not mark a parent ticket ready if an in-scope child work item remains uncovered.
 - Do not mark PR content ready if it has checked commands, CI status, commits, or AC coverage without matching local evidence.
 - Run the smallest relevant validation for the change.

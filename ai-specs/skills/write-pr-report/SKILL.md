@@ -45,7 +45,8 @@ If no repository PR template exists, create a fallback PR report containing:
 2. `.ai-specs/changes/{TICKET}/{TICKET}-CHANGELOG.md`
 3. Implementation Spec and enriched story from `.ai-specs/changes/{TICKET}/`
 4. Completion evidence, validation output, screenshots, or supporting notes from the same folder
-5. Commit history only as a fallback for missing details, never as the main structure
+5. Selected engineering rule packs and their risk notes from the plan, QA report, or review report
+6. Commit history only as a fallback for missing details, never as the main structure
 
 `PROJECT_ROOT` is the repository being worked on. If this kit is installed as `.sdd-kit`, do not resolve the PR template path inside `.sdd-kit/.github/`; use the consuming repository's `.github/pull_request_template.md`. The kit's `.github/pull_request_template.md` is a starter template that must be copied to the consuming repository root to be active.
 
@@ -89,6 +90,7 @@ For the template currently used by this kit:
 - **Screenshots**: include before/after screenshots for frontend changes; keep `N/A` for non-frontend changes
 - **How to test**: check only commands that were actually run or are explicitly required; put unrun relevant commands under `Other:` with status such as `Not run`
 - **Risks and mitigation**: summarize real risks, migrations, config impacts, rollout concerns, and mitigations from changelog `Notes`; write `None identified` only when evidence supports it
+- **Engineering rule packs**: include selected packs and resulting risk notes under risks, validation, or the closest existing template section
 - **Related**: include TC, IMPL, and Confluence links when available
 - **Pre-merge checklist**: check an item only when the changelog/evidence supports it; leave uncertain items unchecked
 - **Definition of Done checklist**: mark all applicable DoD items from `base-standards.mdc` when evidence supports them
@@ -120,6 +122,7 @@ Fix any validation failure before reporting the PR content as ready.
 - Read every changelog subtask section and merge duplicate file entries into a single Changes section
 - Ignore changelog content that is not in the required subtask-entry format from `ai-specs/specs/changelog-template.md`; report malformed changelog sections as a source evidence gap
 - Use changelog `Summary` and `Notes` sections to explain intent, risks, and follow-up work
+- Preserve selected engineering rule pack notes when they explain architecture, domain, data, refactoring, production-readiness, or review risk
 - Use changelog `Commit message` entries only for traceability, not as PR summary prose
 - Do not present suggested commit messages as real commits. Use the template's `Suggested commit messages` field unless real commit hashes are available.
 - Use the enriched story, implementation spec, and completion evidence from the same `{TICKET}` folder

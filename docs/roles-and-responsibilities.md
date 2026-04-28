@@ -19,6 +19,7 @@ person may play multiple roles, but the responsibilities stay separate.
 - Reads the parent work item and linked child work items when available.
 - Produces the implementation plan, companion spec, and changelog before code changes.
 - Maps every in-scope child work item to ACs, validation, or blockers.
+- Selects applicable engineering rule packs when architecture, domain, data, refactoring, production-readiness, or enterprise pattern risks apply.
 - Runs `validate-impl-spec.sh`.
 - Stops at the approval gate.
 
@@ -29,6 +30,7 @@ person may play multiple roles, but the responsibilities stay separate.
 - Implements in the order described by the Delivery Plan.
 - Keeps changes scoped to the ticket.
 - Uses TDD or the closest practical validation loop.
+- Applies selected engineering rule packs and `agent-behavior-standards.mdc` without expanding scope.
 - Appends factual changelog entries after subtasks.
 - Updates Completion Evidence only with real validation results.
 
@@ -36,6 +38,7 @@ person may play multiple roles, but the responsibilities stay separate.
 
 - Validates implementation evidence against the parent ticket, in-scope child work items, and ACs.
 - Checks behavior, edge cases, regressions, and validation gaps.
+- Applies selected engineering rule packs as additional risk lenses.
 - Produces `QA-{TICKET}.md`.
 - Does not approve code quality by itself; QA focuses on delivery contract and behavior.
 
@@ -43,6 +46,7 @@ person may play multiple roles, but the responsibilities stay separate.
 
 - Reviews correctness, reliability, security, architecture, maintainability, tests, and PR readiness.
 - Prioritizes actionable findings with file/line evidence.
+- Flags missing or ignored engineering rule pack risks when they affect readiness.
 - Does not duplicate QA; references QA results and focuses on technical risk.
 - Produces or updates `REVIEW-{TICKET}.md`.
 
@@ -51,6 +55,7 @@ person may play multiple roles, but the responsibilities stay separate.
 - Generates `PR-{TICKET}.md` from local `.ai-specs/changes/{TICKET}/` evidence.
 - Preserves the consuming repository's PR template.
 - Does not invent commands, CI status, commits, screenshots, links, or AC evidence.
+- Preserves selected engineering rule pack risks when they explain validation or readiness.
 - Runs `validate-pr-content.sh` before claiming PR content is ready.
 
 ## Boundaries

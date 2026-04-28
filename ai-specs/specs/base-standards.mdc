@@ -10,12 +10,22 @@
 6. **90%+ coverage**: Unit + integration tests across all layers
 7. **Incremental changes**: Small, focused, reviewable PRs
 
+## Agent Work Discipline
+
+- Surface material assumptions before acting when ambiguity affects scope, safety, contracts, or validation
+- Keep changes simple and surgical; every changed line must trace to the request, an acceptance criterion, validation, or cleanup caused by the change
+- Do not add speculative abstractions, extension points, configuration, or unrelated cleanup
+- Convert vague work into verifiable goals before implementation
+- Do not claim completion, readiness, or passing status without fresh validation evidence or an explicit validation gap
+- Use optional engineering rule packs only when selected for the task by `select-engineering-rules`
+
 ## SDD Workflow
 
 ```
 User Story
   -> /enrich-us              (Decision-Closed Refinement)
   -> Technical Contract      (High-Level agreement, in Confluence)
+  -> /select-engineering-rules (Optional task-scoped technical lenses)
   -> /plan-backend-ticket    (Implementation Spec generated)
   -> /develop-backend        (Agent implements following spec)
   -> /qa-ticket              (Acceptance criteria evidence validated)

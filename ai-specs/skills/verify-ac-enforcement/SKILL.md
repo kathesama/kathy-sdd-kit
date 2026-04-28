@@ -25,6 +25,8 @@ Read:
 
 - `docs/ac-enforcement-pressure-scenarios.md`
 - `ai-specs/specs/base-standards.mdc`
+- `ai-specs/specs/agent-behavior-standards.mdc`
+- `ai-specs/rules/engineering/README.md` when rule pack selection changed
 - the changed skills, agents, or templates
 
 ## Verification Loop
@@ -37,6 +39,7 @@ Read:
    - implementation mapping
    - validation mapping
    - completion/reporting evidence
+   - selected engineering rule packs when they affect risk or validation
 5. If the workflow can still claim "done" while dropping an AC, the kit is not ready.
 
 ## What to look for
@@ -46,6 +49,8 @@ Read:
 - vague validation lines that do not prove coverage
 - inferred ACs not labeled as inferred
 - PR summaries that hide partial coverage
+- selected rule packs that become untraceable between planning, QA, review, and PR reporting
+- agent behavior rules that allow speculative or unrelated changes to bypass AC evidence
 
 ## Output
 

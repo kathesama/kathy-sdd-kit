@@ -5,6 +5,7 @@
 > This file complements the consuming project's root `CLAUDE.md`.
 
 @.sdd-kit/ai-specs/specs/base-standards.mdc
+@.sdd-kit/ai-specs/specs/agent-behavior-standards.mdc
 @.sdd-kit/ai-specs/specs/backend-standards.mdc
 @.sdd-kit/ai-specs/specs/frontend-standards.mdc
 
@@ -28,6 +29,7 @@ Reusable kit references:
 - `.sdd-kit/docs/roles-and-responsibilities.md` for role boundaries
 - `.sdd-kit/docs/tracker-policy.md` for provider-neutral ticket key policy
 - `.sdd-kit/ai-specs/specs/changelog-template.md` for ticket changelog structure
+- `.sdd-kit/ai-specs/rules/engineering/README.md` for optional engineering rule pack selection
 
 ## Available Skills
 
@@ -35,6 +37,8 @@ Reusable kit references:
 - `/plan-backend-ticket [ID]` -> Generate a backend implementation plan with AC-to-implementation and AC-to-validation mapping
 - `/plan-frontend-ticket [ID]` -> Generate a frontend implementation plan with AC-to-implementation and AC-to-validation mapping
 - `/resolve-ticket-workspace [ID]` -> Resolve the current local `.ai-specs` workspace from input or branch
+- `/select-engineering-rules [context]` -> Select optional engineering rule packs for planning, QA, or review
+- `/agent-work-discipline` -> Apply baseline agent behavior discipline for scoped, simple, verifiable changes
 - `/validate-impl-spec [ID or path]` -> Run the structural validator for implementation specs
 - `sh .sdd-kit/tools/validate-changelog.sh [ID or path]` -> Run the structural validator for ticket changelog evidence
 - `/close-ticket-workflow [ID]` -> Apply the correct closure order before generating PR content
@@ -48,6 +52,8 @@ Skill sources live under `.sdd-kit/ai-specs/skills/`.
 ## Rules
 
 - Never write code without a validated Implementation Spec
+- Follow `agent-behavior-standards.mdc`: surface material assumptions, keep changes simple and surgical, and verify before claiming completion
+- Load engineering rule packs only through task-scoped selection; do not treat every pack as always-on context
 - `TICKET` is the canonical ticket/work-item key for the consuming project; resolve ambiguous shorthand before creating artifacts
 - Before planning, inspect the parent work item and linked child work items, subtasks, checklist items, or implementation tasks exposed by the consuming project's tracker
 - Plans and companion specs must include `Related Work Items`; every in-scope child work item with technical requirements must map to an AC, validation item, or documented blocker

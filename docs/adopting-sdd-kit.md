@@ -124,7 +124,7 @@ The pilot should test the workflow, not just the code.
 - Related work item mapping.
 - Structural AC coverage validation.
 - PR content evidence validation.
-- Reusable standards and skills.
+- Reusable standards, agent behavior discipline, optional engineering rule packs, and skills.
 
 ### What The Project Owns
 
@@ -187,6 +187,8 @@ Do not blindly overwrite root `AGENTS.md` or root `CLAUDE.md`.
 | Agents skip subtasks | `Related Work Items` is mandatory and validated |
 | Agents start coding before plan approval | Planning gate requires explicit `approve` |
 | PR content invents test/CI evidence | `validate-pr-content.sh` checks local evidence |
+| Agents overgeneralize or make drive-by changes | `agent-behavior-standards.mdc` requires simple, surgical, verifiable work |
+| Architecture or data risks are missed | `select-engineering-rules` loads task-scoped rule packs |
 | Project rules are overwritten | Preserve local override sections in root files |
 | SDD artifacts create repo noise | Keep `.ai-specs/changes/` local and summarize in `PR-{TICKET}.md` |
 
@@ -196,6 +198,7 @@ The kit is adopted when:
 
 - Root `AGENTS.md` activates `.sdd-kit/CODEX.md`.
 - Root `CLAUDE.md` includes `.sdd-kit/CLAUDE.md` if Claude Code is used.
+- Agent behavior standards and optional engineering rule packs are visible in the planning context.
 - The project ticket policy is documented.
 - A pilot ticket has passed planning, approval, QA, review, PR content generation, and PR content validation.
 - The team agrees whether `.ai-specs/changes/` remains local or is handled by another evidence store.

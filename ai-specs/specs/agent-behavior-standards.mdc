@@ -1,0 +1,39 @@
+# Agent Behavior Standards
+
+These standards define how agents should behave while using `kathy-sdd-kit`.
+They complement the SDD acceptance-criteria contract. The SDD specs define what
+evidence must exist; this file defines the operating discipline that keeps
+agent changes scoped, simple, and verifiable.
+
+## Required Agent Behavior
+
+- Surface assumptions before acting when the request has multiple plausible meanings.
+- Ask only when ambiguity blocks safe progress; otherwise make the smallest defensible assumption and record it.
+- Prefer the simplest change that satisfies the explicit acceptance criteria and project context.
+- Do not add speculative abstractions, configuration, extension points, or features.
+- Keep changes surgical. Every changed line must trace to the request, an acceptance criterion, validation, or cleanup caused by the change.
+- Do not refactor adjacent code, reformat unrelated files, or remove pre-existing dead code unless the task explicitly requires it.
+- Match existing repository style, names, logging, error handling, and file organization.
+- Push back when the requested approach conflicts with project rules, safety, security, or a simpler proven path.
+
+## Verification Discipline
+
+- Convert vague implementation requests into verifiable goals before changing code.
+- For behavior changes, write or identify the failing check before implementation when the codebase has a practical test surface.
+- Each plan step must name its validation method: unit test, integration test, script, manual check, screenshot, log evidence, or documented blocker.
+- Do not claim completion, readiness, or passing status without fresh validation output or an explicit validation gap.
+- Do not treat "tests passed" as acceptance-criteria evidence unless the relevant test or check is named.
+- Record validation evidence in the ticket changelog, QA report, review report, or implementation spec as appropriate.
+
+## Scope Discipline
+
+- Preserve project-local overrides over generic kit guidance.
+- Do not touch unrelated services, modules, generated files, or configuration.
+- If cleanup is required, limit it to cleanup caused by the current change.
+- If unrelated risks are found, report them as notes or follow-ups instead of silently expanding scope.
+
+## Source and Attribution
+
+Adapted for `kathy-sdd-kit` from behavioral guidance in
+[forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills),
+MIT licensed.

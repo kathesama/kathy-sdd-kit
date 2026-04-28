@@ -35,9 +35,11 @@ Before planning, implementing, reviewing, or closing SDD work, use the kit files
 from the submodule:
 
 - `.sdd-kit/ai-specs/specs/base-standards.mdc`
+- `.sdd-kit/ai-specs/specs/agent-behavior-standards.mdc`
 - `.sdd-kit/ai-specs/specs/backend-standards.mdc` for backend work
 - `.sdd-kit/ai-specs/specs/frontend-standards.mdc` for frontend work
 - `.sdd-kit/ai-specs/specs/implementation-spec-template.md` for implementation specs
+- `.sdd-kit/ai-specs/rules/engineering/` for optional engineering rule packs selected by task scope
 - `.sdd-kit/ai-specs/skills/` for reusable SDD workflows
 - `.sdd-kit/ai-specs/.agents/` for role-specific agent guidance
 - `.sdd-kit/VERSION` for the kit version to record in generated specs
@@ -146,6 +148,8 @@ start implementation.
 ## Execution
 
 - Keep changes limited to the requested task.
+- Follow `agent-behavior-standards.mdc`: surface blocking assumptions, keep changes simple and surgical, and verify before claiming completion.
+- Use `select-engineering-rules` when planning, QA, or review touches architecture, domain modeling, enterprise patterns, refactoring, production readiness, or data consistency.
 - Do not touch unrelated services, modules, or packages unless the task requires it.
 - Do not refactor unrelated files.
 - Do not update generated files unless the task or tooling requires it.

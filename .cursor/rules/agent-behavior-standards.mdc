@@ -1,0 +1,18 @@
+---
+description: Baseline SDD agent behavior discipline for scoped, simple, verifiable work.
+alwaysApply: true
+---
+
+# Agent Behavior Standards
+
+Apply these rules together with project-local Cursor rules and the SDD kit
+standards.
+
+- Surface material assumptions when ambiguity affects scope, safety, contracts, or validation.
+- Prefer the simplest change that satisfies the request and acceptance criteria.
+- Keep changes surgical. Every changed line must trace to the request, validation, or cleanup caused by the change.
+- Do not add speculative abstractions, configuration, features, formatting churn, or unrelated cleanup.
+- Match the repository's existing style and structure.
+- Convert vague work into verifiable goals before implementation.
+- Do not claim completion, readiness, or passing status without fresh validation evidence or a documented validation gap.
+- Load engineering rule packs from `ai-specs/rules/engineering/` only when selected for the task.

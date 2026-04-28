@@ -87,11 +87,13 @@ Rules:
 
 ## Execution Notes for Implementer
 
--
+- **Engineering Rule Packs**:
+  - None selected:
 
 Rules:
 
 - Capture implementation-critical context that is not obvious from the ACs.
+- Record selected engineering rule packs and why they apply, or state that none were selected.
 - Include exact package/module targets when names are abbreviated elsewhere.
 - Identify pilot services, first migration targets, feature flags, adapters, or runtime handoff assumptions.
 - Record explicit non-goals that prevent scope creep during execution.
