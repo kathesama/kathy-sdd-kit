@@ -6,4 +6,4 @@
 
 ## Engineering Rule Packs
 
-- `data-intensive.mini.md`: replay and idempotency validation confirmed source of truth behavior for the event consumer.
+- `data-intensive.mini.md`: DI-02 replay and idempotency validation confirmed duplicate delivery safety for the event consumer.

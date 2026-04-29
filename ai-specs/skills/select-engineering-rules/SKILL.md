@@ -39,14 +39,14 @@ Implementer`, and preserve selected packs in QA, review, and PR evidence:
 ```md
 ### Engineering Rule Packs
 
-| Pack | Selection | Reason | Required Validation Impact |
-|---|---|---|---|
-| clean-architecture.mini.md | Not selected | No dependency boundary or adapter decision. | N/A |
-| domain-driven-design.mini.md | Selected | Order lifecycle invariants are in scope. | Validate aggregate invariant behavior. |
-| patterns-of-enterprise-application-architecture.mini.md | Not selected | No enterprise application pattern choice. | N/A |
-| refactoring.mini.md | Not selected | No behavior-preserving structural cleanup. | N/A |
-| release-it.mini.md | Not selected | No production dependency failure mode. | N/A |
-| data-intensive.mini.md | Selected | Event replay and consistency are in scope. | Validate idempotency and replay behavior. |
+| Pack | Selection | Reason | Active Obligations | Required Validation Impact |
+|---|---|---|---|---|
+| clean-architecture.mini.md | Not selected | No dependency boundary or adapter decision. | N/A | N/A |
+| domain-driven-design.mini.md | Selected | Order lifecycle invariants are in scope. | DDD-02 | Validate aggregate invariant behavior. |
+| patterns-of-enterprise-application-architecture.mini.md | Not selected | No enterprise application pattern choice. | N/A | N/A |
+| refactoring.mini.md | Not selected | No behavior-preserving structural cleanup. | N/A | N/A |
+| release-it.mini.md | Not selected | No production dependency failure mode. | N/A | N/A |
+| data-intensive.mini.md | Selected | Event replay and consistency are in scope. | DI-02 | Validate idempotency and replay behavior. |
 ```
 
 ## Rules
@@ -55,9 +55,14 @@ Implementer`, and preserve selected packs in QA, review, and PR evidence:
   validation, or review decisions.
 - Record all six packs exactly once in the table.
 - Use the exact filenames shown in the table; validators use them for traceability.
+- Choose active obligations from the selected pack's `Enforcement Contract`.
 - For every `Selected` pack, include the exact filename in `Implementation Mapping`,
   `Validation Plan`, or `Delivery Plan`.
+- For every active obligation, include the exact obligation ID in `Implementation Mapping`,
+  `Validation Plan`, or `Delivery Plan`.
 - For every `Selected` pack, preserve the exact filename and related risk notes
+  in QA, review, and PR content.
+- For every active obligation, preserve the exact obligation ID and contract evidence
   in QA, review, and PR content.
 - Prefer DDD for business model questions and Clean Architecture for dependency
   direction questions.

@@ -431,10 +431,11 @@ Data-Intensive Applications. They do not override acceptance criteria, ADRs, or
 project-local instructions.
 
 Implementation specs must list all six packs in the `Engineering Rule Packs`
-table under `Execution Notes for Implementer`. Selected packs require a
-non-`N/A` validation impact and must be traceable through implementation
-mapping, validation, QA, review, and PR content. The validators block selected
-packs that are not carried through the evidence chain.
+table under `Execution Notes for Implementer`. Selected packs require active
+obligation IDs from the pack's `Enforcement Contract`, a non-`N/A` validation
+impact, and traceability through implementation mapping, validation, QA, review,
+and PR content. The validators block selected packs or active obligations that
+are not carried through the evidence chain.
 
 ## Examples
 

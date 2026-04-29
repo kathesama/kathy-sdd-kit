@@ -31,6 +31,7 @@ Read, when present:
 - relevant project docs, standards, ADRs, and glossary
 - `agent-behavior-standards.mdc` from the kit when reviewing diff scope and verification discipline
 - selected engineering rule packs recorded in the implementation spec, plan, QA report, or changelog
+- active engineering rule obligations recorded in the implementation spec, plan, or QA report
 
 If no diff or changed-file context is available, state that review is limited to available evidence.
 
@@ -158,6 +159,7 @@ Ready | Not ready
 - Do not approve solely because the implementation follows the plan; plans may contain incomplete assumptions.
 - Apply selected engineering rule packs as review lenses; if an obvious architecture, domain, data, refactoring, or production-readiness risk lacks a selected pack, record that as a review gap.
 - Mention each selected engineering rule pack by exact filename and include a related risk or validation note.
+- Mention each active engineering rule obligation ID and include contract evidence keywords from the selected pack.
 - Flag speculative features, drive-by refactors, formatting churn, and unrelated cleanup that violate `agent-behavior-standards.mdc`.
 - Treat full-input materialization, lost batching/streaming behavior, unbounded loops, and metric cardinality growth as review risks even when tests pass.
 - Do not invent tests, CI results, or ticket links.

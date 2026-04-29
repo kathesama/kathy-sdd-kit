@@ -35,6 +35,14 @@ architecture.
 - Do dependencies still point toward policy?
 - Are risky integrations isolated to adapters or infrastructure code?
 
+## Enforcement Contract
+
+| Check ID | Required When Selected | Evidence Keywords | Applies To |
+|---|---|---|---|
+| CA-01 | Dependency direction or boundary risk is in scope | dependency, inward, boundary, port, adapter | Implementation Mapping, Review |
+| CA-02 | Framework or vendor details may leak into core policy | framework, vendor, infrastructure, adapter | Implementation Mapping, QA, Review |
+| CA-03 | A use case boundary is added or changed | use case, input, output, application layer | Implementation Mapping, Validation Plan |
+
 ## Source and Attribution
 
 Adapted for `kathy-sdd-kit` from

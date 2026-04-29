@@ -124,6 +124,7 @@ Fix any validation failure before reporting the PR content as ready.
 - Use changelog `Summary` and `Notes` sections to explain intent, risks, and follow-up work
 - Preserve selected engineering rule pack notes when they explain architecture, domain, data, refactoring, production-readiness, or review risk
 - Mention each selected engineering rule pack by exact filename in PR content so `validate-pr-content.sh` can trace plan -> QA -> review -> PR continuity
+- Mention each active engineering rule obligation ID and related contract evidence in PR content so `validate-pr-content.sh` can trace obligation coverage
 - Use changelog `Commit message` entries only for traceability, not as PR summary prose
 - Do not present suggested commit messages as real commits. Use the template's `Suggested commit messages` field unless real commit hashes are available.
 - Use the enriched story, implementation spec, and completion evidence from the same `{TICKET}` folder

@@ -35,6 +35,14 @@ Do not let storage, messaging, retries, or caches hide correctness assumptions.
 - Is the path safe under retry, replay, and duplicate delivery?
 - Are secondary views rebuildable?
 
+## Enforcement Contract
+
+| Check ID | Required When Selected | Evidence Keywords | Applies To |
+|---|---|---|---|
+| DI-01 | Data ownership or authoritative write path is in scope | source of truth, owner, authoritative | Implementation Mapping, QA |
+| DI-02 | Replay, retry, duplicate delivery, or consumer idempotency is in scope | replay, idempotent, idempotency, duplicate delivery | Validation Plan, QA, Review |
+| DI-03 | Schema evolution, caches, projections, or derived views are in scope | schema, version, cache, projection, derived, staleness | Implementation Mapping, Review |
+
 ## Source and Attribution
 
 Adapted for `kathy-sdd-kit` from

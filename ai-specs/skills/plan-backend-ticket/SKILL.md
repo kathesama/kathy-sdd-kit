@@ -104,8 +104,10 @@ A backend plan saved to `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md` co
 
 Record the mandatory `### Engineering Rule Packs` table in `Execution Notes for
 Implementer`. The table must list all six packs exactly once. For every pack
-marked `Selected`, include a non-`N/A` validation impact and reference the exact
-pack filename in `Implementation Mapping`, `Validation Plan`, or `Delivery Plan`.
+marked `Selected`, include active obligation IDs from that pack's `Enforcement
+Contract`, include a non-`N/A` validation impact, and reference the exact pack
+filename and active obligation IDs in `Implementation Mapping`,
+`Validation Plan`, or `Delivery Plan`.
 
 Also create `.ai-specs/changes/{TICKET}/{TICKET}-implementation-spec.md` with
 the same AC contract, implementation mapping, validation plan, delivery plan,
@@ -240,6 +242,7 @@ Only after an explicit `approve`:
 - Use `select-engineering-rules` when the ticket touches architecture, domain modeling, enterprise application patterns, refactoring, production readiness, or data consistency
 - Use `agent-behavior-standards.mdc` to keep the plan scoped, simple, and verifiable
 - Preserve selected engineering rule pack filenames exactly so QA, review, PR reporting, and validators can trace them
+- Preserve active obligation IDs exactly so QA, review, PR reporting, and validators can trace them
 - If an AC spans multiple layers, call out the layers explicitly
 - Never produce a generic task list without AC references
 - Do not mark the plan complete if any AC is missing implementation or validation mapping

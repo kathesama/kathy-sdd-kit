@@ -32,10 +32,42 @@ validate_rule_pack() {
     "## Decision rules" \
     "## Trigger rules" \
     "## Final checklist" \
+    "## Enforcement Contract" \
     "## Source and Attribution"
   do
     require_text "$path" "$heading"
   done
+
+  contract_rows=$(awk '
+    $0 == "## Enforcement Contract" { in_contract = 1; next }
+    in_contract && /^## / { exit }
+    in_contract && /^\|/ { print }
+  ' "$path" | awk 'NR > 2 { print }')
+  [ -n "$contract_rows" ] || fail "$path must contain Enforcement Contract rows"
+
+  invalid_contract=$(printf '%s\n' "$contract_rows" | awk -F'|' '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    {
+      check_id = trim($2)
+      required = trim($3)
+      keywords = trim($4)
+      applies_to = trim($5)
+      if (check_id !~ /^[A-Z]+-[0-9][0-9]$/) {
+        print check_id ": invalid Check ID"
+      }
+      if (required == "" || keywords == "" || applies_to == "") {
+        print check_id ": empty contract cell"
+      }
+      if (keywords !~ /,/) {
+        print check_id ": Evidence Keywords must be comma-separated"
+      }
+    }
+  ')
+  [ -z "$invalid_contract" ] || fail "invalid Enforcement Contract in $path:
+$invalid_contract"
 
   if grep -Eq 'TODO|TBD|fill in|placeholder' "$path"; then
     fail "$path contains placeholder text"

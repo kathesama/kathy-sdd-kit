@@ -35,34 +35,34 @@
 
 | AC | Files / Modules | Planned Change | Risk Notes |
 |---|---|---|---|
-| AC-01 | `app/events/consumer.py` | Track processed event IDs before applying writes | `data-intensive.mini.md`: source of truth, replay, and idempotency must be explicit |
-| AC-02 | `app/events/broker.py` | Bound broker timeout and retry attempts | `release-it.mini.md`: timeout, retry, and duplicate safety must be validated |
+| AC-01 | `app/events/consumer.py` | Track processed event IDs before applying writes | `data-intensive.mini.md`: DI-01 source of truth and DI-02 replay/idempotency must be explicit |
+| AC-02 | `app/events/broker.py` | Bound broker timeout and retry attempts | `release-it.mini.md`: REL-01 timeout and REL-02 retry/duplicate safety must be validated |
 
 ## Validation Plan
 
 | AC | Test / Check | Command or Method | Expected Evidence |
 |---|---|---|---|
-| AC-01 | `data-intensive.mini.md` replay test | `pytest tests/test_event_consumer.py` | Duplicate replay does not duplicate writes |
-| AC-02 | `release-it.mini.md` failure handling test | `pytest tests/test_event_consumer.py` | Timeout and retry attempts are bounded |
+| AC-01 | `data-intensive.mini.md` DI-01 DI-02 replay test | `pytest tests/test_event_consumer.py` | Source of truth is named and duplicate replay does not duplicate writes |
+| AC-02 | `release-it.mini.md` REL-01 REL-02 failure handling test | `pytest tests/test_event_consumer.py` | Timeout and retry attempts are bounded with duplicate safety |
 
 ## Delivery Plan
 
-1. Add replay and idempotency tests for `data-intensive.mini.md` (`AC-01`).
-2. Add timeout and retry tests for `release-it.mini.md` (`AC-02`).
+1. Add source of truth, replay, and idempotency tests for `data-intensive.mini.md` DI-01 DI-02 (`AC-01`).
+2. Add timeout, retry, and duplicate safety tests for `release-it.mini.md` REL-01 REL-02 (`AC-02`).
 3. Implement consumer idempotency and broker failure handling (`AC-01`, `AC-02`).
 
 ## Execution Notes for Implementer
 
 ### Engineering Rule Packs
 
-| Pack | Selection | Reason | Required Validation Impact |
-|---|---|---|---|
-| clean-architecture.mini.md | Not selected | Existing consumer and broker boundaries are unchanged. | N/A |
-| domain-driven-design.mini.md | Not selected | No domain language or invariant change. | N/A |
-| patterns-of-enterprise-application-architecture.mini.md | Not selected | No new persistence or transaction pattern choice. | N/A |
-| refactoring.mini.md | Not selected | No behavior-preserving structural cleanup. | N/A |
-| release-it.mini.md | Selected | Broker dependency can fail, stall, or retry. | Validate bounded timeout, retry, and duplicate safety. |
-| data-intensive.mini.md | Selected | Event replay can duplicate writes if the consumer is not idempotent. | Validate source of truth, replay, and idempotency behavior. |
+| Pack | Selection | Reason | Active Obligations | Required Validation Impact |
+|---|---|---|---|---|
+| clean-architecture.mini.md | Not selected | Existing consumer and broker boundaries are unchanged. | N/A | N/A |
+| domain-driven-design.mini.md | Not selected | No domain language or invariant change. | N/A | N/A |
+| patterns-of-enterprise-application-architecture.mini.md | Not selected | No new persistence or transaction pattern choice. | N/A | N/A |
+| refactoring.mini.md | Not selected | No behavior-preserving structural cleanup. | N/A | N/A |
+| release-it.mini.md | Selected | Broker dependency can fail, stall, or retry. | REL-01, REL-02 | Validate bounded timeout, retry, and duplicate safety. |
+| data-intensive.mini.md | Selected | Event replay can duplicate writes if the consumer is not idempotent. | DI-01, DI-02 | Validate source of truth, replay, and idempotency behavior. |
 
 - Keep the example scoped to event consumer behavior.
 - Do not provision broker infrastructure.

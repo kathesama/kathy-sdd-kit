@@ -1,23 +1,23 @@
-# ER-101 Backend Implementation Plan
+# ER-102 Backend Implementation Plan
 
 ## Story Context
 
-- **Story / Ticket**: ER-101
-- **Objective**: Invalid example where a selected engineering rule pack has no validation impact.
+- **Story / Ticket**: ER-102
+- **Objective**: Invalid example where a selected pack references an unknown active obligation.
 - **Related Technical Contract**: Example only.
-- **SDD Kit Version**: 0.4.1
+- **SDD Kit Version**: 0.5.0
 
 ## Related Work Items
 
 | Key | Type | Status | Scope Decision | Plan Impact |
 |---|---|---|---|---|
-| ER-101 | Parent | Ready for planning | In scope | Defines AC-01 |
+| ER-102 | Parent | Ready for planning | In scope | Defines AC-01 |
 
 ## Scope
 
 ### In Scope
 
-- Publish an event after a write.
+- Validate event replay behavior.
 
 ### Out of Scope
 
@@ -27,24 +27,23 @@
 
 | ID | Criterion | Validation Type | Source |
 |---|---|---|---|
-| AC-01 | Write path publishes an event | automated_test | explicit |
+| AC-01 | Event replay does not duplicate writes | automated_test | explicit |
 
 ## Implementation Mapping
 
 | AC | Files / Modules | Planned Change | Risk Notes |
 |---|---|---|---|
-| AC-01 | `app/service.py` | Publish event after write | `data-intensive.mini.md`: DI-02 event write path needs consistency review |
+| AC-01 | `app/events/consumer.py` | Track replayed event IDs | `data-intensive.mini.md`: DI-99 replay risk is in scope |
 
 ## Validation Plan
 
 | AC | Test / Check | Command or Method | Expected Evidence |
 |---|---|---|---|
-| AC-01 | Event publication test | `pytest tests/test_events.py` | DI-02 event is published after write |
+| AC-01 | `data-intensive.mini.md` replay test | `pytest tests/test_event_consumer.py` | DI-99 replay does not duplicate writes |
 
 ## Delivery Plan
 
-1. Add event publication test (`AC-01`).
-2. Implement publisher call (`AC-01`).
+1. Add replay test for `data-intensive.mini.md` DI-99 (`AC-01`).
 
 ## Execution Notes for Implementer
 
@@ -52,12 +51,12 @@
 
 | Pack | Selection | Reason | Active Obligations | Required Validation Impact |
 |---|---|---|---|---|
-| clean-architecture.mini.md | Not selected | No new dependency boundary. | N/A | N/A |
+| clean-architecture.mini.md | Not selected | No boundary change. | N/A | N/A |
 | domain-driven-design.mini.md | Not selected | No domain modeling change. | N/A | N/A |
 | patterns-of-enterprise-application-architecture.mini.md | Not selected | No enterprise pattern choice. | N/A | N/A |
 | refactoring.mini.md | Not selected | No structural cleanup. | N/A | N/A |
-| release-it.mini.md | Not selected | No production failure path change. | N/A | N/A |
-| data-intensive.mini.md | Selected | Event write path introduces consistency risk. | DI-02 | N/A |
+| release-it.mini.md | Not selected | No production dependency change. | N/A | N/A |
+| data-intensive.mini.md | Selected | Event replay can duplicate writes. | DI-99 | Validate replay behavior. |
 
 ## Completion Evidence
 

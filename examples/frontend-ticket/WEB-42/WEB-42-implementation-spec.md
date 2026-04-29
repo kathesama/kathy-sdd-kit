@@ -56,14 +56,14 @@
 
 ### Engineering Rule Packs
 
-| Pack | Selection | Reason | Required Validation Impact |
-|---|---|---|---|
-| clean-architecture.mini.md | Not selected | Example does not change frontend architecture boundaries. | N/A |
-| domain-driven-design.mini.md | Not selected | Example does not change domain language or invariants. | N/A |
-| patterns-of-enterprise-application-architecture.mini.md | Not selected | Example does not involve enterprise persistence or transaction patterns. | N/A |
-| refactoring.mini.md | Not selected | Example does not include structural cleanup. | N/A |
-| release-it.mini.md | Not selected | Example does not touch production dependency failure behavior. | N/A |
-| data-intensive.mini.md | Not selected | Example does not alter data ownership, consistency, events, caches, or projections. | N/A |
+| Pack | Selection | Reason | Active Obligations | Required Validation Impact |
+|---|---|---|---|---|
+| clean-architecture.mini.md | Not selected | Example does not change frontend architecture boundaries. | N/A | N/A |
+| domain-driven-design.mini.md | Not selected | Example does not change domain language or invariants. | N/A | N/A |
+| patterns-of-enterprise-application-architecture.mini.md | Not selected | Example does not involve enterprise persistence or transaction patterns. | N/A | N/A |
+| refactoring.mini.md | Not selected | Example does not include structural cleanup. | N/A | N/A |
+| release-it.mini.md | Not selected | Example does not touch production dependency failure behavior. | N/A | N/A |
+| data-intensive.mini.md | Not selected | Example does not alter data ownership, consistency, events, caches, or projections. | N/A | N/A |
 
 - Use the existing export feature component patterns from the consuming repository.
 - Keep WEB-43 accessibility work scoped to keyboard reachability and screen-reader announcement behavior.

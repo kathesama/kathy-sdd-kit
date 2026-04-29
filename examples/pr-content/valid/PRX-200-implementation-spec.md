@@ -9,14 +9,14 @@
 
 ## Engineering Rule Packs
 
-| Pack | Selection | Reason | Required Validation Impact |
-|---|---|---|---|
-| clean-architecture.mini.md | Not selected | Documentation-only PR fixture does not change architecture boundaries. | N/A |
-| domain-driven-design.mini.md | Not selected | Documentation-only PR fixture does not change domain language or invariants. | N/A |
-| patterns-of-enterprise-application-architecture.mini.md | Not selected | Documentation-only PR fixture does not choose enterprise patterns. | N/A |
-| refactoring.mini.md | Not selected | Documentation-only PR fixture does not refactor production code. | N/A |
-| release-it.mini.md | Not selected | Documentation-only PR fixture does not change production readiness. | N/A |
-| data-intensive.mini.md | Not selected | Documentation-only PR fixture does not change data consistency behavior. | N/A |
+| Pack | Selection | Reason | Active Obligations | Required Validation Impact |
+|---|---|---|---|---|
+| clean-architecture.mini.md | Not selected | Documentation-only PR fixture does not change architecture boundaries. | N/A | N/A |
+| domain-driven-design.mini.md | Not selected | Documentation-only PR fixture does not change domain language or invariants. | N/A | N/A |
+| patterns-of-enterprise-application-architecture.mini.md | Not selected | Documentation-only PR fixture does not choose enterprise patterns. | N/A | N/A |
+| refactoring.mini.md | Not selected | Documentation-only PR fixture does not refactor production code. | N/A | N/A |
+| release-it.mini.md | Not selected | Documentation-only PR fixture does not change production readiness. | N/A | N/A |
+| data-intensive.mini.md | Not selected | Documentation-only PR fixture does not change data consistency behavior. | N/A | N/A |
 
 ## Acceptance Criteria
 

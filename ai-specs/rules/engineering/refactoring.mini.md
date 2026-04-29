@@ -34,6 +34,14 @@ patch.
 - Did the refactor address the smell that affects this task?
 - Did cleanup stop at the useful point?
 
+## Enforcement Contract
+
+| Check ID | Required When Selected | Evidence Keywords | Applies To |
+|---|---|---|---|
+| REF-01 | Existing behavior must be characterized before structural change | characterization, safety net, current behavior | Validation Plan, QA |
+| REF-02 | Observable behavior must be preserved | behavior preserved, observable behavior, no behavior change | QA, PR |
+| REF-03 | Refactor scope needs an explicit boundary | structural cleanup, refactor scope, small step | Implementation Mapping, Review |
+
 ## Source and Attribution
 
 Adapted for `kathy-sdd-kit` from

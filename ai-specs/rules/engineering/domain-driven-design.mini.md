@@ -35,6 +35,14 @@ model.
 - Are invariants protected inside the model?
 - Is richer modeling reserved for the core domain?
 
+## Enforcement Contract
+
+| Check ID | Required When Selected | Evidence Keywords | Applies To |
+|---|---|---|---|
+| DDD-01 | Business language or naming changes are in scope | ubiquitous language, business language, term | Implementation Mapping, Review |
+| DDD-02 | Invariants, aggregates, or value objects are in scope | invariant, aggregate, value object, valid construction | Implementation Mapping, Validation Plan, QA |
+| DDD-03 | Context boundaries or translations are in scope | bounded context, translate, context boundary | Implementation Mapping, Review |
+
 ## Source and Attribution
 
 Adapted for `kathy-sdd-kit` from

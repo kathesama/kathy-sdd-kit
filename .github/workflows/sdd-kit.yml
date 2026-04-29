@@ -45,6 +45,10 @@ jobs:
             echo "Expected engineering rule pack validation impact fixture to fail"
             exit 1
           fi
+          if sh tools/validate-impl-spec.sh examples/engineering-rules/invalid/unknown-active-obligation/ER-102-impl-backend.md; then
+            echo "Expected unknown active engineering rule obligation fixture to fail"
+            exit 1
+          fi
 
       - name: Verify negative PR content fixture fails
         run: |
@@ -54,5 +58,9 @@ jobs:
           fi
           if sh tools/validate-pr-content.sh examples/engineering-rules/invalid/selected-pack-missing-from-pr/PR-ERPR-101.md; then
             echo "Expected selected engineering rule pack missing from PR fixture to fail"
+            exit 1
+          fi
+          if sh tools/validate-pr-content.sh examples/engineering-rules/invalid/active-obligation-missing-evidence/PR-ERPR-102.md; then
+            echo "Expected active engineering rule obligation evidence fixture to fail"
             exit 1
           fi

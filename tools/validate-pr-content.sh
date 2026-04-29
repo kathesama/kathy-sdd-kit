@@ -10,6 +10,9 @@ info() {
   printf '%s\n' "$1"
 }
 
+script_dir=$(CDPATH= cd "$(dirname "$0")" && pwd)
+kit_root=$(dirname "$script_dir")
+
 validate_ticket() {
   ticket=$1
   case "$ticket" in
@@ -93,31 +96,57 @@ selected_engineering_rule_packs() {
   '
 }
 
-pack_keyword_regex() {
+split_obligations() {
+  printf '%s\n' "$1" | tr ',' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | sed '/^$/d'
+}
+
+active_engineering_obligations() {
+  file_path=$1
+  engineering_rule_pack_rows "$file_path" | while IFS= read -r row; do
+    pack=$(printf '%s\n' "$row" | awk -F'|' '{ value=$2; gsub(/^[ \t]+|[ \t]+$/, "", value); print value }')
+    selection=$(printf '%s\n' "$row" | awk -F'|' '{ value=$3; gsub(/^[ \t]+|[ \t]+$/, "", value); print value }')
+    active=$(printf '%s\n' "$row" | awk -F'|' '{ value=$5; gsub(/^[ \t]+|[ \t]+$/, "", value); print value }')
+    [ "$selection" = "Selected" ] || continue
+    split_obligations "$active" | while IFS= read -r obligation; do
+      [ -n "$obligation" ] || continue
+      printf '%s|%s\n' "$pack" "$obligation"
+    done
+  done
+}
+
+obligation_keyword_regex() {
   pack=$1
-  case "$pack" in
-    clean-architecture.mini.md)
-      printf '%s\n' 'dependency|port|adapter|boundary|framework|use case'
-      ;;
-    domain-driven-design.mini.md)
-      printf '%s\n' 'ubiquitous|bounded context|invariant|aggregate|value object|domain event|domain model|business language'
-      ;;
-    patterns-of-enterprise-application-architecture.mini.md)
-      printf '%s\n' 'service layer|transaction script|domain model|repository|unit of work|dto|remote|transaction boundary|lock'
-      ;;
-    refactoring.mini.md)
-      printf '%s\n' 'characterization|behavior preserv|before.after|structural cleanup|refactor|small step'
-      ;;
-    release-it.mini.md)
-      printf '%s\n' 'timeout|retry|overload|fallback|observability|circuit breaker|queue limit|duplicate safety|backpressure|bulkhead|rate limit'
-      ;;
-    data-intensive.mini.md)
-      printf '%s\n' 'idempot|replay|schema|consistency|cache|projection|source of truth|event|derived|staleness'
-      ;;
-    *)
-      printf '%s\n' 'engineering rule pack'
-      ;;
-  esac
+  obligation=$2
+  contract_path="$kit_root/ai-specs/rules/engineering/$pack"
+  [ -f "$contract_path" ] || fail "engineering rule pack contract not found: $contract_path"
+  keywords=$(awk -v obligation="$obligation" '
+    $0 == "## Enforcement Contract" { in_contract = 1; next }
+    in_contract && /^## / { exit }
+    in_contract && /^\|/ { print }
+  ' "$contract_path" | awk 'NR > 2 { print }' | awk -F'|' -v obligation="$obligation" '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    trim($2) == obligation {
+      print trim($4)
+    }
+  ')
+  [ -n "$keywords" ] || fail "active obligation $obligation not found in $contract_path"
+  printf '%s\n' "$keywords" | awk -F',' '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    {
+      for (idx = 1; idx <= NF; idx++) {
+        keyword = trim($idx)
+        if (keyword != "") {
+          print keyword
+        }
+      }
+    }
+  ' | paste -sd'|' -
 }
 
 resolve_paths() {
@@ -300,13 +329,25 @@ $missing"
 
   weak=$(printf '%s\n' "$selected" | while IFS= read -r pack; do
     [ -n "$pack" ] || continue
-    regex=$(pack_keyword_regex "$pack")
-    if ! grep -Eiq "$regex" "$qa_path" "$review_path" "$pr_path"; then
-      printf '%s lacks matching risk or validation keywords\n' "$pack"
+    if ! grep -Fq "$pack" "$implementation_spec_path"; then
+      printf '%s missing from implementation spec\n' "$pack"
     fi
   done)
   [ -z "$weak" ] || fail "selected Engineering Rule Packs lack risk or validation evidence:
 $weak"
+
+  obligation_gaps=$(active_engineering_obligations "$implementation_spec_path" | while IFS='|' read -r pack obligation; do
+    [ -n "$obligation" ] || continue
+    grep -Fq "$obligation" "$qa_path" || printf '%s %s missing from QA report\n' "$pack" "$obligation"
+    grep -Fq "$obligation" "$review_path" || printf '%s %s missing from review report\n' "$pack" "$obligation"
+    grep -Fq "$obligation" "$pr_path" || printf '%s %s missing from PR content\n' "$pack" "$obligation"
+    regex=$(obligation_keyword_regex "$pack" "$obligation")
+    if ! grep -Eiq "$regex" "$qa_path" "$review_path" "$pr_path"; then
+      printf '%s %s lacks matching contract evidence keywords\n' "$pack" "$obligation"
+    fi
+  done)
+  [ -z "$obligation_gaps" ] || fail "active Engineering Rule Pack obligations must be evidenced in QA, review, and PR content:
+$obligation_gaps"
 }
 
 input=${1:-}

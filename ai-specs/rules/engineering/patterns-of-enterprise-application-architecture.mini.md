@@ -34,6 +34,14 @@ Do not apply one enterprise pattern everywhere just because it is familiar.
 - Is the transaction boundary explicit?
 - Is each remote boundary coarse and intentional?
 
+## Enforcement Contract
+
+| Check ID | Required When Selected | Evidence Keywords | Applies To |
+|---|---|---|---|
+| PEA-01 | Business logic pattern choice is in scope | service layer, transaction script, domain model | Implementation Mapping, Review |
+| PEA-02 | Transaction or persistence consistency boundary is in scope | transaction boundary, unit of work, repository, lock | Implementation Mapping, Validation Plan |
+| PEA-03 | DTO, remote facade, or remote boundary is in scope | dto, remote facade, remote boundary, coarse grained | Implementation Mapping, Review |
+
 ## Source and Attribution
 
 Adapted for `kathy-sdd-kit` from

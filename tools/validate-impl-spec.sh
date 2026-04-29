@@ -10,6 +10,9 @@ info() {
   printf '%s\n' "$1"
 }
 
+script_dir=$(CDPATH= cd "$(dirname "$0")" && pwd)
+kit_root=$(dirname "$script_dir")
+
 current_branch() {
   git rev-parse --abbrev-ref HEAD 2>/dev/null || true
 }
@@ -188,6 +191,35 @@ engineering_rule_pack_rows() {
   ' | awk 'NR > 2 { print }'
 }
 
+split_obligations() {
+  printf '%s\n' "$1" | tr ',' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | sed '/^$/d'
+}
+
+contract_obligation_ids() {
+  pack=$1
+  contract_path="$kit_root/ai-specs/rules/engineering/$pack"
+  [ -f "$contract_path" ] || fail "engineering rule pack contract not found: $contract_path"
+  awk '
+    $0 == "## Enforcement Contract" { in_contract = 1; next }
+    in_contract && /^## / { exit }
+    in_contract && /^\|/ { print }
+  ' "$contract_path" | awk 'NR > 2 { print }' | awk -F'|' '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    {
+      print trim($2)
+    }
+  '
+}
+
+contract_has_obligation() {
+  pack=$1
+  obligation=$2
+  contract_obligation_ids "$pack" | grep -Fxq "$obligation"
+}
+
 selected_engineering_rule_packs() {
   file_path=$1
   engineering_rule_pack_rows "$file_path" | awk -F'|' '
@@ -203,6 +235,20 @@ selected_engineering_rule_packs() {
       }
     }
   '
+}
+
+active_engineering_obligations() {
+  file_path=$1
+  engineering_rule_pack_rows "$file_path" | while IFS= read -r row; do
+    pack=$(printf '%s\n' "$row" | awk -F'|' '{ value=$2; gsub(/^[ \t]+|[ \t]+$/, "", value); print value }')
+    selection=$(printf '%s\n' "$row" | awk -F'|' '{ value=$3; gsub(/^[ \t]+|[ \t]+$/, "", value); print value }')
+    active=$(printf '%s\n' "$row" | awk -F'|' '{ value=$5; gsub(/^[ \t]+|[ \t]+$/, "", value); print value }')
+    [ "$selection" = "Selected" ] || continue
+    split_obligations "$active" | while IFS= read -r obligation; do
+      [ -n "$obligation" ] || continue
+      printf '%s|%s\n' "$pack" "$obligation"
+    done
+  done
 }
 
 validate_engineering_rule_packs() {
@@ -271,8 +317,10 @@ $duplicates"
       pack = trim($2)
       selection = trim($3)
       reason = trim($4)
-      impact = trim($5)
+      active = trim($5)
+      impact = trim($6)
       normalized_reason = tolower(reason)
+      normalized_active = tolower(active)
       normalized_impact = tolower(impact)
       if (pack == "") {
         next
@@ -283,8 +331,16 @@ $duplicates"
       if (reason == "" || reason == "-" || normalized_reason == "n/a") {
         print pack ": missing selection reason"
       }
-      if (selection == "Selected" && (impact == "" || impact == "-" || normalized_impact == "n/a")) {
-        print pack ": selected pack requires validation impact"
+      if (selection == "Selected") {
+        if (active == "" || active == "-" || normalized_active == "n/a") {
+          print pack ": selected pack requires active obligations"
+        }
+        if (impact == "" || impact == "-" || normalized_impact == "n/a") {
+          print pack ": selected pack requires validation impact"
+        }
+      }
+      if (selection == "Not selected" && active != "" && active != "-" && normalized_active != "n/a") {
+        print pack ": not-selected pack must use N/A active obligations"
       }
     }
   ' "$rows_file")
@@ -292,6 +348,34 @@ $duplicates"
     rm -f "$rows_file" "$row_packs" "$expected_packs"
     fail "invalid Engineering Rule Packs table in $file_path:
 $invalid"
+  }
+
+  invalid_obligations=$(awk -F'|' '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    {
+      pack = trim($2)
+      selection = trim($3)
+      active = trim($5)
+      if (selection == "Selected") {
+        print pack "|" active
+      }
+    }
+  ' "$rows_file" | while IFS='|' read -r pack active; do
+    [ -n "$pack" ] || continue
+    split_obligations "$active" | while IFS= read -r obligation; do
+      [ -n "$obligation" ] || continue
+      if ! contract_has_obligation "$pack" "$obligation"; then
+        printf '%s: unknown active obligation %s\n' "$pack" "$obligation"
+      fi
+    done
+  done)
+  [ -z "$invalid_obligations" ] || {
+    rm -f "$rows_file" "$row_packs" "$expected_packs"
+    fail "invalid active Engineering Rule Pack obligations in $file_path:
+$invalid_obligations"
   }
 
   plan_text=$(mktemp)
@@ -307,9 +391,17 @@ $invalid"
       printf '%s\n' "$pack"
     fi
   done)
+  missing_obligation_refs=$(active_engineering_obligations "$file_path" | while IFS='|' read -r pack obligation; do
+    [ -n "$obligation" ] || continue
+    if ! grep -Fq "$obligation" "$plan_text"; then
+      printf '%s %s\n' "$pack" "$obligation"
+    fi
+  done)
   rm -f "$rows_file" "$row_packs" "$expected_packs" "$plan_text"
   [ -z "$missing_selected_refs" ] || fail "selected Engineering Rule Packs must be referenced in Implementation Mapping, Validation Plan, or Delivery Plan in $file_path:
 $missing_selected_refs"
+  [ -z "$missing_obligation_refs" ] || fail "active Engineering Rule Pack obligations must be referenced in Implementation Mapping, Validation Plan, or Delivery Plan in $file_path:
+$missing_obligation_refs"
 }
 
 validate_related_work_items() {
@@ -499,6 +591,16 @@ if ! cmp -s "$primary_selected" "$companion_selected"; then
   fail "selected Engineering Rule Packs mismatch between implementation plan and implementation spec"
 fi
 rm -f "$primary_selected" "$companion_selected"
+
+primary_obligations=$(mktemp)
+companion_obligations=$(mktemp)
+active_engineering_obligations "$primary_path" | sort > "$primary_obligations"
+active_engineering_obligations "$implementation_spec_path" | sort > "$companion_obligations"
+if ! cmp -s "$primary_obligations" "$companion_obligations"; then
+  rm -f "$primary_obligations" "$companion_obligations"
+  fail "active Engineering Rule Pack obligations mismatch between implementation plan and implementation spec"
+fi
+rm -f "$primary_obligations" "$companion_obligations"
 
 criteria_count=$(wc -l < "$primary_ids" | tr -d ' ')
 info "OK: implementation plan and companion spec are structurally complete"

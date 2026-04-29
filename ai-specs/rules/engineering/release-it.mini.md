@@ -35,6 +35,14 @@ A passing happy path is not a production-ready design.
 - Is overload behavior explicit?
 - Is the path observable under stress?
 
+## Enforcement Contract
+
+| Check ID | Required When Selected | Evidence Keywords | Applies To |
+|---|---|---|---|
+| REL-01 | Dependency failure, stall, or timeout is in scope | timeout, failure, fallback | Validation Plan, QA |
+| REL-02 | Retry, duplicate execution, or queue redelivery is in scope | retry, duplicate safety, idempotency, backoff | Validation Plan, QA, Review |
+| REL-03 | Overload, capacity, or production diagnostics are in scope | overload, backpressure, observability, metric, circuit breaker | Review, PR |
+
 ## Source and Attribution
 
 Adapted for `kathy-sdd-kit` from

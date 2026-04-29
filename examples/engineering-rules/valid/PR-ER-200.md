@@ -18,8 +18,8 @@ ER-200
 
 ## Engineering Rule Packs
 
-- `data-intensive.mini.md`: replay, idempotency, event consistency, and source of truth risks were validated.
-- `release-it.mini.md`: timeout, retry, overload, observability, and duplicate safety risks were reviewed.
+- `data-intensive.mini.md`: DI-01 source of truth and DI-02 replay/idempotency risks were validated.
+- `release-it.mini.md`: REL-01 timeout and REL-02 retry/duplicate safety risks were reviewed.
 
 ## How to test
 
