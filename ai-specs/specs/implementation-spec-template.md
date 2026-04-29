@@ -87,13 +87,24 @@ Rules:
 
 ## Execution Notes for Implementer
 
-- **Engineering Rule Packs**:
-  - None selected:
+### Engineering Rule Packs
+
+| Pack | Selection | Reason | Required Validation Impact |
+|---|---|---|---|
+| clean-architecture.mini.md | Not selected | No dependency boundary or adapter decision. | N/A |
+| domain-driven-design.mini.md | Not selected | No domain language, invariant, aggregate, or bounded-context change. | N/A |
+| patterns-of-enterprise-application-architecture.mini.md | Not selected | No enterprise application pattern choice. | N/A |
+| refactoring.mini.md | Not selected | No behavior-preserving structural cleanup. | N/A |
+| release-it.mini.md | Not selected | No production dependency, overload, deployment, or observability risk. | N/A |
+| data-intensive.mini.md | Not selected | No data ownership, consistency, event, cache, projection, or schema-evolution risk. | N/A |
 
 Rules:
 
 - Capture implementation-critical context that is not obvious from the ACs.
-- Record selected engineering rule packs and why they apply, or state that none were selected.
+- Record all six engineering rule packs exactly once.
+- `Selection` must be exactly `Selected` or `Not selected`.
+- If a pack is `Selected`, `Reason` must explain why and `Required Validation Impact` must name the validation it adds.
+- If a pack is `Selected`, reference the pack filename in `Implementation Mapping`, `Validation Plan`, or `Delivery Plan`.
 - Include exact package/module targets when names are abbreviated elsewhere.
 - Identify pilot services, first migration targets, feature flags, adapters, or runtime handoff assumptions.
 - Record explicit non-goals that prevent scope creep during execution.

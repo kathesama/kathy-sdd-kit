@@ -57,6 +57,17 @@
 
 ## Execution Notes for Implementer
 
+### Engineering Rule Packs
+
+| Pack | Selection | Reason | Required Validation Impact |
+|---|---|---|---|
+| clean-architecture.mini.md | Not selected | Example follows existing event publisher conventions without a new boundary decision. | N/A |
+| domain-driven-design.mini.md | Not selected | Example does not change domain language or invariants. | N/A |
+| patterns-of-enterprise-application-architecture.mini.md | Not selected | Example does not introduce a persistence or transaction pattern choice. | N/A |
+| refactoring.mini.md | Not selected | Example does not include structural cleanup. | N/A |
+| release-it.mini.md | Not selected | Example excludes broker provisioning and production rollout behavior. | N/A |
+| data-intensive.mini.md | Not selected | Example validates payload shape only and does not model retry, replay, or consistency semantics. | N/A |
+
 - Use the existing export service event publisher conventions from the consuming repository.
 - Keep JAP-101 payload validation scoped to export ID, actor ID, and timestamp.
 - Do not create broker topics or change export API contracts in this example.

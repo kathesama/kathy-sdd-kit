@@ -168,6 +168,150 @@ validate_delivery_plan_refs() {
 $missing"
 }
 
+expected_engineering_rule_packs() {
+  cat <<'EOF'
+clean-architecture.mini.md
+domain-driven-design.mini.md
+patterns-of-enterprise-application-architecture.mini.md
+refactoring.mini.md
+release-it.mini.md
+data-intensive.mini.md
+EOF
+}
+
+engineering_rule_pack_rows() {
+  file_path=$1
+  section_text "$file_path" "Execution Notes for Implementer" | awk '
+    $0 == "### Engineering Rule Packs" { in_table = 1; next }
+    in_table && /^### / { exit }
+    in_table && /^\|/ { print }
+  ' | awk 'NR > 2 { print }'
+}
+
+selected_engineering_rule_packs() {
+  file_path=$1
+  engineering_rule_pack_rows "$file_path" | awk -F'|' '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    {
+      pack = trim($2)
+      selection = trim($3)
+      if (selection == "Selected") {
+        print pack
+      }
+    }
+  '
+}
+
+validate_engineering_rule_packs() {
+  file_path=$1
+  rows_file=$(mktemp)
+  engineering_rule_pack_rows "$file_path" > "$rows_file"
+  [ -s "$rows_file" ] || {
+    rm -f "$rows_file"
+    fail "Execution Notes for Implementer must contain an Engineering Rule Packs table in $file_path"
+  }
+
+  row_packs=$(mktemp)
+  expected_packs=$(mktemp)
+  expected_engineering_rule_packs > "$expected_packs"
+
+  awk -F'|' '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    {
+      pack = trim($2)
+      if (pack != "") {
+        print pack
+      }
+    }
+  ' "$rows_file" > "$row_packs"
+
+  missing=$(while IFS= read -r pack; do
+    [ -n "$pack" ] || continue
+    if ! contains_line "$pack" "$row_packs"; then
+      printf '%s\n' "$pack"
+    fi
+  done < "$expected_packs")
+  [ -z "$missing" ] || {
+    rm -f "$rows_file" "$row_packs" "$expected_packs"
+    fail "Engineering Rule Packs table is missing required packs in $file_path:
+$missing"
+  }
+
+  unexpected=$(while IFS= read -r pack; do
+    [ -n "$pack" ] || continue
+    if ! contains_line "$pack" "$expected_packs"; then
+      printf '%s\n' "$pack"
+    fi
+  done < "$row_packs")
+  [ -z "$unexpected" ] || {
+    rm -f "$rows_file" "$row_packs" "$expected_packs"
+    fail "Engineering Rule Packs table contains unknown packs in $file_path:
+$unexpected"
+  }
+
+  duplicates=$(sort "$row_packs" | uniq -d)
+  [ -z "$duplicates" ] || {
+    rm -f "$rows_file" "$row_packs" "$expected_packs"
+    fail "Engineering Rule Packs table contains duplicate packs in $file_path:
+$duplicates"
+  }
+
+  invalid=$(awk -F'|' '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    {
+      pack = trim($2)
+      selection = trim($3)
+      reason = trim($4)
+      impact = trim($5)
+      normalized_reason = tolower(reason)
+      normalized_impact = tolower(impact)
+      if (pack == "") {
+        next
+      }
+      if (selection != "Selected" && selection != "Not selected") {
+        print pack ": invalid Selection \"" selection "\""
+      }
+      if (reason == "" || reason == "-" || normalized_reason == "n/a") {
+        print pack ": missing selection reason"
+      }
+      if (selection == "Selected" && (impact == "" || impact == "-" || normalized_impact == "n/a")) {
+        print pack ": selected pack requires validation impact"
+      }
+    }
+  ' "$rows_file")
+  [ -z "$invalid" ] || {
+    rm -f "$rows_file" "$row_packs" "$expected_packs"
+    fail "invalid Engineering Rule Packs table in $file_path:
+$invalid"
+  }
+
+  plan_text=$(mktemp)
+  {
+    section_text "$file_path" "Implementation Mapping"
+    section_text "$file_path" "Validation Plan"
+    section_text "$file_path" "Delivery Plan"
+  } > "$plan_text"
+
+  missing_selected_refs=$(selected_engineering_rule_packs "$file_path" | while IFS= read -r pack; do
+    [ -n "$pack" ] || continue
+    if ! grep -Fq "$pack" "$plan_text"; then
+      printf '%s\n' "$pack"
+    fi
+  done)
+  rm -f "$rows_file" "$row_packs" "$expected_packs" "$plan_text"
+  [ -z "$missing_selected_refs" ] || fail "selected Engineering Rule Packs must be referenced in Implementation Mapping, Validation Plan, or Delivery Plan in $file_path:
+$missing_selected_refs"
+}
+
 validate_related_work_items() {
   file_path=$1
   canonical_ticket=$2
@@ -272,6 +416,7 @@ validate_spec_file() {
   validate_completion_statuses "$file_path"
   validate_completion_evidence "$file_path"
   validate_delivery_plan_refs "$file_path" "$out_file"
+  validate_engineering_rule_packs "$file_path"
 
   rm -f "$mapping_file" "$validation_file" "$completion_file"
 }
@@ -344,6 +489,16 @@ done < "$companion_ids")
 if [ -n "$missing_in_companion" ] || [ -n "$missing_in_primary" ]; then
   fail "acceptance criteria mismatch between implementation plan and implementation spec"
 fi
+
+primary_selected=$(mktemp)
+companion_selected=$(mktemp)
+selected_engineering_rule_packs "$primary_path" | sort > "$primary_selected"
+selected_engineering_rule_packs "$implementation_spec_path" | sort > "$companion_selected"
+if ! cmp -s "$primary_selected" "$companion_selected"; then
+  rm -f "$primary_selected" "$companion_selected"
+  fail "selected Engineering Rule Packs mismatch between implementation plan and implementation spec"
+fi
+rm -f "$primary_selected" "$companion_selected"
 
 criteria_count=$(wc -l < "$primary_ids" | tr -d ' ')
 info "OK: implementation plan and companion spec are structurally complete"

@@ -157,6 +157,7 @@ Ready | Not ready
 - Do not duplicate QA; reference QA results and focus on review risks.
 - Do not approve solely because the implementation follows the plan; plans may contain incomplete assumptions.
 - Apply selected engineering rule packs as review lenses; if an obvious architecture, domain, data, refactoring, or production-readiness risk lacks a selected pack, record that as a review gap.
+- Mention each selected engineering rule pack by exact filename and include a related risk or validation note.
 - Flag speculative features, drive-by refactors, formatting churn, and unrelated cleanup that violate `agent-behavior-standards.mdc`.
 - Treat full-input materialization, lost batching/streaming behavior, unbounded loops, and metric cardinality growth as review risks even when tests pass.
 - Do not invent tests, CI results, or ticket links.

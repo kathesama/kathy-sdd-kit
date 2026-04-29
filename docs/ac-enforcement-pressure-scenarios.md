@@ -10,6 +10,7 @@ Verify that the kit prevents agents from:
 - merging unrelated acceptance criteria into vague work items
 - marking a task done without AC-specific evidence
 - generating PR reports that hide partial or missing coverage
+- selecting engineering rule packs without carrying their validation impact through QA, review, and PR evidence
 
 ## How to run the scenarios
 
@@ -26,6 +27,7 @@ Record:
 - whether every AC had implementation mapping
 - whether every AC had validation mapping
 - whether completion/reporting exposed uncovered ACs explicitly
+- whether selected engineering rule packs stayed traceable through plan, QA, review, and PR evidence
 
 ## Scenario 1: Planner drops a "boring" AC
 
@@ -260,6 +262,38 @@ Acceptance criteria:
 - changelog entries omit required subsections
 - QA or PR report treats malformed changelog text as implementation evidence
 
+## Scenario 9: Selected engineering rule pack disappears
+
+### Input story
+
+```text
+As a platform service, I want an event consumer to tolerate replay so that queue retries do not duplicate writes.
+
+Acceptance criteria:
+1. Duplicate event delivery does not duplicate writes.
+2. Broker calls use bounded timeout and retry behavior.
+```
+
+### Pressure
+
+- planner selects `data-intensive.mini.md` or `release-it.mini.md`
+- implementation spec records the pack, but validation plan does not add replay, idempotency, timeout, or retry checks
+- QA/review mention tests passed but omit the selected pack and related risk
+- PR content summarizes ACs but hides the selected pack evidence
+
+### Expected pass
+
+- `Execution Notes for Implementer` includes the full `Engineering Rule Packs` table
+- every selected pack has a non-`N/A` validation impact
+- every selected pack filename appears in implementation mapping, validation plan, or delivery plan
+- QA, review, and PR content mention each selected pack by exact filename and include related risk or validation evidence
+
+### Expected fail
+
+- selected pack has `N/A` validation impact
+- selected pack is missing from QA, review, or PR content
+- selected pack evidence lacks pack-specific risk terms such as replay, idempotency, timeout, retry, source of truth, or duplicate safety
+
 ## Pass criteria for the kit
 
 The kit is behaving correctly when:
@@ -269,3 +303,4 @@ The kit is behaving correctly when:
 - partial coverage is exposed instead of buried
 - inferred ACs are clearly labeled
 - final outputs make it hard to fake completeness
+- selected engineering rule packs stay visible from planning through PR evidence

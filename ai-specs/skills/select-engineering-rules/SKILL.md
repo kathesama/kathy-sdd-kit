@@ -33,26 +33,32 @@ Load only the selected rule pack files from `ai-specs/rules/engineering/`.
 
 ## Output
 
-Add an `Engineering Rule Packs` note to the plan, QA report, review report, or
-execution notes:
+Add an `Engineering Rule Packs` table to the plan/spec `Execution Notes for
+Implementer`, and preserve selected packs in QA, review, and PR evidence:
 
 ```md
-## Engineering Rule Packs
-- `domain-driven-design.mini.md`: selected because ...
-- `data-intensive.mini.md`: selected because ...
-```
+### Engineering Rule Packs
 
-If no pack applies, record:
-
-```md
-## Engineering Rule Packs
-- None selected: no architecture, domain, data, refactoring, or production-readiness lens is needed for this task.
+| Pack | Selection | Reason | Required Validation Impact |
+|---|---|---|---|
+| clean-architecture.mini.md | Not selected | No dependency boundary or adapter decision. | N/A |
+| domain-driven-design.mini.md | Selected | Order lifecycle invariants are in scope. | Validate aggregate invariant behavior. |
+| patterns-of-enterprise-application-architecture.mini.md | Not selected | No enterprise application pattern choice. | N/A |
+| refactoring.mini.md | Not selected | No behavior-preserving structural cleanup. | N/A |
+| release-it.mini.md | Not selected | No production dependency failure mode. | N/A |
+| data-intensive.mini.md | Selected | Event replay and consistency are in scope. | Validate idempotency and replay behavior. |
 ```
 
 ## Rules
 
 - Prefer one or two packs. Use more only when each pack changes planning,
   validation, or review decisions.
+- Record all six packs exactly once in the table.
+- Use the exact filenames shown in the table; validators use them for traceability.
+- For every `Selected` pack, include the exact filename in `Implementation Mapping`,
+  `Validation Plan`, or `Delivery Plan`.
+- For every `Selected` pack, preserve the exact filename and related risk notes
+  in QA, review, and PR content.
 - Prefer DDD for business model questions and Clean Architecture for dependency
   direction questions.
 - Prefer Patterns of Enterprise Application Architecture for concrete service,

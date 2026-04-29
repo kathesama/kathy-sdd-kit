@@ -430,6 +430,12 @@ Application Architecture, Refactoring, Release It!, and Designing
 Data-Intensive Applications. They do not override acceptance criteria, ADRs, or
 project-local instructions.
 
+Implementation specs must list all six packs in the `Engineering Rule Packs`
+table under `Execution Notes for Implementer`. Selected packs require a
+non-`N/A` validation impact and must be traceable through implementation
+mapping, validation, QA, review, and PR content. The validators block selected
+packs that are not carried through the evidence chain.
+
 ## Examples
 
 Reference examples live under `examples/`:
@@ -441,6 +447,8 @@ Reference examples live under `examples/`:
 - `examples/invalid/missing-related-work-items/`
 - `examples/review-fix-ticket/JAP-160/`
 - `examples/engineering-rules/JAP-210-rule-selection.md`
+- `examples/engineering-rules/valid/`
+- `examples/engineering-rules/invalid/`
 
 They are documentation examples, not local ticket artifacts. Do not copy them
 into `.ai-specs/changes/` unless adapting them for a real ticket.

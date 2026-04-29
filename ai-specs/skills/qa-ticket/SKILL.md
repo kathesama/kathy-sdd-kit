@@ -42,6 +42,7 @@ If the ticket cannot be resolved from input, branch, or local `.ai-specs` state,
 3. Compare each AC against implementation mapping, completion evidence, changelog entries, and tests.
 4. Verify that validation evidence is concrete: command output, test name, screenshot, manual check, or reviewer-observable behavior.
 5. Apply selected engineering rule packs as risk lenses when they were recorded in the plan/spec; if none were recorded but a clear architecture, domain, data, refactoring, or production-readiness risk exists, note the missing selection as a QA gap.
+   Preserve the exact selected pack filenames in QA evidence.
 6. Run a regression-oriented pass over the changed behavior, independent of the plan's assumptions.
 7. Identify partial coverage, missing tests, missing evidence, unaddressed risks, and follow-up work.
 8. Produce a QA report in the ticket folder.
@@ -118,6 +119,7 @@ Ready | Not ready
 - Do not treat "tests passed" as AC evidence unless the relevant test/check is named.
 - Do not let the implementation plan's proposed approach suppress regression review; plans can contain incomplete assumptions.
 - Apply selected engineering rule packs as additional risk checks; do not use them to override explicit acceptance criteria or project ADRs.
+- Mention each selected engineering rule pack by exact filename and include a related risk or validation note.
 - Flag speculative features, broad refactors, or unrelated changes that violate `agent-behavior-standards.mdc`.
 - Do not mark performance/observability side-channel changes as `Pass` until memory, batching, cardinality, and side-effect timing have been considered.
 - If evidence is missing, mark the AC as `Partial`, `Not Covered`, or `Blocked`.

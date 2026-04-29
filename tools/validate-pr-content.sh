@@ -66,6 +66,60 @@ completion_problem_statuses() {
   '
 }
 
+engineering_rule_pack_rows() {
+  file_path=$1
+  awk '
+    $0 == "## Engineering Rule Packs" || $0 == "### Engineering Rule Packs" { in_table = 1; next }
+    in_table && /^## / { exit }
+    in_table && /^### / { exit }
+    in_table && /^\|/ { print }
+  ' "$file_path" | awk 'NR > 2 { print }'
+}
+
+selected_engineering_rule_packs() {
+  file_path=$1
+  engineering_rule_pack_rows "$file_path" | awk -F'|' '
+    function trim(value) {
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      return value
+    }
+    {
+      pack = trim($2)
+      selection = trim($3)
+      if (selection == "Selected") {
+        print pack
+      }
+    }
+  '
+}
+
+pack_keyword_regex() {
+  pack=$1
+  case "$pack" in
+    clean-architecture.mini.md)
+      printf '%s\n' 'dependency|port|adapter|boundary|framework|use case'
+      ;;
+    domain-driven-design.mini.md)
+      printf '%s\n' 'ubiquitous|bounded context|invariant|aggregate|value object|domain event|domain model|business language'
+      ;;
+    patterns-of-enterprise-application-architecture.mini.md)
+      printf '%s\n' 'service layer|transaction script|domain model|repository|unit of work|dto|remote|transaction boundary|lock'
+      ;;
+    refactoring.mini.md)
+      printf '%s\n' 'characterization|behavior preserv|before.after|structural cleanup|refactor|small step'
+      ;;
+    release-it.mini.md)
+      printf '%s\n' 'timeout|retry|overload|fallback|observability|circuit breaker|queue limit|duplicate safety|backpressure|bulkhead|rate limit'
+      ;;
+    data-intensive.mini.md)
+      printf '%s\n' 'idempot|replay|schema|consistency|cache|projection|source of truth|event|derived|staleness'
+      ;;
+    *)
+      printf '%s\n' 'engineering rule pack'
+      ;;
+  esac
+}
+
 resolve_paths() {
   input=${1:-}
   [ -n "$input" ] || fail "usage: validate-pr-content.sh <ticket-key-or-pr-path>"
@@ -223,6 +277,38 @@ validate_qa_review_status() {
   fi
 }
 
+validate_engineering_rule_pack_traceability() {
+  rows_file=$(mktemp)
+  engineering_rule_pack_rows "$implementation_spec_path" > "$rows_file"
+  [ -s "$rows_file" ] || {
+    rm -f "$rows_file"
+    fail "implementation spec must contain an Engineering Rule Packs table: $implementation_spec_path"
+  }
+  rm -f "$rows_file"
+
+  selected=$(selected_engineering_rule_packs "$implementation_spec_path")
+  [ -n "$selected" ] || return 0
+
+  missing=$(printf '%s\n' "$selected" | while IFS= read -r pack; do
+    [ -n "$pack" ] || continue
+    grep -Fq "$pack" "$qa_path" || printf '%s missing from QA report\n' "$pack"
+    grep -Fq "$pack" "$review_path" || printf '%s missing from review report\n' "$pack"
+    grep -Fq "$pack" "$pr_path" || printf '%s missing from PR content\n' "$pack"
+  done)
+  [ -z "$missing" ] || fail "selected Engineering Rule Packs must be traceable through QA, review, and PR content:
+$missing"
+
+  weak=$(printf '%s\n' "$selected" | while IFS= read -r pack; do
+    [ -n "$pack" ] || continue
+    regex=$(pack_keyword_regex "$pack")
+    if ! grep -Eiq "$regex" "$qa_path" "$review_path" "$pr_path"; then
+      printf '%s lacks matching risk or validation keywords\n' "$pack"
+    fi
+  done)
+  [ -z "$weak" ] || fail "selected Engineering Rule Packs lack risk or validation evidence:
+$weak"
+}
+
 input=${1:-}
 resolve_paths "$input"
 
@@ -240,6 +326,7 @@ validate_ci_not_invented
 validate_key_commits
 validate_referenced_files_exist
 validate_qa_review_status
+validate_engineering_rule_pack_traceability
 
 info "OK: PR content is consistent with local SDD evidence"
 info "Ticket: $ticket"

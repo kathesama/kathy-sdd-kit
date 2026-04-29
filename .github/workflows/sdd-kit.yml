@@ -28,10 +28,12 @@ jobs:
         run: |
           sh tools/validate-impl-spec.sh examples/backend-ticket/JAP-100/JAP-100-impl-backend.md
           sh tools/validate-impl-spec.sh examples/frontend-ticket/WEB-42/WEB-42-impl-frontend.md
+          sh tools/validate-impl-spec.sh examples/engineering-rules/valid/ER-200-impl-backend.md
 
       - name: Validate PR content example
         run: |
           sh tools/validate-pr-content.sh examples/pr-content/valid/PR-PRX-200.md
+          sh tools/validate-pr-content.sh examples/engineering-rules/valid/PR-ER-200.md
 
       - name: Verify negative implementation spec fixture fails
         run: |
@@ -39,10 +41,18 @@ jobs:
             echo "Expected invalid implementation spec fixture to fail"
             exit 1
           fi
+          if sh tools/validate-impl-spec.sh examples/engineering-rules/invalid/missing-rule-pack-validation-impact/ER-101-impl-backend.md; then
+            echo "Expected engineering rule pack validation impact fixture to fail"
+            exit 1
+          fi
 
       - name: Verify negative PR content fixture fails
         run: |
           if sh tools/validate-pr-content.sh examples/pr-content/invalid/PR-PRBAD-200.md; then
             echo "Expected invalid PR content fixture to fail"
+            exit 1
+          fi
+          if sh tools/validate-pr-content.sh examples/engineering-rules/invalid/selected-pack-missing-from-pr/PR-ERPR-101.md; then
+            echo "Expected selected engineering rule pack missing from PR fixture to fail"
             exit 1
           fi

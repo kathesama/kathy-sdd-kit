@@ -1,0 +1,75 @@
+# ER-200 Backend Implementation Plan
+
+## Story Context
+
+- **Story / Ticket**: ER-200
+- **Objective**: Add a replay-safe event consumer with production failure handling.
+- **Related Technical Contract**: Example only.
+- **SDD Kit Version**: 0.4.1
+
+## Related Work Items
+
+| Key | Type | Status | Scope Decision | Plan Impact |
+|---|---|---|---|---|
+| ER-200 | Parent | Ready for planning | In scope | Defines AC-01 and AC-02 |
+
+## Scope
+
+### In Scope
+
+- Validate duplicate event replay behavior.
+- Validate timeout and retry handling for broker calls.
+
+### Out of Scope
+
+- Broker provisioning.
+
+## Acceptance Criteria
+
+| ID | Criterion | Validation Type | Source |
+|---|---|---|---|
+| AC-01 | Event consumer is idempotent under replay | automated_test | explicit |
+| AC-02 | Broker publication uses bounded timeout and retry behavior | automated_test | explicit |
+
+## Implementation Mapping
+
+| AC | Files / Modules | Planned Change | Risk Notes |
+|---|---|---|---|
+| AC-01 | `app/events/consumer.py` | Track processed event IDs before applying writes | `data-intensive.mini.md`: source of truth, replay, and idempotency must be explicit |
+| AC-02 | `app/events/broker.py` | Bound broker timeout and retry attempts | `release-it.mini.md`: timeout, retry, and duplicate safety must be validated |
+
+## Validation Plan
+
+| AC | Test / Check | Command or Method | Expected Evidence |
+|---|---|---|---|
+| AC-01 | `data-intensive.mini.md` replay test | `pytest tests/test_event_consumer.py` | Duplicate replay does not duplicate writes |
+| AC-02 | `release-it.mini.md` failure handling test | `pytest tests/test_event_consumer.py` | Timeout and retry attempts are bounded |
+
+## Delivery Plan
+
+1. Add replay and idempotency tests for `data-intensive.mini.md` (`AC-01`).
+2. Add timeout and retry tests for `release-it.mini.md` (`AC-02`).
+3. Implement consumer idempotency and broker failure handling (`AC-01`, `AC-02`).
+
+## Execution Notes for Implementer
+
+### Engineering Rule Packs
+
+| Pack | Selection | Reason | Required Validation Impact |
+|---|---|---|---|
+| clean-architecture.mini.md | Not selected | Existing consumer and broker boundaries are unchanged. | N/A |
+| domain-driven-design.mini.md | Not selected | No domain language or invariant change. | N/A |
+| patterns-of-enterprise-application-architecture.mini.md | Not selected | No new persistence or transaction pattern choice. | N/A |
+| refactoring.mini.md | Not selected | No behavior-preserving structural cleanup. | N/A |
+| release-it.mini.md | Selected | Broker dependency can fail, stall, or retry. | Validate bounded timeout, retry, and duplicate safety. |
+| data-intensive.mini.md | Selected | Event replay can duplicate writes if the consumer is not idempotent. | Validate source of truth, replay, and idempotency behavior. |
+
+- Keep the example scoped to event consumer behavior.
+- Do not provision broker infrastructure.
+
+## Completion Evidence
+
+| AC | Status | Evidence |
+|---|---|---|
+| AC-01 | Covered | `pytest tests/test_event_consumer.py` passed with replay/idempotency scenario. |
+| AC-02 | Covered | `pytest tests/test_event_consumer.py` passed with timeout/retry scenario. |

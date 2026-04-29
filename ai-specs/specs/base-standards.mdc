@@ -18,6 +18,7 @@
 - Convert vague work into verifiable goals before implementation
 - Do not claim completion, readiness, or passing status without fresh validation evidence or an explicit validation gap
 - Use optional engineering rule packs only when selected for the task by `select-engineering-rules`
+- Record all six engineering rule packs in implementation specs; selected packs require validation impact and PR evidence traceability
 
 ## SDD Workflow
 
