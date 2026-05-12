@@ -110,6 +110,13 @@ Rules:
 - Identify pilot services, first migration targets, feature flags, adapters, or runtime handoff assumptions.
 - Record explicit non-goals that prevent scope creep during execution.
 - Do not duplicate the Delivery Plan; this section should reduce ambiguity for a different agent executing the spec later.
+- For frontend/UI work, add a `### Design System Contract` subsection after
+  the Engineering Rule Packs table. Reference root `DESIGN.md` when present,
+  or state the local design sources used temporarily plus the missing
+  `DESIGN.md` standardization gap. Use a plain fallback only when no design
+  context exists.
+- If a ticket changes visual tokens, component styling, or design-system
+  behavior, map that impact to an AC, validation item, or documented risk.
 
 ## Completion Evidence
 

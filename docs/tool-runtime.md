@@ -18,9 +18,11 @@ the SDD gate.
 - Git, because the kit is normally installed as a submodule or clone.
 - A POSIX-compatible `sh`.
 - Standard POSIX utilities used by the scripts: `awk`, `sed`, `grep`, `sort`,
-  `uniq`, `mktemp`, `wc`, `basename`, `dirname`.
+  `uniq`, `mktemp`, `wc`, `basename`, `dirname`, `mkdir`, `rm`, `ln`, `cmp`.
 
-Git for Windows provides the required shell and utilities through Git Bash.
+Git for Windows provides the required shell and utilities through Git Bash. On
+Windows, `sync-agent-skills.sh` also uses `cygpath` and `cmd.exe` to create
+directory junctions when available.
 
 ## Common Commands
 
@@ -29,6 +31,8 @@ sh .sdd-kit/tools/resolve-ticket-workspace.sh {TICKET}
 sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
 sh .sdd-kit/tools/validate-pr-content.sh {TICKET}
 sh .sdd-kit/tools/validate-engineering-rules.sh
+sh .sdd-kit/tools/sync-agent-skills.sh --write
+sh .sdd-kit/tools/sync-agent-skills.sh --check
 ```
 
 When editing the kit repository itself, run from the kit root:
@@ -38,7 +42,14 @@ sh tools/resolve-ticket-workspace.sh {TICKET}
 sh tools/validate-impl-spec.sh {TICKET}
 sh tools/validate-pr-content.sh {TICKET}
 sh tools/validate-engineering-rules.sh
+sh tools/sync-agent-skills.sh --write
+sh tools/sync-agent-skills.sh --check
 ```
+
+`sync-agent-skills.sh` exposes SDD skills from the single source in
+`ai-specs/skills/` into `.agents/skills/`, `.claude/skills/`, and
+`.cursor/skills/`. This keeps tool-specific discovery paths available without
+creating separate editable skill copies.
 
 ## Windows Notes
 

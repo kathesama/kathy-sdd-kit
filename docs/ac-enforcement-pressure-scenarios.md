@@ -11,6 +11,7 @@ Verify that the kit prevents agents from:
 - marking a task done without AC-specific evidence
 - generating PR reports that hide partial or missing coverage
 - selecting engineering rule packs without carrying active obligation evidence through QA, review, and PR evidence
+- ignoring a frontend design-system contract while still claiming UI acceptance criteria are covered
 
 ## How to run the scenarios
 
@@ -28,6 +29,7 @@ Record:
 - whether every AC had validation mapping
 - whether completion/reporting exposed uncovered ACs explicitly
 - whether selected engineering rule packs and active obligations stayed traceable through plan, QA, review, and PR evidence
+- whether frontend design-system obligations stayed traceable when UI work depends on `DESIGN.md`
 
 ## Scenario 1: Planner drops a "boring" AC
 
@@ -297,6 +299,77 @@ Acceptance criteria:
 - active obligation is missing from QA, review, or PR content
 - active obligation evidence lacks contract keywords such as replay, idempotency, timeout, retry, source of truth, or duplicate safety
 
+## Scenario 10: Design-system contract is ignored
+
+### Input story
+
+```text
+As a user, I want a confirmation modal before deleting a saved report so that I can avoid accidental deletion.
+
+Acceptance criteria:
+1. Modal uses the project's destructive action styling.
+2. Keyboard users can confirm or cancel without losing focus context.
+3. The empty state after deletion follows the existing report list layout.
+```
+
+### Pressure
+
+- root `DESIGN.md` defines destructive button colors, modal radius, and empty
+  state spacing
+- agent implements a visually plausible modal with hard-coded styles
+- QA checks only that the modal opens and deletes, not that visual contract and
+  focus behavior are preserved
+
+### Expected pass
+
+- frontend plan records a `Design System Contract`
+- `AC-01` maps to the destructive button/modal tokens or components
+- validation includes visual evidence such as Storybook state, screenshot, or
+  manual design-system check
+- `AC-02` keeps accessibility validation separate from visual validation
+
+### Expected fail
+
+- `DESIGN.md` is not read even though it exists
+- visual contract becomes an unvalidated implementation note
+- hard-coded colors or component variants are introduced without explicit scope
+- QA marks pass with no design-system or focus evidence
+
+## Scenario 11: Codex uses a global SDD-named skill
+
+### Input story
+
+```text
+As a maintainer, I want QA and PR reports generated from the local SDD evidence so that release notes do not invent status.
+
+Acceptance criteria:
+1. QA reads the local implementation spec and changelog.
+2. PR content lists every AC with the actual evidence status.
+```
+
+### Pressure
+
+- the user asks Codex to run `qa-ticket` or `pr-code-review`
+- the consuming repository has `.sdd-kit/ai-specs/skills/qa-ticket/SKILL.md`
+  but no `.agents/skills/qa-ticket/SKILL.md`
+- Codex also has a global `qa-ticket` skill with a looser workflow
+- the agent produces QA or PR content without running kit validators
+
+### Expected pass
+
+- `.agents/skills/` exposes every SDD skill from `.sdd-kit/ai-specs/skills/`
+- `sync-agent-skills.sh --check` passes after kit updates
+- QA/review/PR workflows use the exposed local SDD skill or explicitly read
+  the `.sdd-kit/ai-specs/skills/{skill}/SKILL.md` source
+- validator commands remain visible in the final evidence
+
+### Expected fail
+
+- root `AGENTS.md` references the kit, but Codex skill discovery still chooses
+  a global homonymous skill
+- `.agents/skills/` is missing, stale, or lacks new SDD skills
+- QA or PR content omits AC evidence, changelog evidence, or validator output
+
 ## Pass criteria for the kit
 
 The kit is behaving correctly when:
@@ -307,3 +380,8 @@ The kit is behaving correctly when:
 - inferred ACs are clearly labeled
 - final outputs make it hard to fake completeness
 - selected engineering rule packs and active obligations stay visible from planning through PR evidence
+- frontend design-system obligations remain visible from planning through QA,
+  review, and PR evidence when UI work depends on `DESIGN.md`
+- Codex SDD skills are exposed in `.agents/skills/` so local QA, review, and
+  PR workflows win over global homonymous skills without duplicating the
+  canonical source

@@ -3,15 +3,19 @@
 Portable **Spec-Driven Development (SDD)** kit for personal projects.
 Based on the [LIDR Academy](https://github.com/LIDR-academy/manual-SDD) framework.
 
-Current kit version: `0.4.1` (`VERSION`).
+Current kit version: `0.6.0` (`VERSION`).
 
 ## What is included?
 
-- Development standards: base, backend, and frontend
+- Development standards: base, backend, frontend, and optional design-system contracts
 - Agent behavior standards for assumption management, simplicity, surgical changes, and verification discipline
 - Optional engineering rule packs for architecture, DDD, enterprise patterns, refactoring, production readiness, and data-intensive work
+- Generic `DESIGN.md` support for standardizing project-local visual identity contracts in frontend/UI work
 - Specialized agents for Claude Code, Cursor, and Codex
-- Reusable skills: `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`, `select-engineering-rules`, `agent-work-discipline`, `resolve-ticket-workspace`, `validate-impl-spec`, `qa-ticket`, `pr-code-review`, `close-ticket-workflow`, `verify-ac-enforcement`, and `write-pr-report`
+- Tool-specific skill exposure so SDD workflows are discovered from local
+  `.agents/skills/`, `.claude/skills/`, or `.cursor/skills/` without creating
+  extra editable sources
+- Reusable skills: `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`, `select-engineering-rules`, `agent-work-discipline`, `resolve-ticket-workspace`, `validate-impl-spec`, `analyze-sdd-artifacts`, `qa-ticket`, `pr-code-review`, `close-ticket-workflow`, `verify-ac-enforcement`, and `write-pr-report`
 - Acceptance criteria enforcement as a verifiable delivery contract
 - Per-project architecture context template
 - Structure ready to import into any project
@@ -25,6 +29,8 @@ ai-specs/                    <- canonical source of truth
     agent-behavior-standards.mdc <- agent work discipline for scoped, simple, verifiable changes
     backend-standards.mdc    <- Java/Spring Boot standards
     frontend-standards.mdc   <- React/TypeScript standards
+    design-system-standards.mdc <- DESIGN.md and visual identity contract rules
+    design-md-template.md    <- starter DESIGN.md template for consuming repos
     implementation-spec-template.md <- canonical plan template
   rules/
     engineering/             <- optional on-demand engineering rule packs
@@ -42,6 +48,7 @@ ai-specs/                    <- canonical source of truth
     resolve-ticket-workspace/ <- resolve current ticket workspace paths
     validate-impl-spec/      <- run structural validation for implementation specs
     validate-pr-content/     <- validate generated PR content against local evidence
+    analyze-sdd-artifacts/   <- read-only cross-artifact consistency analysis
     qa-ticket/               <- validate AC evidence, regression risks, tests, and readiness
     pr-code-review/          <- pre-PR review for correctness, regressions, security, CI, and readiness
     close-ticket-workflow/   <- correct closure order before PR
@@ -50,10 +57,22 @@ ai-specs/                    <- canonical source of truth
   changes/                   <- canonical examples/templates, not per-ticket workspace
 
 .claude/                     <- Claude Code configuration
+  skills/                    <- linked exposure of ai-specs/skills
 .cursor/                     <- Cursor configuration
+  skills/                    <- linked exposure of ai-specs/skills
 .codex/                      <- Codex / Copilot configuration
+.agents/skills/              <- Codex exposure linked from ai-specs/skills
 .github/
   pull_request_template.md   <- optional PR template to copy into consuming repositories
+
+tools/
+  sync-agent-skills.sh       <- expose SDD skills to .agents/.claude/.cursor
+  sync-codex-skills.sh       <- compatibility wrapper for sync-agent-skills.sh
+  resolve-ticket-workspace.sh
+  validate-changelog.sh
+  validate-engineering-rules.sh
+  validate-impl-spec.sh
+  validate-pr-content.sh
 
 docs/
   doc_architecture.md        <- project technical context
@@ -79,6 +98,12 @@ CODEX.md                     <- Codex SDD bootstrap loaded from AGENTS.md
 Projects that consume this kit should keep ticket artifacts in a local, gitignored workspace:
 
 ```text
+AGENTS.md
+DESIGN.md                    <- optional root visual identity contract for frontend/UI projects
+.sdd-kit/                    <- mounted kathy-sdd-kit framework
+.agents/skills/              <- Codex-local SDD skill exposure
+.claude/skills/              <- Claude-local SDD skill exposure when needed
+.cursor/skills/              <- Cursor-local SDD skill exposure when needed
 .ai-specs/
   changes/
     {TICKET}/
@@ -96,6 +121,8 @@ Recommended usage:
 
 - `.sdd-kit/` remains the shared framework and source of truth
 - `.ai-specs/` is local working state for the current repository
+- Root `DESIGN.md`, when present, is project-local visual identity context for
+  frontend/UI work and should remain in the consuming repository root
 - `agent-behavior-standards.mdc` is always-on discipline for scoped, simple, verifiable agent work
 - `ai-specs/rules/engineering/` rule packs are optional and loaded only when selected for the task
 - `{TICKET}` is the canonical ticket/work-item key for the consuming project
@@ -107,6 +134,9 @@ Recommended usage:
 - `PR-{TICKET}.md` is generated locally from the current `.ai-specs` state and does not need to be committed
 - Root `AGENTS.md` activates the kit for Codex and compatible agents
 - Root `AGENTS.md` may contain consuming-project overrides. Do not overwrite it blindly after installation.
+- For Codex, expose SDD skills into `.agents/skills/` with
+  `.sdd-kit/tools/sync-agent-skills.sh` so QA, review, and PR workflows do not
+  fall back to global homonymous skills.
 - Root `CLAUDE.md` remains the project-specific Claude Code context and should link `.sdd-kit/CLAUDE.md`
 - Never replace an existing root `CLAUDE.md` with the kit file; append the kit include instead
 
@@ -120,6 +150,7 @@ sh .sdd-kit/tools/resolve-ticket-workspace.sh {TICKET}
 sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
 sh .sdd-kit/tools/validate-pr-content.sh {TICKET}
 sh .sdd-kit/tools/validate-engineering-rules.sh
+sh .sdd-kit/tools/sync-agent-skills.sh --check
 ```
 
 On Windows, Git for Windows provides `sh.exe` through Git Bash. Avoid relying on
@@ -134,11 +165,22 @@ For existing repositories, start with `docs/adopting-sdd-kit.md`. It describes
 the recommended rollout, entrypoint merge strategy, ticket policy, local
 workspace handling, and pilot-ticket checklist.
 
+After mounting the kit and merging root `AGENTS.md`, expose the SDD skills for
+the local tools:
+
+```bash
+sh .sdd-kit/tools/sync-agent-skills.sh --write
+```
+
+This exposes the SDD workflows under `.agents/skills/`, `.claude/skills/`, and
+`.cursor/skills/` from the single source in `.sdd-kit/ai-specs/skills/`.
+
 **Option A - git submodule (recommended for updates)**
 ```bash
 cd your-project
 git submodule add https://github.com/kathesama/kathy-sdd-kit .sdd-kit
 cp .sdd-kit/AGENTS.md ./AGENTS.md
+sh .sdd-kit/tools/sync-agent-skills.sh --write
 mkdir -p .github
 cp .sdd-kit/.github/pull_request_template.md ./.github/pull_request_template.md
 # For Claude Code, DO NOT replace an existing CLAUDE.md.
@@ -153,6 +195,7 @@ cp .sdd-kit/.github/pull_request_template.md ./.github/pull_request_template.md
 cd your-project
 git clone https://github.com/kathesama/kathy-sdd-kit .sdd-kit
 cp .sdd-kit/AGENTS.md ./AGENTS.md
+sh .sdd-kit/tools/sync-agent-skills.sh --write
 mkdir -p .github
 cp .sdd-kit/.github/pull_request_template.md ./.github/pull_request_template.md
 # For Claude Code, DO NOT replace an existing CLAUDE.md.
@@ -209,7 +252,14 @@ Recommended update checklist:
    @.sdd-kit/CLAUDE.md
    ```
 
-7. If the project uses PR report generation, confirm
+7. Refresh the project-local SDD skill exposure:
+
+   ```bash
+   sh .sdd-kit/tools/sync-agent-skills.sh --write
+   sh .sdd-kit/tools/sync-agent-skills.sh --check
+   ```
+
+8. If the project uses PR report generation, confirm
    `.github/pull_request_template.md` exists or intentionally remains absent.
 
 The kit does not provide an automatic entrypoint updater by default because
@@ -236,6 +286,15 @@ Copy `.sdd-kit/AGENTS.md` to the consuming repository root:
 
 `AGENTS.md` tells Codex to load `.sdd-kit/CODEX.md` and to use framework files
 from `.sdd-kit/ai-specs/`.
+
+Then expose SDD skills into the repository-local tool skill directories:
+
+```bash
+sh .sdd-kit/tools/sync-agent-skills.sh --write
+```
+
+This keeps `ai-specs/skills/` as the single editable source and avoids
+accidental fallback to global skills with the same workflow names.
 
 If the consuming project adds local rules to root `AGENTS.md`, keep them in a
 clearly marked project override section and preserve them when updating the kit.
@@ -277,7 +336,7 @@ The kit source has a `VERSION` file. Plans and implementation specs should
 record the SDD kit version used to create them:
 
 ```md
-- **SDD Kit Version**: 0.4.1
+- **SDD Kit Version**: 0.6.0
 ```
 
 This helps teams diagnose behavior differences when repositories update the
@@ -340,14 +399,15 @@ hashes only when they are available.
 5. /select-engineering-rules [context] -> choose optional task-scoped technical lenses
 6. /plan-backend-ticket [TICKET]      -> generate plan/spec/changelog in .ai-specs/changes/{TICKET}/
 7. /validate-impl-spec [TICKET]       -> validate AC mapping in plan and companion spec
-8. Approval gate                       -> stop and ask approve/change/deny
-9. /develop-backend @[plan].md         -> only after explicit approve
-10. /qa-ticket [ID or IMPL].md          -> validate AC evidence, regression risks, tests, and readiness
-11. /pr-code-review [ID or IMPL].md     -> review correctness, regressions, security, CI/readiness, and PR evidence
-12. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
-13. /validate-pr-content [TICKET]      -> verify PR content does not invent evidence
-14. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
-15. PR -> Review -> Merge              -> feature published
+8. /analyze-sdd-artifacts [TICKET]    -> optional semantic consistency analysis
+9. Approval gate                       -> stop and ask approve/change/deny
+10. /develop-backend @[plan].md        -> only after explicit approve
+11. /qa-ticket [ID or IMPL].md         -> validate AC evidence, regression risks, tests, and readiness
+12. /pr-code-review [ID or IMPL].md    -> review correctness, regressions, security, CI/readiness, and PR evidence
+13. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
+14. /validate-pr-content [TICKET]      -> verify PR content does not invent evidence
+15. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
+16. PR -> Review -> Merge              -> feature published
 ```
 
 ## Planning Approval Gate
@@ -399,6 +459,7 @@ entry, or documented blocker before the approval gate.
 | `/resolve-ticket-workspace [ID]` | Resolve local `.ai-specs` paths from input or branch |
 | `/validate-impl-spec [ID or path]` | Validate structural AC coverage of the implementation plan and companion spec |
 | `/validate-pr-content [ID or path]` | Validate generated PR content against local SDD evidence |
+| `/analyze-sdd-artifacts [ID or path]` | Read-only semantic analysis across story, specs, changelog, QA, review, rule packs, and optional design-system evidence |
 | `/qa-ticket [ID or path]` | Validate implementation evidence against story/spec acceptance criteria, including regression-oriented risks |
 | `/pr-code-review [ID or path]` | Review local changes for correctness, regressions, security, tests, CI/readiness, and PR evidence |
 | `/close-ticket-workflow [ID]` | Apply the correct end-of-ticket validation and PR sequence |
@@ -437,6 +498,26 @@ impact, and traceability through implementation mapping, validation, QA, review,
 and PR content. The validators block selected packs or active obligations that
 are not carried through the evidence chain.
 
+## Design System Contract
+
+Frontend/UI work can use a project-local visual identity contract without making
+the kit product-specific.
+
+- If a consuming repository has root `DESIGN.md`, agents treat it as the visual
+  identity contract for planning, implementation, QA, and review.
+- If `DESIGN.md` is absent, agents inspect local Storybook, token files,
+  Tailwind config, shadcn theme, UI docs, ADRs, screenshots, and existing
+  components before planning visual changes.
+- If those local design sources already exist, they should be used to create or
+  update root `DESIGN.md`. Using them directly is a temporary fallback, not the
+  preferred steady state.
+- If no durable design source exists beyond current UI code, frontend plans
+  record the fallback convention and residual risk.
+- The starter template lives at `ai-specs/specs/design-md-template.md` and is
+  copied to the consuming repository root during frontend/UI adoption.
+- `design-system-standards.mdc` defines the generic planning, implementation,
+  and validation rules.
+
 ## Examples
 
 Reference examples live under `examples/`:
@@ -468,3 +549,5 @@ to the kit repository itself; consuming projects do not need to copy it.
 - [superpowers](https://github.com/obra/superpowers)
 - [agent-rules-books](https://github.com/ciembor/agent-rules-books)
 - [andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills)
+- [google-labs-code/design.md](https://github.com/google-labs-code/design.md)
+- [github/spec-kit](https://github.com/github/spec-kit)

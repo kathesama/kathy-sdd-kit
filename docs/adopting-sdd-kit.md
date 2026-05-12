@@ -50,7 +50,40 @@ For Claude Code, do not replace root `CLAUDE.md`. Add the kit include:
 @.sdd-kit/CLAUDE.md
 ```
 
-### 3. Decide The Ticket Policy
+### 3. Expose Agent Skills
+
+`ai-specs/skills/` is the single editable source for SDD skills. Tool-specific
+skill directories are exposure layers so each agent can discover those skills
+locally.
+
+Codex reads root `AGENTS.md` for instructions, but skill discovery can still
+prefer global user skills when they share names such as `qa-ticket`,
+`pr-code-review`, or `write-pr-report`. Expose the kit skills into the consuming
+repository so local SDD workflows win:
+
+```bash
+sh .sdd-kit/tools/sync-agent-skills.sh --write
+```
+
+This links the canonical skills into:
+
+```text
+.agents/skills/{skill-name}/SKILL.md
+.claude/skills/{skill-name}/SKILL.md
+.cursor/skills/{skill-name}/SKILL.md
+```
+
+Run the check after kit updates:
+
+```bash
+sh .sdd-kit/tools/sync-agent-skills.sh --check
+```
+
+Keep any project-specific skills under different names unless they intentionally
+replace an SDD workflow. Do not edit exposed SDD skills directly; update the
+kit source under `.sdd-kit/ai-specs/skills/` and sync again.
+
+### 4. Decide The Ticket Policy
 
 Define how `{TICKET}` is resolved in this repository.
 
@@ -73,7 +106,7 @@ For this repository, `{TICKET}` is the GitHub issue key `GH-{number}`.
 
 Keep this policy in root `AGENTS.md`, `CLAUDE.md`, or project docs.
 
-### 4. Prepare Local Workspace
+### 5. Prepare Local Workspace
 
 Ticket artifacts are local working evidence:
 
@@ -85,7 +118,48 @@ The folder may be created by the agent when the first ticket starts. Teams may
 also add `.ai-specs/` to `.gitignore` if they want to keep all ticket artifacts
 local.
 
-### 5. Copy Or Keep The PR Template
+Expected root layout for a frontend/UI repository:
+
+```text
+AGENTS.md
+DESIGN.md
+.sdd-kit/
+.agents/skills/
+.claude/skills/
+.cursor/skills/
+.ai-specs/changes/{TICKET}/
+```
+
+### 6. Standardize Design Context
+
+For frontend/UI projects, prefer a root `DESIGN.md` as the SDD-facing design
+contract for agents:
+
+```bash
+cp .sdd-kit/ai-specs/specs/design-md-template.md ./DESIGN.md
+```
+
+Then replace the template content with project-specific tokens, rationale, and
+component guidance. Keep `DESIGN.md` in the consuming repository root, not in
+`.sdd-kit/`.
+
+If the project already has Storybook, design tokens, Tailwind theme files,
+shadcn theme configuration, UI docs, ADRs, or brand guidelines, use those
+sources to populate `DESIGN.md`. The file standardizes the scattered visual
+contract for agents; it does not replace the underlying token files,
+components, Storybook, or product design docs.
+
+`DESIGN.md` is optional for repositories without persistent UI work. In an
+active frontend/UI repository, absence of `DESIGN.md` is a standardization gap,
+not a neutral default. Frontend plans may use existing local sources
+temporarily, but they must record:
+
+- which local design sources were used
+- why creating or updating root `DESIGN.md` is out of scope for this ticket, or
+  whether it is planned as prework
+- the residual risk of planning UI from scattered sources
+
+### 7. Copy Or Keep The PR Template
 
 If the project wants SDD-generated PR content, copy the starter template:
 
@@ -97,7 +171,7 @@ cp .sdd-kit/.github/pull_request_template.md .github/pull_request_template.md
 If the repository already has a PR template, keep it and let `write-pr-report`
 preserve its structure.
 
-### 6. Run One Pilot Ticket
+### 8. Run One Pilot Ticket
 
 Pick a small backend or frontend task.
 
@@ -124,11 +198,12 @@ The pilot should test the workflow, not just the code.
 - Related work item mapping.
 - Structural AC coverage validation.
 - PR content evidence validation.
-- Reusable standards, agent behavior discipline, optional engineering rule packs, and skills.
+- Reusable standards, agent behavior discipline, optional engineering rule packs, generic design-system contract support, and skills.
 
 ### What The Project Owns
 
 - Architecture decisions.
+- Product visual identity and root `DESIGN.md` content.
 - Security policy.
 - Ticket key policy.
 - Build and test commands.
@@ -171,14 +246,18 @@ For projects that installed the kit as a direct clone instead of a submodule:
 git -C .sdd-kit pull --ff-only
 ```
 
-After the kit revision is updated, review root entrypoints:
+After the kit revision is updated, review root entrypoints and skill exposures:
 
 1. Review `.sdd-kit/AGENTS.md` against root `AGENTS.md`.
 2. Preserve project-specific override sections.
 3. Confirm root `CLAUDE.md` still includes `.sdd-kit/CLAUDE.md` when Claude Code is used.
-4. Review `.github/pull_request_template.md` only if the project wants to adopt starter template changes.
+4. Run `sh .sdd-kit/tools/sync-agent-skills.sh --write`.
+5. Run `sh .sdd-kit/tools/sync-agent-skills.sh --check` to confirm exposed
+   SDD skills point to the kit.
+6. Review `.github/pull_request_template.md` only if the project wants to adopt starter template changes.
 
-Do not blindly overwrite root `AGENTS.md` or root `CLAUDE.md`.
+Do not blindly overwrite root `AGENTS.md`, root `CLAUDE.md`, or project-local
+non-SDD skills.
 
 ## Common Adoption Risks
 
@@ -186,9 +265,11 @@ Do not blindly overwrite root `AGENTS.md` or root `CLAUDE.md`.
 |---|---|
 | Agents skip subtasks | `Related Work Items` is mandatory and validated |
 | Agents start coding before plan approval | Planning gate requires explicit `approve` |
+| Codex runs a global QA/PR skill instead of the kit workflow | Expose SDD skills with `sync-agent-skills.sh` and check drift after kit updates |
 | PR content invents test/CI evidence | `validate-pr-content.sh` checks local evidence |
 | Agents overgeneralize or make drive-by changes | `agent-behavior-standards.mdc` requires simple, surgical, verifiable work |
 | Architecture or data risks are missed | `select-engineering-rules` loads task-scoped rule packs |
+| Frontend agents invent visual style | Root `DESIGN.md` and `design-system-standards.mdc` make visual identity explicit; scattered Storybook/tokens/theme sources should be summarized into `DESIGN.md` during adoption |
 | Project rules are overwritten | Preserve local override sections in root files |
 | SDD artifacts create repo noise | Keep `.ai-specs/changes/` local and summarize in `PR-{TICKET}.md` |
 
@@ -199,6 +280,9 @@ The kit is adopted when:
 - Root `AGENTS.md` activates `.sdd-kit/CODEX.md`.
 - Root `CLAUDE.md` includes `.sdd-kit/CLAUDE.md` if Claude Code is used.
 - Agent behavior standards and optional engineering rule packs are visible in the planning context.
+- Active frontend/UI projects provide root `DESIGN.md`, or plans explicitly
+  record why creating it is out of scope and which local sources are being used
+  temporarily.
 - The project ticket policy is documented.
 - A pilot ticket has passed planning, approval, QA, review, PR content generation, and PR content validation.
 - The team agrees whether `.ai-specs/changes/` remains local or is handled by another evidence store.

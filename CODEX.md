@@ -20,6 +20,7 @@ read the relevant framework files from the submodule:
 - `.sdd-kit/ai-specs/specs/agent-behavior-standards.mdc`
 - `.sdd-kit/ai-specs/specs/backend-standards.mdc` for backend work
 - `.sdd-kit/ai-specs/specs/frontend-standards.mdc` for frontend work
+- `.sdd-kit/ai-specs/specs/design-system-standards.mdc` for frontend/UI design-system work
 - `.sdd-kit/ai-specs/specs/implementation-spec-template.md` when creating or validating implementation specs
 - `.sdd-kit/ai-specs/rules/engineering/README.md` when selecting optional engineering rule packs
 - `.sdd-kit/ai-specs/skills/{skill-name}/SKILL.md` for the requested SDD workflow
@@ -30,13 +31,45 @@ read the relevant framework files from the submodule:
 - `.sdd-kit/docs/tracker-policy.md` when project ticket policy is not defined
 - `.sdd-kit/ai-specs/specs/changelog-template.md` when creating or appending ticket changelog evidence
 
+## Skill Resolution
+
+`ai-specs/skills/` is the canonical source for SDD skills. Tool-specific skill
+directories are exposure layers only:
+
+- `.agents/skills/` for Codex
+- `.claude/skills/` for Claude Code
+- `.cursor/skills/` for Cursor
+
+Codex may also have global skills with the same names as SDD workflows, such as
+`qa-ticket`, `pr-code-review`, or `write-pr-report`. For SDD work, prefer the
+project-local exposure under `.agents/skills/`.
+
+- After adding or updating `.sdd-kit/`, run:
+
+  ```powershell
+  sh .sdd-kit/tools/sync-agent-skills.sh --write
+  ```
+
+- The tool links SDD skills from `.sdd-kit/ai-specs/skills/` into
+  tool-specific skill directories without creating a second editable source.
+- If a requested SDD skill exists in `.agents/skills/`, read that file before
+  using any global skill with the same name.
+- If the exposure is absent or stale, read the source skill directly from
+  `.sdd-kit/ai-specs/skills/{skill-name}/SKILL.md` before continuing.
+- Validate the exposure with:
+
+  ```powershell
+  sh .sdd-kit/tools/sync-agent-skills.sh --check
+  ```
+
 ## Project Context Precedence
 
 Use consuming-project context before generic kit guidance:
 
 1. Direct user request
 2. Root `AGENTS.md`
-3. Root project context such as `CLAUDE.md`, `docs/doc_architecture.md`, ADRs, glossary, scripts, and package/build config
+3. Root project context such as `CLAUDE.md`, `DESIGN.md`,
+   `docs/doc_architecture.md`, ADRs, glossary, scripts, and package/build config
 4. `.sdd-kit/CODEX.md`
 5. `.sdd-kit/ai-specs/` framework standards, skills, templates, and agents
 
@@ -88,6 +121,11 @@ instructions.
   explicitly answers `approve`.
 - Treat acceptance criteria as delivery contract items.
 - Implementation specs must map each acceptance criterion to implementation and validation evidence.
+- For frontend/UI work, use root `DESIGN.md` as the project-local visual
+  identity contract when present. If it is absent but local Storybook, token,
+  Tailwind, shadcn, UI doc, ADR, screenshot, or brand sources exist, record
+  the missing `DESIGN.md` as a standardization gap and state whether creating
+  it is prework, in scope, or explicitly out of scope.
 - Follow `agent-behavior-standards.mdc`: state material assumptions, keep changes simple and surgical, and verify before making completion claims.
 - Use `select-engineering-rules` only when the task needs an architecture, domain, enterprise pattern, refactoring, production-readiness, or data-consistency lens.
 - Load engineering rule packs on demand; do not treat all rule packs as always-on instructions.

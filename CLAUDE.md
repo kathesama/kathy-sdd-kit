@@ -8,12 +8,14 @@
 @.sdd-kit/ai-specs/specs/agent-behavior-standards.mdc
 @.sdd-kit/ai-specs/specs/backend-standards.mdc
 @.sdd-kit/ai-specs/specs/frontend-standards.mdc
+@.sdd-kit/ai-specs/specs/design-system-standards.mdc
 
 ## Project Context
 
 Load project-specific context from the consuming repository when present:
 
 - Root `CLAUDE.md`
+- Root `DESIGN.md` for frontend/UI visual identity when present
 - `docs/doc_architecture.md`
 - `docs/adr/`
 - `docs/GLOSSARY.md`
@@ -41,6 +43,7 @@ Reusable kit references:
 - `/agent-work-discipline` -> Apply baseline agent behavior discipline for scoped, simple, verifiable changes
 - `/validate-impl-spec [ID or path]` -> Run the structural validator for implementation specs
 - `sh .sdd-kit/tools/validate-changelog.sh [ID or path]` -> Run the structural validator for ticket changelog evidence
+- `/analyze-sdd-artifacts [ID or path]` -> Run a read-only cross-artifact consistency analysis
 - `/close-ticket-workflow [ID]` -> Apply the correct closure order before generating PR content
 - `/verify-ac-enforcement` -> Verify that the kit still blocks AC coverage regressions
 - `/develop-backend @[plan].md` -> Implement following the backend plan
@@ -57,6 +60,10 @@ Skill sources live under `.sdd-kit/ai-specs/skills/`.
 - `TICKET` is the canonical ticket/work-item key for the consuming project; resolve ambiguous shorthand before creating artifacts
 - Before planning, inspect the parent work item and linked child work items, subtasks, checklist items, or implementation tasks exposed by the consuming project's tracker
 - Plans and companion specs must include `Related Work Items`; every in-scope child work item with technical requirements must map to an AC, validation item, or documented blocker
+- Frontend plans must use root `DESIGN.md` as the design-system contract when
+  present. If it is absent but local design sources exist, record the missing
+  `DESIGN.md` as a standardization gap and state whether creating it is
+  prework, in scope, or explicitly out of scope
 - Planning artifacts must use the exact required level-2 headings from `implementation-spec-template.md`; do not rename sections to synonyms such as `AC-to-Implementation Mapping`, `Delivery Roadmap`, or `Completion Evidence Template`
 - In `Related Work Items`, `Scope Decision` must be exactly `In scope`, `Out of scope`, `No implementation impact`, or `Blocked`
 - In planning-stage `Completion Evidence`, use validator statuses only: `Covered`, `Partial`, or `Not Covered`; unimplemented ACs should be `Not Covered` with evidence like `Pending implementation after approval.`

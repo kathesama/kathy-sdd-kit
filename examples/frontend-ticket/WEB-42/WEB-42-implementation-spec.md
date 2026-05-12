@@ -65,6 +65,12 @@
 | release-it.mini.md | Not selected | Example does not touch production dependency failure behavior. | N/A | N/A |
 | data-intensive.mini.md | Not selected | Example does not alter data ownership, consistency, events, caches, or projections. | N/A | N/A |
 
+### Design System Contract
+
+| Source | Scope | Tokens / Components | Planned Impact | Validation Evidence |
+|---|---|---|---|---|
+| Existing export UI conventions; root `DESIGN.md` absent | Temporary fallback; DESIGN.md adoption pending | Export button/loading/error states | Reuse only; no token changes; DESIGN.md creation out of scope for this example | Component test and manual accessibility check |
+
 - Use the existing export feature component patterns from the consuming repository.
 - Keep WEB-43 accessibility work scoped to keyboard reachability and screen-reader announcement behavior.
 - Do not change backend export status APIs in this example.

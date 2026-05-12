@@ -26,6 +26,10 @@ a newer `.sdd-kit/AGENTS.md`; do not replace them blindly.
 ## Tool-Specific Bootstrap
 
 - If you are Codex, load and follow `.sdd-kit/CODEX.md`.
+- If you are Codex and `.agents/skills/` exists, prefer project-local SDD
+  skills there over global skills with the same names. Tool-specific skill
+  directories are exposed from `.sdd-kit/ai-specs/skills/` by
+  `sh .sdd-kit/tools/sync-agent-skills.sh --write`.
 - If you are Claude Code and this file is loaded, also load and follow `.sdd-kit/CLAUDE.md`.
 - If the tool cannot auto-load referenced files, read the relevant file directly before starting SDD work.
 
@@ -38,6 +42,7 @@ from the submodule:
 - `.sdd-kit/ai-specs/specs/agent-behavior-standards.mdc`
 - `.sdd-kit/ai-specs/specs/backend-standards.mdc` for backend work
 - `.sdd-kit/ai-specs/specs/frontend-standards.mdc` for frontend work
+- `.sdd-kit/ai-specs/specs/design-system-standards.mdc` for frontend/UI design-system work
 - `.sdd-kit/ai-specs/specs/implementation-spec-template.md` for implementation specs
 - `.sdd-kit/ai-specs/rules/engineering/` for optional engineering rule packs selected by task scope
 - `.sdd-kit/ai-specs/skills/` for reusable SDD workflows
@@ -53,6 +58,7 @@ Use project-local context from the consuming repository first when it exists:
 - `docs/doc_architecture.md`
 - `docs/adr/`
 - `docs/GLOSSARY.md`
+- `DESIGN.md` for project-local visual identity when present
 - local package, build, test, and script configuration
 
 # Common Agent Rules
@@ -136,6 +142,12 @@ start implementation.
 - Prefer local docs, existing scripts, package config, and nearby code over assumptions.
 - If the repository has framework-specific instructions, follow them before generic rules.
 - If project-specific ADRs exist, check relevant ADRs before changing architecture, contracts, or cross-service behavior.
+- For frontend/UI work, if root `DESIGN.md` exists, treat it as the
+  project-local visual identity contract. If it is absent, inspect local design
+  docs, Storybook, tokens, theme files, and existing UI conventions before
+  planning visual changes. When those sources exist, record the missing
+  `DESIGN.md` as a design-standardization gap and decide whether creating it is
+  prework, in scope, or explicitly out of scope.
 
 ## Optional Naming Glossary
 

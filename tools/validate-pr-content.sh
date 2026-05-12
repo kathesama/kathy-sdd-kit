@@ -350,6 +350,28 @@ $weak"
 $obligation_gaps"
 }
 
+design_system_contract_present() {
+  grep -Fq "### Design System Contract" "$implementation_spec_path"
+}
+
+contains_design_system_evidence() {
+  path=$1
+  grep -Eiq 'Design System|DESIGN\.md|Storybook|screenshot|visual|token|component|responsive|accessibility|a11y' "$path"
+}
+
+validate_design_system_traceability() {
+  design_system_contract_present || return 0
+
+  missing=$(
+    contains_design_system_evidence "$qa_path" || printf 'QA report\n'
+    contains_design_system_evidence "$review_path" || printf 'review report\n'
+    contains_design_system_evidence "$pr_path" || printf 'PR content\n'
+  )
+
+  [ -z "$missing" ] || fail "Design System Contract must be traceable through QA, review, and PR content:
+$missing"
+}
+
 input=${1:-}
 resolve_paths "$input"
 
@@ -368,6 +390,7 @@ validate_key_commits
 validate_referenced_files_exist
 validate_qa_review_status
 validate_engineering_rule_pack_traceability
+validate_design_system_traceability
 
 info "OK: PR content is consistent with local SDD evidence"
 info "Ticket: $ticket"

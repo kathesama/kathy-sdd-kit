@@ -19,6 +19,27 @@
 - Pure components when possible
 - Co-locate tests with components
 
+## Design System
+
+- If the consuming repository has a root `DESIGN.md`, treat it as the
+  project-local visual identity contract.
+- If `DESIGN.md` is absent, inspect local Storybook, token files, Tailwind
+  config, shadcn theme, UI docs, ADRs, screenshots, and existing components
+  before choosing visual styles.
+- If those local design sources exist, treat them as input for root
+  `DESIGN.md` standardization. A frontend plan may use them temporarily, but it
+  must record the missing `DESIGN.md` as a design-standardization gap unless
+  creating it is already in scope.
+- Do not invent a new palette, typography scale, spacing scale, radius scale,
+  or component variant when project-local tokens or components already exist.
+- For UI tickets, implementation plans must record a `Design System Contract`
+  in `Execution Notes for Implementer`, including source, impacted
+  tokens/components, planned impact, and visual validation evidence.
+- Any intentional design-system change must be explicitly scoped and mapped to
+  an acceptance criterion, related work item, or documented risk.
+- Follow `design-system-standards.mdc` for DESIGN.md usage, fallback behavior,
+  and validation expectations.
+
 ## Performance
 
 - Initial bundle < 250KB
@@ -40,6 +61,8 @@
 - `aria-labels` where needed
 - Keyboard navigation functional
 - Color contrast compliant
+- Focus, hover, active, disabled, loading, empty, error, and permission states
+  are covered when relevant to the acceptance criteria
 
 ## Package Manager
 
