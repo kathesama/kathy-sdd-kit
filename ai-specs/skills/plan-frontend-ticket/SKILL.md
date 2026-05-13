@@ -52,6 +52,8 @@ Before writing the plan, read:
   screenshots, or brand guidelines when `DESIGN.md` is absent; treat these as
   source material for a future root `DESIGN.md`, not as an equivalent permanent
   contract
+- `docs/design-system/MASTER.md`, `docs/design/MASTER.md`, or an existing
+  `design-system/**/MASTER.md` when present
 
 Before writing the plan, resolve the workspace using the kit tool:
 
@@ -264,6 +266,9 @@ Only after an explicit `approve`:
   those sources as temporary input, call out the missing `DESIGN.md` as a
   standardization gap, and state whether creating it is prework, in scope, or
   explicitly out of scope
+- If `DESIGN.md` creation is prework or in scope, use
+  `standardize-design-contract`; when no authoritative source is obvious, ask
+  the user which master document or source should be primary before writing it
 - If no durable design source exists beyond current UI code, frontend plans
   must state the fallback UI convention and residual risk
 - Use `select-engineering-rules` when the ticket touches architecture, refactoring, production readiness, data consistency, or cross-boundary contracts

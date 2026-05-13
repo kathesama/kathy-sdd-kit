@@ -1,125 +1,106 @@
 # DESIGN.md Template
 
-Copy this file to the root of a consuming repository as `DESIGN.md` when the
-project needs a persistent visual identity contract for AI agents.
+Copy this file to the root of a consuming repository as `DESIGN.md` when a
+frontend/UI project needs an agent-facing design contract.
+
+`DESIGN.md` is not the detailed design-system documentation. Prefer
+`docs/design-system/MASTER.md` for the human-facing master source, then use
+`DESIGN.md` as the root contract that tells agents how to apply that source.
 
 ```md
 ---
 version: alpha
-name: Project Design System
-description: Visual identity contract for this product.
-colors:
-  primary: "#1A1C1E"
-  on-primary: "#FFFFFF"
-  secondary: "#6C7278"
-  tertiary: "#B8422E"
-  neutral: "#F7F5F2"
-  surface: "#FFFFFF"
-  on-surface: "#1A1C1E"
-  border: "#D9DEE3"
-  error: "#B42318"
-  on-error: "#FFFFFF"
-typography:
-  headline-lg:
-    fontFamily: Inter
-    fontSize: 32px
-    fontWeight: 700
-    lineHeight: 40px
-  headline-md:
-    fontFamily: Inter
-    fontSize: 24px
-    fontWeight: 600
-    lineHeight: 32px
-  body-md:
-    fontFamily: Inter
-    fontSize: 16px
-    fontWeight: 400
-    lineHeight: 24px
-  label-sm:
-    fontFamily: Inter
-    fontSize: 12px
-    fontWeight: 600
-    lineHeight: 16px
-rounded:
-  none: 0px
-  sm: 4px
-  md: 8px
-  lg: 12px
-  full: 9999px
-spacing:
-  xs: 4px
-  sm: 8px
-  md: 16px
-  lg: 24px
-  xl: 32px
-components:
-  button-primary:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.on-primary}"
-    typography: "{typography.label-sm}"
-    rounded: "{rounded.md}"
-    height: 40px
-    padding: 0 16px
-  button-danger:
-    backgroundColor: "{colors.error}"
-    textColor: "{colors.on-error}"
-    typography: "{typography.label-sm}"
-    rounded: "{rounded.md}"
-    height: 40px
-    padding: 0 16px
-  card:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-surface}"
-    rounded: "{rounded.md}"
-    padding: "{spacing.lg}"
+name: Project Design Agent Contract
+description: Agent-facing design rules and summary for this product.
+sourceOfTruth:
+  - docs/design-system/MASTER.md
+reviewedSources: []
+tokens:
+  colors: {}
+  typography: {}
+  rounded: {}
+  spacing: {}
+components: {}
 ---
 
 ## Overview
 
-Describe the product personality, audience, density, and emotional tone. Keep
-this practical enough that an agent can decide between competing UI choices.
+Summarize the product personality, audience, density, and UI tone. Keep this
+practical enough that an agent can make routine UI choices without inventing a
+new visual language.
+
+## Source Of Truth
+
+Reference the detailed design source for this product. Prefer
+`docs/design-system/MASTER.md` for new projects. If this repository already uses
+another master document, link it here and state that it is the primary source.
+
+If this file conflicts with the primary source, the primary source wins unless
+the ticket explicitly changes the design contract.
+
+## Reviewed Sources
+
+List the local sources used to create this contract, such as Storybook, tokens,
+Tailwind config, shadcn theme files, shared components, ADRs, screenshots, or
+brand guidelines.
+
+## Agent Rules
+
+- Read the primary design source before changing visual behavior.
+- Use existing tokens, components, spacing, typography, radius, and states.
+- Do not introduce a new visual language unless the ticket explicitly asks for
+  it.
+- If a required token or component is missing, record the gap before inventing
+  one.
+- Keep accessibility, responsive behavior, and component states consistent with
+  the primary design source.
 
 ## Colors
 
-Explain how the color roles should be used.
-
-- **Primary:** Main brand/action color.
-- **Secondary:** Utility text, borders, and lower-emphasis UI.
-- **Tertiary:** Accent for selected or high-attention moments.
-- **Neutral/Surface:** Page and container foundations.
-- **Error:** Destructive or failed states.
+Summarize color roles from the primary source. Record gaps instead of inventing
+values.
 
 ## Typography
 
-Describe the type scale, hierarchy, and where each role applies.
+Summarize type scale, hierarchy, and usage from the primary source.
 
 ## Layout
 
-Describe the spacing rhythm, container widths, density, responsive behavior, and
-where content should feel compact or spacious.
+Summarize spacing rhythm, container widths, density, responsive behavior, and
+layout constraints from the primary source.
 
 ## Elevation & Depth
 
-Describe how the product communicates hierarchy: borders, shadows, layers,
+Summarize how the product communicates hierarchy: borders, shadows, layers,
 tonal surfaces, or flat composition.
 
 ## Shapes
 
-Describe radius, border weight, icon style, and whether components should feel
-sharp, soft, dense, editorial, utilitarian, or playful.
+Summarize radius, border weight, icon style, and shape language.
 
 ## Components
 
-Describe expected styling for common components such as buttons, inputs, cards,
-tabs, modals, menus, banners, tables, and navigation.
+Summarize expected styling for common components such as buttons, inputs,
+cards, tabs, modals, menus, banners, tables, and navigation.
+
+## States & Accessibility
+
+Describe focus, hover, active, disabled, loading, empty, error, and
+permission-limited states. Record contrast, keyboard, and screen-reader
+expectations.
 
 ## Do's and Don'ts
 
 - Do use design tokens instead of hard-coded visual values.
 - Do keep WCAG AA contrast for normal text.
 - Do preserve responsive behavior across supported viewports.
-- Don't introduce new colors, fonts, spacing scales, or radius scales without
-  changing this file deliberately.
-- Don't treat screenshots as a substitute for the token contract when tokens
-  exist.
+
+## Conflicts
+
+Record conflicts between design sources. Prefer the declared source of truth
+unless the ticket explicitly changes it.
+
+## Gaps
+
+Record missing design decisions instead of inventing values.
 ```

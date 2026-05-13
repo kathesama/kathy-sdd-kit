@@ -113,6 +113,7 @@ require_file "tools/sync-codex-skills.sh" "Codex skill compatibility wrapper"
 validate_skill "ai-specs/skills/select-engineering-rules/SKILL.md" "select-engineering-rules"
 validate_skill "ai-specs/skills/agent-work-discipline/SKILL.md" "agent-work-discipline"
 validate_skill "ai-specs/skills/analyze-sdd-artifacts/SKILL.md" "analyze-sdd-artifacts"
+validate_skill "ai-specs/skills/standardize-design-contract/SKILL.md" "standardize-design-contract"
 
 require_text "AGENTS.md" "agent-behavior-standards.mdc"
 require_text "CLAUDE.md" "agent-behavior-standards.mdc"

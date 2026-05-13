@@ -15,7 +15,7 @@ Current kit version: `0.6.0` (`VERSION`).
 - Tool-specific skill exposure so SDD workflows are discovered from local
   `.agents/skills/`, `.claude/skills/`, or `.cursor/skills/` without creating
   extra editable sources
-- Reusable skills: `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`, `select-engineering-rules`, `agent-work-discipline`, `resolve-ticket-workspace`, `validate-impl-spec`, `analyze-sdd-artifacts`, `qa-ticket`, `pr-code-review`, `close-ticket-workflow`, `verify-ac-enforcement`, and `write-pr-report`
+- Reusable skills: `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`, `standardize-design-contract`, `select-engineering-rules`, `agent-work-discipline`, `resolve-ticket-workspace`, `validate-impl-spec`, `analyze-sdd-artifacts`, `qa-ticket`, `pr-code-review`, `close-ticket-workflow`, `verify-ac-enforcement`, and `write-pr-report`
 - Acceptance criteria enforcement as a verifiable delivery contract
 - Per-project architecture context template
 - Structure ready to import into any project
@@ -48,6 +48,7 @@ ai-specs/                    <- canonical source of truth
     resolve-ticket-workspace/ <- resolve current ticket workspace paths
     validate-impl-spec/      <- run structural validation for implementation specs
     validate-pr-content/     <- validate generated PR content against local evidence
+    standardize-design-contract/ <- create/update root DESIGN.md from local design sources
     analyze-sdd-artifacts/   <- read-only cross-artifact consistency analysis
     qa-ticket/               <- validate AC evidence, regression risks, tests, and readiness
     pr-code-review/          <- pre-PR review for correctness, regressions, security, CI, and readiness
@@ -100,6 +101,7 @@ Projects that consume this kit should keep ticket artifacts in a local, gitignor
 ```text
 AGENTS.md
 DESIGN.md                    <- optional root visual identity contract for frontend/UI projects
+docs/design-system/MASTER.md <- optional detailed design-system source for UI projects
 .sdd-kit/                    <- mounted kathy-sdd-kit framework
 .agents/skills/              <- Codex-local SDD skill exposure
 .claude/skills/              <- Claude-local SDD skill exposure when needed
@@ -400,14 +402,15 @@ hashes only when they are available.
 6. /plan-backend-ticket [TICKET]      -> generate plan/spec/changelog in .ai-specs/changes/{TICKET}/
 7. /validate-impl-spec [TICKET]       -> validate AC mapping in plan and companion spec
 8. /analyze-sdd-artifacts [TICKET]    -> optional semantic consistency analysis
-9. Approval gate                       -> stop and ask approve/change/deny
-10. /develop-backend @[plan].md        -> only after explicit approve
-11. /qa-ticket [ID or IMPL].md         -> validate AC evidence, regression risks, tests, and readiness
-12. /pr-code-review [ID or IMPL].md    -> review correctness, regressions, security, CI/readiness, and PR evidence
-13. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
-14. /validate-pr-content [TICKET]      -> verify PR content does not invent evidence
-15. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
-16. PR -> Review -> Merge              -> feature published
+9. /standardize-design-contract       -> optional/prework for frontend UI repos missing DESIGN.md
+10. Approval gate                      -> stop and ask approve/change/deny
+11. /develop-backend @[plan].md        -> only after explicit approve
+12. /qa-ticket [ID or IMPL].md         -> validate AC evidence, regression risks, tests, and readiness
+13. /pr-code-review [ID or IMPL].md    -> review correctness, regressions, security, CI/readiness, and PR evidence
+14. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
+15. /validate-pr-content [TICKET]      -> verify PR content does not invent evidence
+16. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
+17. PR -> Review -> Merge              -> feature published
 ```
 
 ## Planning Approval Gate
@@ -459,6 +462,7 @@ entry, or documented blocker before the approval gate.
 | `/resolve-ticket-workspace [ID]` | Resolve local `.ai-specs` paths from input or branch |
 | `/validate-impl-spec [ID or path]` | Validate structural AC coverage of the implementation plan and companion spec |
 | `/validate-pr-content [ID or path]` | Validate generated PR content against local SDD evidence |
+| `/standardize-design-contract` | Create or update root `DESIGN.md` from local design sources, asking when the primary source is unclear |
 | `/analyze-sdd-artifacts [ID or path]` | Read-only semantic analysis across story, specs, changelog, QA, review, rule packs, and optional design-system evidence |
 | `/qa-ticket [ID or path]` | Validate implementation evidence against story/spec acceptance criteria, including regression-oriented risks |
 | `/pr-code-review [ID or path]` | Review local changes for correctness, regressions, security, tests, CI/readiness, and PR evidence |
@@ -501,7 +505,9 @@ are not carried through the evidence chain.
 ## Design System Contract
 
 Frontend/UI work can use a project-local visual identity contract without making
-the kit product-specific.
+the kit product-specific. Root `DESIGN.md` is the design agent contract; the
+detailed human-facing source should live at `docs/design-system/MASTER.md` when
+the project has one.
 
 - If a consuming repository has root `DESIGN.md`, agents treat it as the visual
   identity contract for planning, implementation, QA, and review.
@@ -511,6 +517,15 @@ the kit product-specific.
 - If those local design sources already exist, they should be used to create or
   update root `DESIGN.md`. Using them directly is a temporary fallback, not the
   preferred steady state.
+- Use `/standardize-design-contract` when `DESIGN.md` must be created or
+  refreshed. The skill reads the most authoritative local source first, such as
+  a user-named master document, `docs/design-system/MASTER.md`,
+  `docs/design/MASTER.md`, existing `design-system/**/MASTER.md`, Storybook,
+  tokens, Tailwind, shadcn, shared components, docs, ADRs, or screenshots. If
+  the primary source is unclear, it asks before writing.
+- For new frontend/UI documentation, prefer `docs/design-system/MASTER.md` as
+  the detailed human-facing source. Root `DESIGN.md` remains the agent-facing
+  summary and should point to the master source.
 - If no durable design source exists beyond current UI code, frontend plans
   record the fallback convention and residual risk.
 - The starter template lives at `ai-specs/specs/design-md-template.md` and is

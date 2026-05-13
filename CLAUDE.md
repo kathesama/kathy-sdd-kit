@@ -38,6 +38,7 @@ Reusable kit references:
 - `/enrich-us [description]` -> Enrich a user story with acceptance criteria and edge cases
 - `/plan-backend-ticket [ID]` -> Generate a backend implementation plan with AC-to-implementation and AC-to-validation mapping
 - `/plan-frontend-ticket [ID]` -> Generate a frontend implementation plan with AC-to-implementation and AC-to-validation mapping
+- `/standardize-design-contract` -> Create or update root `DESIGN.md` from local design sources
 - `/resolve-ticket-workspace [ID]` -> Resolve the current local `.ai-specs` workspace from input or branch
 - `/select-engineering-rules [context]` -> Select optional engineering rule packs for planning, QA, or review
 - `/agent-work-discipline` -> Apply baseline agent behavior discipline for scoped, simple, verifiable changes

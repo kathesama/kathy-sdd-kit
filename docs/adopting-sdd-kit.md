@@ -123,6 +123,7 @@ Expected root layout for a frontend/UI repository:
 ```text
 AGENTS.md
 DESIGN.md
+docs/design-system/MASTER.md
 .sdd-kit/
 .agents/skills/
 .claude/skills/
@@ -132,22 +133,45 @@ DESIGN.md
 
 ### 6. Standardize Design Context
 
-For frontend/UI projects, prefer a root `DESIGN.md` as the SDD-facing design
-contract for agents:
+For frontend/UI projects, prefer this split:
+
+```text
+DESIGN.md                         # root design agent contract
+docs/design-system/MASTER.md      # detailed human-facing design source
+```
+
+Create or refresh `DESIGN.md` as the SDD-facing design contract for agents:
+
+```bash
+sh .sdd-kit/tools/sync-agent-skills.sh --write
+# Then ask the agent to run /standardize-design-contract.
+```
+
+`/standardize-design-contract` creates or updates `DESIGN.md` from existing
+project sources. If the repository has a master design document, tell the agent
+which file is authoritative before it writes `DESIGN.md`. If the agent cannot
+identify a clear primary source, it must ask first.
+
+For new frontend/UI documentation, prefer `docs/design-system/MASTER.md` as the
+detailed human-facing design source. `DESIGN.md` stays in the root as the
+agent-facing summary and points to that master document.
+
+For manual setup, copy the template and then replace the template content with
+project-specific tokens, rationale, and component guidance:
 
 ```bash
 cp .sdd-kit/ai-specs/specs/design-md-template.md ./DESIGN.md
 ```
 
-Then replace the template content with project-specific tokens, rationale, and
-component guidance. Keep `DESIGN.md` in the consuming repository root, not in
-`.sdd-kit/`.
+Keep `DESIGN.md` in the consuming repository root, not in `.sdd-kit/`.
 
 If the project already has Storybook, design tokens, Tailwind theme files,
-shadcn theme configuration, UI docs, ADRs, or brand guidelines, use those
-sources to populate `DESIGN.md`. The file standardizes the scattered visual
-contract for agents; it does not replace the underlying token files,
-components, Storybook, or product design docs.
+shadcn theme configuration, UI docs, ADRs, brand guidelines, or an existing
+master document such as `design-system/**/MASTER.md`, use those sources to
+populate `DESIGN.md`. The file standardizes the scattered visual contract for
+agents; it does not replace the underlying token files, components, Storybook,
+or product design docs. Do not move existing design documentation into `docs/`
+unless that reorganization is explicitly in scope.
 
 `DESIGN.md` is optional for repositories without persistent UI work. In an
 active frontend/UI repository, absence of `DESIGN.md` is a standardization gap,

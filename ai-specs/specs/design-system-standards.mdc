@@ -6,11 +6,18 @@ These standards define how frontend and UI work should use project-local visual
 identity context. They apply to any consuming project that has UI work, not to a
 specific product.
 
+`DESIGN.md` is the root agent-facing contract. It summarizes operational rules
+for AI agents and points to the detailed design source. It is not the complete
+design-system manual.
+
 ## Design System Contract
 
 - If the consuming repository has a root `DESIGN.md`, treat it as the
   project-local visual identity contract for frontend planning, implementation,
   QA, and review.
+- If the repository has `docs/design-system/MASTER.md`, treat that file as the
+  preferred detailed design-system source. `DESIGN.md` should reference and
+  summarize it for agents.
 - Keep `DESIGN.md` in the consuming repository root. Do not create project
   design artifacts inside `.sdd-kit/`.
 - `DESIGN.md` is optional for the kit as a whole. Backend, CLI, data, and
@@ -26,19 +33,30 @@ specific product.
   gap as design-standardization debt. Record the sources used, recommend
   synthesizing root `DESIGN.md`, and for broad or new UI work make that
   synthesis explicit prework unless the user scopes it out.
+- Use `standardize-design-contract` to create or refresh root `DESIGN.md` from
+  local sources. If a master design document is named by the user, read it
+  first. If source priority is unclear, ask before writing `DESIGN.md`.
+- When a project needs a detailed human-facing design source, prefer
+  `docs/design-system/MASTER.md`. Root `DESIGN.md` should summarize and point
+  to that source for agents. Existing repository conventions such as
+  `design-system/**/MASTER.md` may remain in place and should be referenced
+  rather than moved without explicit scope.
 - If no durable design source exists beyond the current UI code, proceed with
   the repository's visible UI conventions and record the missing visual
   contract as a risk in the implementation plan.
-- When `DESIGN.md` exists, token values are normative and prose is application
-  guidance. Do not override tokens with ad hoc colors, typography, spacing, or
-  radius choices unless the ticket explicitly changes the design contract.
+- When `DESIGN.md` exists, agent rules and referenced token values are
+  normative for implementation. Do not override them with ad hoc colors,
+  typography, spacing, or radius choices unless the ticket explicitly changes
+  the design contract.
 
 ## DESIGN.md Format
 
 The recommended `DESIGN.md` format has two layers:
 
-- YAML front matter with machine-readable tokens.
-- Markdown body with human-readable rationale.
+- YAML front matter with source references and machine-readable token summaries
+  when available.
+- Markdown body with agent rules, source-of-truth references, and practical UI
+  summaries.
 
 Recommended token groups:
 
@@ -51,13 +69,19 @@ Recommended token groups:
 Recommended prose sections:
 
 1. `Overview`
-2. `Colors`
-3. `Typography`
-4. `Layout`
-5. `Elevation & Depth`
-6. `Shapes`
-7. `Components`
-8. `Do's and Don'ts`
+2. `Source Of Truth`
+3. `Reviewed Sources`
+4. `Agent Rules`
+5. `Colors`
+6. `Typography`
+7. `Layout`
+8. `Elevation & Depth`
+9. `Shapes`
+10. `Components`
+11. `States & Accessibility`
+12. `Do's and Don'ts`
+13. `Conflicts`
+14. `Gaps`
 
 Unknown sections should be preserved. Duplicate sections or broken token
 references should be treated as design-system defects.
