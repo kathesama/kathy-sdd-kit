@@ -147,6 +147,16 @@ sh .sdd-kit/tools/sync-agent-skills.sh --write
 # Then ask the agent to run /standardize-design-contract.
 ```
 
+Suggested prompt:
+
+```text
+Run /standardize-design-contract.
+If docs/design-system/MASTER.md exists, use it as the primary source.
+If it does not exist, inspect local design sources.
+If the primary source is unclear, ask before writing DESIGN.md.
+Create or update root DESIGN.md as the design agent contract.
+```
+
 `/standardize-design-contract` creates or updates `DESIGN.md` from existing
 project sources. If the repository has a master design document, tell the agent
 which file is authoritative before it writes `DESIGN.md`. If the agent cannot
