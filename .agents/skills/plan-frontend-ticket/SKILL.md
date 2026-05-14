@@ -271,6 +271,11 @@ Only after an explicit `approve`:
   the user which master document or source should be primary before writing it
 - If no durable design source exists beyond current UI code, frontend plans
   must state the fallback UI convention and residual risk
+- If `docs/api-contract.md`, `contracts/api/`, or
+  `contracts/api/api-contract-source.json` exists, use `consume-api-contract`
+  before planning API-consuming UI and record API contract source, usage map,
+  gaps, and out-of-scope backend contract changes in `Execution Notes for
+  Implementer`
 - Use `select-engineering-rules` when the ticket touches architecture, refactoring, production readiness, data consistency, or cross-boundary contracts
 - Use `agent-behavior-standards.mdc` to keep the plan scoped, simple, and verifiable
 - Preserve selected engineering rule pack filenames exactly so QA, review, PR reporting, and validators can trace them
@@ -295,6 +300,8 @@ Only after an explicit `approve`:
 - Identify whether root `DESIGN.md` exists; if absent but local design sources
   exist, record the standardization gap and whether `DESIGN.md` creation is in
   scope
+- Identify whether API contract artifacts exist and map API-backed UI behavior
+  to documented endpoint or capability evidence
 - Define component, integration, and visual/manual validation per AC
 - Call out bundle-size, dependency, and UX risks where relevant
 

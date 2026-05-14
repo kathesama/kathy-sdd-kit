@@ -40,6 +40,20 @@
 - Follow `design-system-standards.mdc` for DESIGN.md usage, fallback behavior,
   and validation expectations.
 
+## API Contract
+
+- If the consuming repository has `docs/api-contract.md`, `contracts/api/`,
+  or `contracts/api/api-contract-source.json`, treat those files as the
+  project-local API source of truth for frontend planning and implementation.
+- Use `consume-api-contract` before adding or changing API clients, server
+  state hooks, mocked backend flows, forms, permissions, or capability-gated
+  UI.
+- Do not invent endpoints, payload fields, status codes, auth rules, feature
+  flags, or response shapes. Missing behavior is a contract gap or blocker.
+- Generated API contract files in a UI repository are read-only; update the API
+  source repository and rerun `api-contract-sync` when the contract must
+  change.
+
 ## Performance
 
 - Initial bundle < 250KB
