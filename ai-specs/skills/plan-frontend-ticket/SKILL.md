@@ -122,6 +122,36 @@ subsection must identify:
 - visual, responsive, accessibility, Storybook, screenshot, or manual evidence
   required to validate the change
 
+For any UI component added or materially changed by the ticket, the plan must
+also include a `Component-Driven UI Architecture` note in
+`Execution Notes for Implementer`:
+
+- component level: primitive, composed component, feature component, or page
+- named component tags/files to create or update
+- typed props, variants, children, callbacks, and state inputs needed for
+  parameterization
+- whether the component is page-scoped or reusable across screens
+- explicit reuse target or future reuse rationale when reuse is plausible
+- Storybook/story path and colocated test path for each new visible component
+  when the repository has Storybook and a component test stack; otherwise record
+  the visual/manual validation fallback
+- confirmation that no new inline component definitions or one-off inline UI
+  blocks are planned
+
+For frontend work that adds or changes component state, forms, API-backed data,
+filters, navigation state, or cross-component communication, the plan must also
+include a `State Ownership & Data Flow` note in `Execution Notes for
+Implementer`:
+
+- owner of each new or changed state value
+- data-flow path: props/callbacks, feature context/hook, Zustand/client store,
+  React Query, React Hook Form/local form state, or URL/search params
+- justification when state crosses three or more component boundaries or
+  non-adjacent siblings
+- confirmation that passive parents are not used only to forward props
+- confirmation that server state remains in React Query and is not duplicated
+  in client stores unless explicitly scoped
+
 Record the mandatory `### Engineering Rule Packs` table in `Execution Notes for
 Implementer`. The table must list all six packs exactly once. For every pack
 marked `Selected`, include active obligation IDs from that pack's `Enforcement
@@ -259,6 +289,20 @@ Only after an explicit `approve`:
 - Every AC must map to implementation work and at least one validation entry
 - Every explicit AC must appear in both `{TICKET}-impl-frontend.md` and `{TICKET}-implementation-spec.md`
 - Frontend plans must follow `frontend-standards.mdc`, accessibility rules, and design-system constraints
+- Frontend plans must reject inline component additions. Every new visible UI
+  unit must be planned as a named component rendered through its own JSX tag and
+  component file. If the component does not exist, create it for the page or
+  feature; if reuse or future reuse is plausible, parameterize it with typed
+  props, variants, children, callbacks, or state inputs.
+- Frontend plans must follow Component-Driven UI Architecture: treat pages as
+  component composition surfaces. Page and route files should group existing and
+  new components for a use case, not embed newly invented presentational markup
+  inline.
+- Frontend plans must follow State Ownership & Data Flow: colocate state at the
+  closest owner, use props/callbacks for local composition, avoid prop drilling
+  through passive parents, use feature context/hooks or existing client stores
+  for cross-tree client state, React Query for server state, form tooling for
+  form state, and URL/search params for shareable navigation state.
 - If root `DESIGN.md` exists, frontend plans must treat it as the visual
   identity contract and preserve it unless the ticket explicitly changes it
 - If root `DESIGN.md` is absent but local Storybook, token, Tailwind, shadcn,
@@ -293,6 +337,12 @@ Only after an explicit `approve`:
 ## Frontend Planning Checklist
 
 - Identify impacted routes, components, hooks, and state boundaries
+- Identify every new or changed UI component tag/file, including its typed props
+  and reuse or parameterization plan
+- Identify Storybook stories and colocated tests required for each new visible
+  component, or record the fallback when the repository lacks that tooling
+- Identify state ownership and data-flow boundaries for props, callbacks,
+  feature context/hooks, stores, React Query, forms, and URL/search params
 - Select and record applicable engineering rule packs, or state that none apply
 - Confirm parent and child work items have been inspected and mapped
 - Identify accessibility and responsive behavior requirements per AC
@@ -327,7 +377,10 @@ For frontend work, the plan must identify:
 - impacted viewport sizes and responsive behavior
 - keyboard and screen-reader expectations
 - loading, empty, error, and permission states
+- state ownership and data-flow validation for forms, filters, API-backed data,
+  and cross-component communication
 - visual evidence required for review, such as screenshots or Storybook states
+- Storybook stories and component tests required for each new visible component
 - design-token or DESIGN.md lint/diff evidence when design tokens change and
   the relevant CLI/runtime is available
 - manual checks that cannot be automated

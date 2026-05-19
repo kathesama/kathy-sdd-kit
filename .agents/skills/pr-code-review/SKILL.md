@@ -173,6 +173,15 @@ Ready | Not ready
 - Mention each active engineering rule obligation ID and include contract evidence keywords from the selected pack.
 - For frontend/UI tickets, verify that visual changes respect the recorded
   Design System Contract or explicitly document a scoped design-system change.
+- For frontend/UI tickets, flag new inline component definitions or one-off
+  inline UI blocks. New visible UI units should be named component tags in
+  their own files with typed props and parameterization when reuse is plausible.
+- For frontend/UI tickets, flag missing stories or colocated component tests for
+  new visible components when the repository has Storybook and component tests.
+- For frontend/UI tickets, review state ownership and data flow. Flag prop
+  drilling through passive parents, duplicated server state in client stores,
+  global stores used for local form/component state, or atomic components that
+  import stores/API hooks without an explicit connected-component decision.
 - Flag speculative features, drive-by refactors, formatting churn, and unrelated cleanup that violate `agent-behavior-standards.mdc`.
 - Treat full-input materialization, lost batching/streaming behavior, unbounded loops, and metric cardinality growth as review risks even when tests pass.
 - Do not invent tests, CI results, or ticket links.

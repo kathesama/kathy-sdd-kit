@@ -10,14 +10,35 @@
 - React Hook Form + Zod for forms
 - i18next for internationalization scaffolding
 
-## Component Rules
+## Component-Driven UI Architecture
 
 - Functional components always
 - One component per file
+- No inline component definitions inside pages, route files, parent
+  components, hooks, or render branches.
+- Treat UI as Component-Driven UI Architecture: a component library built from
+  small primitives, composed components, feature components, and pages. Pages
+  and routes are composition surfaces: they group components for a use case and
+  wire data, routing, and permissions.
+- Every visible UI unit added by a ticket must have its own named JSX tag and
+  component file. Do not hide new screen elements as inline JSX blocks inside a
+  page or parent component.
+- If the required component does not exist, create it for the page or feature.
+  If it can plausibly be reused in another screen, parameterize it instead of
+  hard-coding page-specific behavior.
+- New components must be parameterized with typed props, `children`, variants,
+  state props, or callbacks when that makes the component reusable without
+  leaking page-specific behavior.
+- Prefer extracting reusable or future-reusable UI into a small named component
+  over duplicating markup or styling in place.
 - Props typed with TypeScript (never `any`)
 - Separate logic into custom hooks
 - Pure components when possible
 - Co-locate tests with components
+- When the repository has Storybook or an equivalent component catalog, every
+  new visible component must include a story covering the relevant variants and
+  states. If no component catalog exists, record the visual/manual validation
+  fallback in the implementation plan.
 
 ## Design System
 
@@ -39,6 +60,33 @@
   an acceptance criterion, related work item, or documented risk.
 - Follow `design-system-standards.mdc` for DESIGN.md usage, fallback behavior,
   and validation expectations.
+
+## State Ownership & Data Flow
+
+- Keep state at the closest owner that needs to read or mutate it. The owner is
+  usually the nearest common ancestor of the components that use the value.
+- Use typed props and callbacks for local parent-child composition, especially
+  across one or two component boundaries.
+- Do not prop-drill through passive parents. If state must cross three or more
+  component boundaries, reach non-adjacent siblings, or be shared by multiple
+  feature areas, introduce a feature-level context, custom hook, or client store.
+- Atomic and presentational components should be controlled by props and events.
+  They should not import route hooks, API clients, React Query hooks, or global
+  stores unless they are intentionally documented as connected feature
+  components.
+- Use React Query for server state, caching, loading, error, and refetch flows.
+  Do not duplicate server state in Zustand or local component state except for
+  short-lived derived UI state.
+- Use React Hook Form, Zod, or local form state for form ownership. Promote form
+  data to feature state only for multi-step wizards, persisted drafts, or
+  cross-screen flows.
+- Use URL/search params for state that must be shareable, bookmarkable, or
+  browser-navigation aware, such as filters, selected tabs, cursors, or sort
+  options.
+- Use Zustand or another existing project store only for real client state that
+  crosses screens, modules, or non-adjacent feature trees. Do not introduce
+  Redux unless the consuming repository already uses it or a ticket explicitly
+  scopes that architecture change.
 
 ## API Contract
 

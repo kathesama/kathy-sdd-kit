@@ -7,91 +7,139 @@ Current kit version: `0.6.0` (`VERSION`).
 
 ## What is included?
 
-- Development standards: base, backend, frontend, and optional design-system contracts
-- Agent behavior standards for assumption management, simplicity, surgical changes, and verification discipline
-- Optional engineering rule packs for architecture, DDD, enterprise patterns, refactoring, production readiness, and data-intensive work
-- Generic `DESIGN.md` support for standardizing project-local visual identity contracts in frontend/UI work
-- Specialized agents for Claude Code, Cursor, and Codex
-- Tool-specific skill exposure so SDD workflows are discovered from local
-  `.agents/skills/`, `.claude/skills/`, or `.cursor/skills/` without creating
-  extra editable sources
-- Reusable skills: `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`, `standardize-design-contract`, `select-engineering-rules`, `agent-work-discipline`, `resolve-ticket-workspace`, `validate-impl-spec`, `analyze-sdd-artifacts`, `qa-ticket`, `pr-code-review`, `close-ticket-workflow`, `verify-ac-enforcement`, and `write-pr-report`
-- Acceptance criteria enforcement as a verifiable delivery contract
-- Per-project architecture context template
-- Structure ready to import into any project
+- SDD standards for base workflow, backend, frontend, agent behavior,
+  changelogs, implementation specs, and project-local design contracts.
+- Frontend guardrails for Component-Driven UI Architecture, State Ownership &
+  Data Flow, API contract consumption, accessibility, validation, and
+  design-system evidence.
+- Optional engineering rule packs for Clean Architecture, DDD, enterprise
+  patterns, refactoring, production readiness, and data-intensive work.
+- Root `DESIGN.md` support for standardizing project-local visual identity
+  contracts, with `docs/design-system/MASTER.md` as the preferred detailed
+  design-system source.
+- API contract workflows for syncing backend contract artifacts into UI repos
+  and consuming those artifacts without inventing endpoints or payload fields.
+- Reusable SDD skills: `agent-work-discipline`, `analyze-sdd-artifacts`,
+  `api-contract-sync`, `close-ticket-workflow`, `consume-api-contract`,
+  `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`,
+  `pr-code-review`, `qa-ticket`, `resolve-ticket-workspace`,
+  `select-engineering-rules`, `standardize-design-contract`,
+  `validate-impl-spec`, `validate-pr-content`, `verify-ac-enforcement`, and
+  `write-pr-report`.
+- Tool-specific skill exposure for Codex, Claude Code, and Cursor through
+  `.agents/skills/`, `.claude/skills/`, `.cursor/skills/`, and `.codex/`
+  links, while `ai-specs/skills/` remains the single editable source.
+- Entrypoints for Codex-compatible agents (`AGENTS.md` and `CODEX.md`) and
+  Claude Code (`CLAUDE.md` include target).
+- Validation tools for ticket workspace resolution, implementation specs,
+  changelogs, engineering rule packs, PR content, and skill exposure sync.
+- Examples and negative fixtures for backend/frontend planning, PR content,
+  engineering rule enforcement, invalid specs, and review-fix workflows.
+- Starter PR template and kit CI workflow.
+- Documentation for adoption, runtime, roles, tracker-neutral ticket policy,
+  architecture context, and AC enforcement pressure scenarios.
 
 ## Structure
 
 ```text
-ai-specs/                    <- canonical source of truth
+VERSION                      <- current kit version
+AGENTS.md                    <- root agent bootstrap copied to consuming repos
+CODEX.md                     <- Codex bootstrap loaded from AGENTS.md
+CLAUDE.md                    <- Claude Code SDD include target
+README.md
+
+ai-specs/                    <- canonical SDD framework source
   specs/
-    base-standards.mdc       <- general rules
-    agent-behavior-standards.mdc <- agent work discipline for scoped, simple, verifiable changes
-    backend-standards.mdc    <- Java/Spring Boot standards
-    frontend-standards.mdc   <- React/TypeScript standards
+    agent-behavior-standards.mdc <- assumption, scope, and verification discipline
+    backend-standards.mdc    <- backend implementation standards
+    base-standards.mdc       <- SDD workflow and AC contract rules
+    changelog-template.md    <- append-only ticket changelog template
+    design-md-template.md    <- starter root DESIGN.md template
     design-system-standards.mdc <- DESIGN.md and visual identity contract rules
-    design-md-template.md    <- starter DESIGN.md template for consuming repos
+    frontend-standards.mdc   <- frontend, component, state, API, a11y standards
     implementation-spec-template.md <- canonical plan template
   rules/
-    engineering/             <- optional on-demand engineering rule packs
+    engineering/
+      README.md
+      clean-architecture.mini.md
+      data-intensive.mini.md
+      domain-driven-design.mini.md
+      patterns-of-enterprise-application-architecture.mini.md
+      refactoring.mini.md
+      release-it.mini.md
   .agents/
+    analyst-agent.md
     backend-agent.md
     frontend-agent.md
-    analyst-agent.md
-  .commands/                 <- utility prompts (add as needed)
+  .commands/
+    .gitkeep                 <- reserved for future command prompts
+  changes/
+    .gitkeep                 <- framework placeholder, not per-ticket workspace
   skills/
-    enrich-user-story/       <- /enrich-us
-    plan-backend-ticket/     <- /plan-backend-ticket
-    plan-frontend-ticket/    <- /plan-frontend-ticket
-    select-engineering-rules/ <- choose task-scoped rule packs
-    agent-work-discipline/   <- baseline agent behavior discipline
-    resolve-ticket-workspace/ <- resolve current ticket workspace paths
-    validate-impl-spec/      <- run structural validation for implementation specs
-    validate-pr-content/     <- validate generated PR content against local evidence
-    standardize-design-contract/ <- create/update root DESIGN.md from local design sources
-    analyze-sdd-artifacts/   <- read-only cross-artifact consistency analysis
-    qa-ticket/               <- validate AC evidence, regression risks, tests, and readiness
-    pr-code-review/          <- pre-PR review for correctness, regressions, security, CI, and readiness
-    close-ticket-workflow/   <- correct closure order before PR
-    verify-ac-enforcement/   <- kit self-check for AC coverage regressions
-    write-pr-report/         <- /write-pr-report
-  changes/                   <- canonical examples/templates, not per-ticket workspace
+    agent-work-discipline/
+    analyze-sdd-artifacts/
+    api-contract-sync/
+      scripts/
+        sync-api-contract.ps1
+        sync-api-contract.sh
+    close-ticket-workflow/
+    consume-api-contract/
+    enrich-user-story/
+    plan-backend-ticket/
+    plan-frontend-ticket/
+    pr-code-review/
+    qa-ticket/
+    resolve-ticket-workspace/
+    select-engineering-rules/
+    standardize-design-contract/
+    validate-impl-spec/
+    validate-pr-content/
+    verify-ac-enforcement/
+    write-pr-report/
 
-.claude/                     <- Claude Code configuration
-  skills/                    <- linked exposure of ai-specs/skills
-.cursor/                     <- Cursor configuration
-  skills/                    <- linked exposure of ai-specs/skills
-.codex/                      <- Codex / Copilot configuration
-.agents/skills/              <- Codex exposure linked from ai-specs/skills
-.github/
-  pull_request_template.md   <- optional PR template to copy into consuming repositories
+docs/
+  ac-enforcement-pressure-scenarios.md <- regression scenarios for kit workflow changes
+  adopting-sdd-kit.md        <- guide for adding the kit to an existing repo
+  doc_architecture.md        <- project technical context
+  roles-and-responsibilities.md <- human and agent role boundaries
+  tool-runtime.md            <- shell runtime and Windows guidance
+  tracker-policy.md          <- generic ticket/work-item key policy examples
+
+examples/
+  backend-ticket/            <- complete backend planning example
+  engineering-rules/         <- valid and invalid engineering rule evidence fixtures
+  frontend-ticket/           <- complete frontend planning example
+  invalid/                   <- fixtures expected to fail validation
+  pr-content/                <- valid and invalid generated PR content examples
+  review-fix-ticket/         <- pattern for turning review findings into ACs
 
 tools/
+  resolve-ticket-workspace.sh
   sync-agent-skills.sh       <- expose SDD skills to .agents/.claude/.cursor
   sync-codex-skills.sh       <- compatibility wrapper for sync-agent-skills.sh
-  resolve-ticket-workspace.sh
   validate-changelog.sh
   validate-engineering-rules.sh
   validate-impl-spec.sh
   validate-pr-content.sh
 
-docs/
-  doc_architecture.md        <- project technical context
-  tool-runtime.md            <- shell runtime and Windows guidance
-  roles-and-responsibilities.md <- human and agent role boundaries
-  tracker-policy.md          <- generic ticket/work-item key policy examples
-  adopting-sdd-kit.md        <- professional guide for adding the kit to an existing repo
-
-examples/
-  backend-ticket/            <- complete backend planning example
-  frontend-ticket/           <- complete frontend planning example
-  pr-content/                <- valid and invalid generated PR content examples
-  invalid/                   <- fixtures expected to fail validation
-  review-fix-ticket/         <- pattern for turning review findings into ACs
-
-AGENTS.md                    <- agent bootstrap to copy into consuming repository root
-CLAUDE.md                    <- Claude Code SDD bootstrap loaded from the submodule
-CODEX.md                     <- Codex SDD bootstrap loaded from AGENTS.md
+.agents/
+  skills/                    <- Codex skill exposure, junctions to ai-specs/skills
+.claude/
+  agents -> ../ai-specs/.agents
+  commands/                  <- Claude command exposure placeholder
+  skills -> ../ai-specs/skills
+.codex/
+  agents -> ../ai-specs/.agents
+  skills -> ../ai-specs/skills
+.cursor/
+  agents -> ../ai-specs/.agents
+  rules/
+    agent-behavior-standards.mdc
+  skills -> ../ai-specs/skills
+.github/
+  pull_request_template.md   <- starter PR template for consuming repos
+  workflows/
+    sdd-kit.yml              <- kit repository validation workflow
 ```
 
 ## Local workspace convention
@@ -102,6 +150,8 @@ Projects that consume this kit should keep ticket artifacts in a local, gitignor
 AGENTS.md
 DESIGN.md                    <- optional root visual identity contract for frontend/UI projects
 docs/design-system/MASTER.md <- optional detailed design-system source for UI projects
+docs/api-contract.md         <- optional copied API contract for frontend/UI projects
+contracts/api/               <- optional generated/copied API contract artifacts
 .sdd-kit/                    <- mounted kathy-sdd-kit framework
 .agents/skills/              <- Codex-local SDD skill exposure
 .claude/skills/              <- Claude-local SDD skill exposure when needed
@@ -127,6 +177,10 @@ Recommended usage:
   frontend/UI work and should remain in the consuming repository root
 - `agent-behavior-standards.mdc` is always-on discipline for scoped, simple, verifiable agent work
 - `ai-specs/rules/engineering/` rule packs are optional and loaded only when selected for the task
+- Frontend/UI work follows Component-Driven UI Architecture and State Ownership
+  & Data Flow from `frontend-standards.mdc`
+- `docs/api-contract.md` and `contracts/api/`, when present, are frontend API
+  contract sources and should be consumed before API-backed UI planning
 - `{TICKET}` is the canonical ticket/work-item key for the consuming project
 - Examples: `JAP-160`, `ENG-123`, `GH-42`, `160`, `task-160`
 - If a user gives ambiguous shorthand, resolve it using the consuming project's ticket policy before writing artifacts
@@ -150,6 +204,7 @@ be invoked explicitly with `sh`:
 ```bash
 sh .sdd-kit/tools/resolve-ticket-workspace.sh {TICKET}
 sh .sdd-kit/tools/validate-impl-spec.sh {TICKET}
+sh .sdd-kit/tools/validate-changelog.sh {TICKET}
 sh .sdd-kit/tools/validate-pr-content.sh {TICKET}
 sh .sdd-kit/tools/validate-engineering-rules.sh
 sh .sdd-kit/tools/sync-agent-skills.sh --check
@@ -399,18 +454,22 @@ hashes only when they are available.
 3. /resolve-ticket-workspace [TICKET] -> resolve canonical ticket paths
 4. Inspect parent + child work items   -> map subtasks/checklists into scope, ACs, validation, or blockers
 5. /select-engineering-rules [context] -> choose optional task-scoped technical lenses
-6. /plan-backend-ticket [TICKET]      -> generate plan/spec/changelog in .ai-specs/changes/{TICKET}/
-7. /validate-impl-spec [TICKET]       -> validate AC mapping in plan and companion spec
-8. /analyze-sdd-artifacts [TICKET]    -> optional semantic consistency analysis
-9. /standardize-design-contract       -> optional/prework for frontend UI repos missing DESIGN.md
-10. Approval gate                      -> stop and ask approve/change/deny
-11. /develop-backend @[plan].md        -> only after explicit approve
-12. /qa-ticket [ID or IMPL].md         -> validate AC evidence, regression risks, tests, and readiness
-13. /pr-code-review [ID or IMPL].md    -> review correctness, regressions, security, CI/readiness, and PR evidence
-14. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
-15. /validate-pr-content [TICKET]      -> verify PR content does not invent evidence
-16. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
-17. PR -> Review -> Merge              -> feature published
+6. /api-contract-sync                 -> optional cross-repo API contract sync when backend contracts changed
+7. /standardize-design-contract       -> optional/prework for frontend UI repos missing DESIGN.md
+8. /consume-api-contract              -> required before planning API-consuming frontend/UI work when contract artifacts exist
+9. /plan-backend-ticket [TICKET]      -> generate backend plan/spec/changelog in .ai-specs/changes/{TICKET}/
+10. /plan-frontend-ticket [TICKET]     -> generate frontend plan/spec/changelog in .ai-specs/changes/{TICKET}/
+11. /validate-impl-spec [TICKET]       -> validate AC mapping in plan and companion spec
+12. /analyze-sdd-artifacts [TICKET]    -> optional semantic consistency analysis
+13. Approval gate                      -> stop and ask approve/change/deny
+14. /develop-backend @[plan].md        -> only after explicit approve
+15. /develop-frontend @[plan].md       -> only after explicit approve
+16. /qa-ticket [ID or IMPL].md         -> validate AC evidence, regression risks, tests, and readiness
+17. /pr-code-review [ID or IMPL].md    -> review correctness, regressions, security, CI/readiness, and PR evidence
+18. /write-pr-report @[IMPL].md        -> generate PR-{TICKET}.md from local .ai-specs state
+19. /validate-pr-content [TICKET]      -> verify PR content does not invent evidence
+20. /close-ticket-workflow [ID]        -> perform final closure sequence before PR
+21. PR -> Review -> Merge              -> feature published
 ```
 
 ## Planning Approval Gate
@@ -460,6 +519,8 @@ entry, or documented blocker before the approval gate.
 | `/select-engineering-rules [context]` | Select optional engineering rule packs for planning, QA, or review |
 | `/agent-work-discipline` | Apply baseline agent behavior discipline for scoped, simple, verifiable changes |
 | `/resolve-ticket-workspace [ID]` | Resolve local `.ai-specs` paths from input or branch |
+| `/api-contract-sync` | Sync API contract artifacts from an API repo into a frontend/UI repo |
+| `/consume-api-contract` | Map API-consuming UI behavior to documented contract artifacts before planning or implementation |
 | `/validate-impl-spec [ID or path]` | Validate structural AC coverage of the implementation plan and companion spec |
 | `/validate-pr-content [ID or path]` | Validate generated PR content against local SDD evidence |
 | `/standardize-design-contract` | Create or update root `DESIGN.md` from local design sources, asking when the primary source is unclear |
@@ -532,6 +593,49 @@ the project has one.
   copied to the consuming repository root during frontend/UI adoption.
 - `design-system-standards.mdc` defines the generic planning, implementation,
   and validation rules.
+
+## Frontend Architecture Patterns
+
+`frontend-standards.mdc` defines two required frontend patterns for UI work:
+
+- **Component-Driven UI Architecture**: build UI as a component library made of
+  primitives, composed components, feature components, and pages. Pages and
+  routes compose named component tags and wire data; they should not define new
+  visible UI as inline JSX blocks. New visible components need typed props,
+  parameterization when reuse is plausible, colocated tests, and Storybook
+  stories when the repository has that tooling.
+- **State Ownership & Data Flow**: keep state at the closest owner that needs
+  it. Use props/callbacks for local parent-child composition, feature
+  context/hooks or existing client stores for cross-tree client state, React
+  Query for server state, form tooling for form state, and URL/search params for
+  shareable navigation state. Avoid prop drilling through passive parents and
+  avoid duplicating server state in client stores.
+
+Frontend plans must record componentization and state ownership decisions in
+`Execution Notes for Implementer`. QA and review must flag inline UI,
+missing stories/tests, prop drilling, inappropriate global store usage, and
+server-state duplication.
+
+## API Contract Workflows
+
+The kit supports API-backed frontend work without making the UI repository the
+source of truth for backend contracts.
+
+- `api-contract-sync` runs from an API/backend repository with
+  `.ai-specs/config/api-contract-sync.json` and copies configured contract
+  artifacts into a frontend/UI repository.
+- Recommended copied artifacts are `docs/api-contract.md`,
+  `contracts/api/capabilities.json`, `contracts/api/openapi/**`, and
+  `contracts/api/api-contract-source.json`.
+- `consume-api-contract` runs in the frontend/UI repository before planning or
+  implementing API-consuming screens, hooks, forms, permissions, mocks, or
+  capability-gated UI.
+- Frontend agents must not invent endpoints, payload fields, auth rules,
+  capability names, status codes, or response shapes. Missing behavior is a
+  contract gap or blocker.
+- Generated or copied API contract files in the UI repository are read-only;
+  update the API source and rerun `api-contract-sync` when the contract must
+  change.
 
 ## Examples
 

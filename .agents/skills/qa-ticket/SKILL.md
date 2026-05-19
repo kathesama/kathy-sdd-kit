@@ -50,7 +50,15 @@ If the ticket cannot be resolved from input, branch, or local `.ai-specs` state,
 6. For frontend/UI work, compare implementation evidence against the recorded
    `Design System Contract`, root `DESIGN.md` when present, accessibility
    requirements, responsive behavior, and visual evidence such as Storybook
-   states or screenshots.
+   states or screenshots. Also verify new visible UI units are named component
+   tags in their own files with typed, reusable props instead of inline
+   component definitions or one-off inline UI blocks. When the repository has
+   Storybook and component tests, verify each new visible component has a story
+   and colocated test or a documented validation gap. Verify state ownership and
+   data flow use props/callbacks for local composition, feature context/hooks or
+   stores for cross-tree client state, React Query for server state, form
+   tooling for form state, and URL/search params for shareable navigation
+   state.
 7. Run a regression-oriented pass over the changed behavior, independent of the plan's assumptions.
 8. Identify partial coverage, missing tests, missing evidence, unaddressed risks, and follow-up work.
 9. Produce a QA report in the ticket folder.
@@ -137,6 +145,15 @@ Ready | Not ready
 - For frontend/UI tickets, mention whether a Design System Contract was present
   and whether the evidence covers tokens/components, accessibility, responsive
   behavior, and visual review needs.
+- For frontend/UI tickets, flag new inline component definitions or one-off
+  inline UI blocks as QA gaps unless the plan explicitly documents an accepted
+  exception.
+- For frontend/UI tickets, flag missing stories or colocated component tests for
+  new visible components when the repository has those surfaces.
+- For frontend/UI tickets, flag prop drilling through passive parents, duplicated
+  server state in client stores, global stores used for local form/component
+  state, or atomic components importing stores/API hooks without an explicit
+  connected-component decision.
 - Flag speculative features, broad refactors, or unrelated changes that violate `agent-behavior-standards.mdc`.
 - Do not mark performance/observability side-channel changes as `Pass` until memory, batching, cardinality, and side-effect timing have been considered.
 - If evidence is missing, mark the AC as `Partial`, `Not Covered`, or `Blocked`.
