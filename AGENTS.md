@@ -33,6 +33,18 @@ a newer `.sdd-kit/AGENTS.md`; do not replace them blindly.
 - If you are Claude Code and this file is loaded, also load and follow `.sdd-kit/CLAUDE.md`.
 - If the tool cannot auto-load referenced files, read the relevant file directly before starting SDD work.
 
+## Generated Agent Skill Exposures
+
+- `.agents/skills/`, `.claude/skills/`, and `.cursor/skills/` are generated
+  junction/symlink exposures created by `.sdd-kit/tools/sync-agent-skills.sh`.
+- They point to `.sdd-kit/ai-specs/skills/`; editing or rolling back those
+  exposed paths edits the submodule source.
+- Do not modify, restore, or stage files under those exposure directories from
+  the consuming repository. Update `kathesama/kathy-sdd-kit` first, then refresh
+  the exposures with the sync script.
+- `.sdd-kit/` remains read-only from the consuming repository unless the task
+  explicitly targets the kit itself.
+
 ## SDD Framework References
 
 Before planning, implementing, reviewing, or closing SDD work, use the kit files
