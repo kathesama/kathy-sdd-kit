@@ -32,8 +32,29 @@ agent changes scoped, simple, and verifiable.
 - If cleanup is required, limit it to cleanup caused by the current change.
 - If unrelated risks are found, report them as notes or follow-ups instead of silently expanding scope.
 
+## Complexity Decision Ladder
+
+Before writing custom code inside approved implementation scope, stop at the
+first rung that holds:
+
+1. Does this need to exist at all? If no, skip it.
+2. Does the standard library or language runtime do it? Use it.
+3. Does a native platform feature do it? Use it.
+4. Does an already-installed dependency do it? Use it.
+5. Is it one line? Use the one line.
+6. Only then, write the minimum custom code that satisfies the acceptance
+   criteria.
+
+This ladder does not override hexagonal boundaries, port or interface
+requirements, TDD obligations, ADR decisions, selected engineering rule packs,
+security, accessibility, error handling, or acceptance-criteria evidence.
+
 ## Source and Attribution
 
 Adapted for `kathy-sdd-kit` from behavioral guidance in
 [forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills),
 MIT licensed.
+
+The Complexity Decision Ladder is adapted from ideas in
+[DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail), MIT
+licensed, and rewritten for SDD gates and evidence rules.

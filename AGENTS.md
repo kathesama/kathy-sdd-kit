@@ -184,6 +184,33 @@ start implementation.
 - Do not create commits or pull requests unless explicitly requested.
 - Do not run git commands except `git diff` or `git status` unless explicitly requested or required for recovery.
 
+## Intentional Simplification Markers
+
+When an implementation deliberately takes a simpler path with a known ceiling,
+mark it inline with `sdd-simplification:`:
+
+```text
+# sdd-simplification: <what was skipped> - upgrade path: <what replaces this when needed>
+```
+
+Examples:
+
+```text
+# sdd-simplification: no cache layer - upgrade path: Redis via cache-service when p95 > 200ms
+# sdd-simplification: raw text() query - upgrade path: ORM abstraction when a second caller appears
+# sdd-simplification: no retry logic - upgrade path: resilience4j CircuitBreaker when dependency failures reach release risk
+```
+
+Rules:
+
+- Only mark shortcuts that are deliberate and bounded, never hidden debt.
+- The upgrade path must name a concrete mechanism or trigger, not "refactor later".
+- `sdd-simplification:` markers may be harvested by `/debt-harvest` into the
+  ticket changelog.
+- A `sdd-simplification:` marker does not exempt the line from
+  acceptance-criteria validation, tests, security, accessibility, error
+  handling, or architecture rules.
+
 ## Validation
 
 - Run the smallest relevant validation command for the change.
