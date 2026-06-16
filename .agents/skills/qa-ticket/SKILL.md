@@ -30,6 +30,8 @@ Read, when present:
 - completion evidence and validation output from `.ai-specs/changes/{TICKET}/`
 - relevant project docs, ADRs, glossary, or standards referenced by the spec
 - `agent-behavior-standards.mdc` from the kit when reviewing scope, simplicity, and verification discipline
+- `complexity-review` from the kit when reviewing over-engineering and
+  acceptance-criteria scope discipline
 - `design-system-standards.mdc` from the kit when reviewing frontend/UI work
 - root `DESIGN.md` or project-local design-system context when referenced by
   the frontend plan
@@ -60,8 +62,17 @@ If the ticket cannot be resolved from input, branch, or local `.ai-specs` state,
    tooling for form state, and URL/search params for shareable navigation
    state.
 7. Run a regression-oriented pass over the changed behavior, independent of the plan's assumptions.
-8. Identify partial coverage, missing tests, missing evidence, unaddressed risks, and follow-up work.
-9. Produce a QA report in the ticket folder.
+8. Run an automatic complexity review pass over the changed files and planned
+   implementation evidence. Flag custom code, dependencies, abstractions,
+   configuration, components, state, or extension points that exceed AC scope or
+   duplicate standard library, native platform, existing component, or
+   already-installed dependency behavior. Do not flag validation, security,
+   accessibility, error handling, or architecture boundaries required by SDD.
+9. If `sdd-simplification:` markers appear in ticket-scoped files, verify that
+   each marker has a concrete upgrade path and that a debt-harvest changelog
+   entry exists or is listed as a QA gap.
+10. Identify partial coverage, missing tests, missing evidence, unaddressed risks, and follow-up work.
+11. Produce a QA report in the ticket folder.
 
 ## Regression QA Pass
 
@@ -114,6 +125,11 @@ Pass | Pass with risks | Blocked | Fail
 - Impact:
 - Mitigation:
 
+## Complexity Review
+- Status:
+- Findings:
+- Debt markers:
+
 ## Engineering Rule Packs
 - Selected:
 - Notes:
@@ -139,6 +155,9 @@ Ready | Not ready
 - Do not merge distinct ACs into one QA row.
 - Do not treat "tests passed" as AC evidence unless the relevant test/check is named.
 - Do not let the implementation plan's proposed approach suppress regression review; plans can contain incomplete assumptions.
+- Do not let the implementation plan's proposed approach suppress complexity
+  review; plans can contain unnecessary custom code, dependencies, or
+  abstractions.
 - Apply selected engineering rule packs as additional risk checks; do not use them to override explicit acceptance criteria or project ADRs.
 - Mention each selected engineering rule pack by exact filename and include a related risk or validation note.
 - Mention each active engineering rule obligation ID and include contract evidence keywords from the selected pack.
@@ -155,9 +174,14 @@ Ready | Not ready
   state, or atomic components importing stores/API hooks without an explicit
   connected-component decision.
 - Flag speculative features, broad refactors, or unrelated changes that violate `agent-behavior-standards.mdc`.
+- Flag over-engineering that violates the Complexity Decision Ladder, including
+  custom code where standard library, native platform, existing components, or
+  already-installed dependencies would satisfy the AC.
 - Do not mark performance/observability side-channel changes as `Pass` until memory, batching, cardinality, and side-effect timing have been considered.
 - If evidence is missing, mark the AC as `Partial`, `Not Covered`, or `Blocked`.
 - Use the changelog as primary implementation evidence when present.
 - Treat changelog sections that look like planning summaries, design documents, QA reports, PR reports, or AC matrices as invalid evidence unless they also follow the required changelog entry format.
 - Do not rewrite the changelog during QA; report malformed changelog evidence as a gap.
+- Do not run `/debt-harvest` during QA; report missing or malformed debt
+  harvest evidence as a gap.
 - Output in English.

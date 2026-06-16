@@ -47,8 +47,8 @@ Reusable kit references:
 - `/analyze-sdd-artifacts [ID or path]` -> Run a read-only cross-artifact consistency analysis
 - `/close-ticket-workflow [ID]` -> Apply the correct closure order before generating PR content
 - `/verify-ac-enforcement` -> Verify that the kit still blocks AC coverage regressions
-- `/complexity-review` -> Run a read-only over-engineering review of the current implementation diff
-- `/debt-harvest [ID]` -> Append a ticket-scoped `sdd-simplification:` marker ledger to the changelog
+- `/complexity-review` -> Run a standalone read-only over-engineering review of the current implementation diff; the same lens is embedded in planning, QA, and PR review
+- `/debt-harvest [ID]` -> Append a ticket-scoped `sdd-simplification:` marker ledger to the changelog; `close-ticket-workflow` runs it when markers are detected
 - `/develop-backend @[plan].md` -> Implement following the backend plan
 - `/develop-frontend @[plan].md` -> Implement following the frontend plan
 - `/write-pr-report @[IMPL].md` -> Generate PR description from spec
@@ -76,8 +76,8 @@ Rules:
 
 - Only mark shortcuts that are deliberate and bounded, never hidden debt.
 - The upgrade path must name a concrete mechanism or trigger, not "refactor later".
-- `sdd-simplification:` markers may be harvested by `/debt-harvest` into the
-  ticket changelog.
+- `sdd-simplification:` markers are harvested into the ticket changelog by
+  `close-ticket-workflow` when present, or by standalone `/debt-harvest`.
 - A `sdd-simplification:` marker does not exempt the line from
   acceptance-criteria validation, tests, security, accessibility, error
   handling, or architecture rules.

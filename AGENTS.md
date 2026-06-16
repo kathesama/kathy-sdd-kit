@@ -205,8 +205,8 @@ Rules:
 
 - Only mark shortcuts that are deliberate and bounded, never hidden debt.
 - The upgrade path must name a concrete mechanism or trigger, not "refactor later".
-- `sdd-simplification:` markers may be harvested by `/debt-harvest` into the
-  ticket changelog.
+- `sdd-simplification:` markers are harvested into the ticket changelog by
+  `close-ticket-workflow` when present, or by standalone `/debt-harvest`.
 - A `sdd-simplification:` marker does not exempt the line from
   acceptance-criteria validation, tests, security, accessibility, error
   handling, or architecture rules.

@@ -12,14 +12,13 @@ append a structured debt ledger to the ticket changelog.
 
 ## When to Use
 
-Use only when explicitly requested, such as:
+Use when explicitly requested, such as:
 
 - `harvest debt`
 - `/debt-harvest`
 
-`close-ticket-workflow` may recommend running `/debt-harvest` if
-`sdd-simplification:` markers are detected in ticket scope, but it must never
-execute this skill automatically.
+Also run automatically from `close-ticket-workflow` when `sdd-simplification:`
+markers are detected in ticket scope.
 
 ## Required Inputs
 

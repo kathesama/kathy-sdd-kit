@@ -13,12 +13,21 @@ This is a read-only, complexity-only lens, not a replacement for
 
 ## When to Use
 
-Use only when explicitly requested, such as:
+The complexity lens runs automatically inside:
+
+- `plan-backend-ticket`
+- `plan-frontend-ticket`
+- `qa-ticket`
+- `pr-code-review`
+
+Use this skill directly for a standalone report when explicitly requested, such
+as:
 
 - `run complexity review`
 - `/complexity-review`
 
-Never run automatically or as part of the standard SDD workflow.
+The standalone command remains read-only and does not replace the embedded
+planning, QA, or review passes.
 
 ## Required Inputs
 

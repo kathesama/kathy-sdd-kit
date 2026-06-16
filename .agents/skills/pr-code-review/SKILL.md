@@ -30,6 +30,8 @@ Read, when present:
 - changed files, validation output, and CI logs provided by the user
 - relevant project docs, standards, ADRs, and glossary
 - `agent-behavior-standards.mdc` from the kit when reviewing diff scope and verification discipline
+- `complexity-review` from the kit when reviewing over-engineering and
+  acceptance-criteria scope discipline
 - `design-system-standards.mdc` from the kit when reviewing frontend/UI work
 - root `DESIGN.md` or project-local design-system context when referenced by
   the frontend plan
@@ -51,7 +53,8 @@ Prioritize findings in this order:
 7. Design-system, accessibility, responsive, and visual evidence risks for UI
    changes
 8. Engineering rule pack risks selected for the ticket
-9. PR template/evidence gaps
+9. Complexity and over-engineering risks
+10. PR template/evidence gaps
 
 ## Mandatory Regression Review
 
@@ -72,6 +75,27 @@ When a performance or side-effect AC claims "no meaningful degradation",
 "no external contract change", or similar, require evidence that covers memory,
 batching/streaming behavior, and side-effect failure timing, not just the happy
 path metric or response assertion.
+
+## Mandatory Complexity Review
+
+Code review must also run an over-engineering pass over the actual diff and
+implementation evidence.
+
+For every added or changed implementation choice, ask:
+
+- Does the acceptance criterion require this code, dependency, abstraction,
+  configuration, component, state, or extension point?
+- Does the standard library, language runtime, native platform, existing
+  component, or already-installed dependency already satisfy the need?
+- Is a port, interface, adapter, component extraction, or state boundary
+  required by hexagonal architecture, frontend standards, ADRs, selected
+  engineering rule packs, or validation needs?
+- If a `sdd-simplification:` marker exists, does it name a bounded shortcut and
+  concrete upgrade path?
+
+Flag unnecessary complexity as a finding, but do not recommend removing
+validation, security, accessibility, error handling, tests, or required
+architecture boundaries.
 
 ## Security Impact Review
 
@@ -112,6 +136,8 @@ Verify that:
 - performance/observability claims have regression evidence or explicit risk notes for memory, batching, cardinality, and side-effect timing
 - frontend/UI claims have design-system evidence when the plan references
   `DESIGN.md`, tokens, Storybook, screenshots, or manual visual checks
+- `sdd-simplification:` markers in ticket-scoped files have a debt-harvest
+  changelog entry or are called out as a PR-readiness gap
 
 Run the PR content validator when `PR-{TICKET}.md` exists:
 
@@ -154,6 +180,11 @@ Ready | Ready with risks | Not ready
 - Selected:
 - Notes:
 
+## Complexity Review
+- Status:
+- Findings:
+- Debt markers:
+
 ## Design System Review
 - Status:
 - Notes:
@@ -171,6 +202,8 @@ Ready | Not ready
 - Apply selected engineering rule packs as review lenses; if an obvious architecture, domain, data, refactoring, or production-readiness risk lacks a selected pack, record that as a review gap.
 - Mention each selected engineering rule pack by exact filename and include a related risk or validation note.
 - Mention each active engineering rule obligation ID and include contract evidence keywords from the selected pack.
+- Run the mandatory complexity review pass and include the result in
+  `## Complexity Review`.
 - For frontend/UI tickets, verify that visual changes respect the recorded
   Design System Contract or explicitly document a scoped design-system change.
 - For frontend/UI tickets, flag new inline component definitions or one-off
@@ -183,6 +216,8 @@ Ready | Not ready
   global stores used for local form/component state, or atomic components that
   import stores/API hooks without an explicit connected-component decision.
 - Flag speculative features, drive-by refactors, formatting churn, and unrelated cleanup that violate `agent-behavior-standards.mdc`.
+- Flag custom code, dependencies, abstractions, configuration, components,
+  state, or extension points that violate the Complexity Decision Ladder.
 - Treat full-input materialization, lost batching/streaming behavior, unbounded loops, and metric cardinality growth as review risks even when tests pass.
 - Do not invent tests, CI results, or ticket links.
 - Output in English.
