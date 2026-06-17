@@ -27,6 +27,7 @@ section_rows() {
   file_path=$1
   section=$2
   awk -v section="$section" '
+    { sub(/\r$/, "", $0) }
     $0 == "## " section { in_section = 1; next }
     in_section && /^## / { exit }
     in_section && /^\|/ { print }
@@ -72,6 +73,7 @@ completion_problem_statuses() {
 engineering_rule_pack_rows() {
   file_path=$1
   awk '
+    { sub(/\r$/, "", $0) }
     $0 == "## Engineering Rule Packs" || $0 == "### Engineering Rule Packs" { in_table = 1; next }
     in_table && /^## / { exit }
     in_table && /^### / { exit }
@@ -120,6 +122,7 @@ obligation_keyword_regex() {
   contract_path="$kit_root/ai-specs/rules/engineering/$pack"
   [ -f "$contract_path" ] || fail "engineering rule pack contract not found: $contract_path"
   keywords=$(awk -v obligation="$obligation" '
+    { sub(/\r$/, "", $0) }
     $0 == "## Enforcement Contract" { in_contract = 1; next }
     in_contract && /^## / { exit }
     in_contract && /^\|/ { print }
@@ -160,11 +163,13 @@ resolve_paths() {
     [ -n "$ticket" ] || fail "input file must be named PR-{TICKET}.md: $pr_path"
     validate_ticket "$ticket"
     ticket_dir=$(dirname "$pr_path")
+    workspace_root=$(CDPATH= cd "$ticket_dir/../../.." && pwd)
   else
     ticket=$input
     validate_ticket "$ticket"
     ticket_dir="$(pwd)/.ai-specs/changes/$ticket"
     pr_path="$ticket_dir/PR-$ticket.md"
+    workspace_root=$(pwd)
   fi
 
   changelog_path="$ticket_dir/$ticket-CHANGELOG.md"
@@ -291,7 +296,15 @@ validate_referenced_files_exist() {
         continue
         ;;
     esac
-    [ -e "$file_path" ] || printf '%s\n' "$file_path"
+    case "$file_path" in
+      /*|[A-Za-z]:/*|[A-Za-z]:\\*)
+        resolved_path=$file_path
+        ;;
+      *)
+        resolved_path=$workspace_root/$file_path
+        ;;
+    esac
+    [ -e "$resolved_path" ] || printf '%s\n' "$file_path"
   done)
   [ -z "$missing" ] || fail "PR content references files that do not exist:
 $missing"
