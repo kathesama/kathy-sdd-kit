@@ -105,7 +105,7 @@ A backend plan saved to `.ai-specs/changes/{TICKET}/{TICKET}-impl-backend.md` co
 - **Completion Evidence** table prepared for final fill-in
 
 Record the mandatory `### Engineering Rule Packs` table in `Execution Notes for
-Implementer`. The table must list all six packs exactly once. For every pack
+Implementer`. The table must list every available pack exactly once. For every pack
 marked `Selected`, include active obligation IDs from that pack's `Enforcement
 Contract`, include a non-`N/A` validation impact, and reference the exact pack
 filename and active obligation IDs in `Implementation Mapping`,
@@ -115,8 +115,9 @@ Also record a mandatory `### Complexity Minimization` note in
 `Execution Notes for Implementer`. It must state how the plan applied the
 Complexity Decision Ladder:
 
-- custom code avoided because the standard library, language runtime, native
-  platform, or an already-installed dependency covers the need
+- custom code avoided because existing codebase behavior, the standard library,
+  language runtime, native platform, or an already-installed dependency covers
+  the need
 - new dependencies rejected or confirmed as necessary
 - abstractions, ports, interfaces, configuration, or extension points that are
   required by acceptance criteria, hexagonal boundaries, ADRs, or selected

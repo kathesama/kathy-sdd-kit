@@ -155,7 +155,7 @@ Implementer`:
   in client stores unless explicitly scoped
 
 Record the mandatory `### Engineering Rule Packs` table in `Execution Notes for
-Implementer`. The table must list all six packs exactly once. For every pack
+Implementer`. The table must list every available pack exactly once. For every pack
 marked `Selected`, include active obligation IDs from that pack's `Enforcement
 Contract`, include a non-`N/A` validation impact, and reference the exact pack
 filename and active obligation IDs in `Implementation Mapping`,
@@ -165,8 +165,9 @@ Also record a mandatory `### Complexity Minimization` note in
 `Execution Notes for Implementer`. It must state how the plan applied the
 Complexity Decision Ladder:
 
-- UI behavior avoided because native browser features, semantic HTML, CSS,
-  existing components, or already-installed dependencies cover the need
+- UI behavior avoided because existing codebase behavior, native browser
+  features, semantic HTML, CSS, existing components, or already-installed
+  dependencies cover the need
 - new dependencies rejected or confirmed as necessary
 - component extraction, state management, hooks, stores, configuration, or
   abstractions that are required by acceptance criteria, accessibility,
@@ -332,7 +333,7 @@ Only after an explicit `approve`:
   the user which master document or source should be primary before writing it
 - If no durable design source exists beyond current UI code, frontend plans
   must state the fallback UI convention and residual risk
-- If `docs/api-contract.md`, `contracts/api/`, or
+- If `docs/contracts/`, `docs/api-contract.md`, `contracts/api/`, or
   `contracts/api/api-contract-source.json` exists, use `consume-api-contract`
   before planning API-consuming UI and record API contract source, usage map,
   gaps, and out-of-scope backend contract changes in `Execution Notes for

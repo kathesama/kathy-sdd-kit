@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string] $ProjectRoot = (Get-Location).Path,
-    [string] $Config = ".ai-specs/config/api-contract-sync.json",
+    [string] $Config = "docs/contracts/api-contract-sync.json",
     [switch] $DryRun
 )
 
@@ -186,7 +186,7 @@ if ($missingPolicy -notin @("fail", "warn")) {
 
 $cleanTargetDirectories = ConvertTo-Bool (Get-ConfigValue -ConfigObject $configObject -Name "clean_target_directories" -DefaultValue $false)
 $markdownHeaderEnabled = ConvertTo-Bool (Get-ConfigValue -ConfigObject $configObject -Name "markdown_header_enabled" -DefaultValue $true)
-$manifestPathRaw = [string] (Get-ConfigValue -ConfigObject $configObject -Name "manifest_path" -DefaultValue "contracts/api/api-contract-source.json")
+$manifestPathRaw = [string] (Get-ConfigValue -ConfigObject $configObject -Name "manifest_path" -DefaultValue "docs/contracts/api-contract-source.json")
 
 $copiedFiles = @()
 $missingSources = @()

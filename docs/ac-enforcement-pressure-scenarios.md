@@ -12,6 +12,8 @@ Verify that the kit prevents agents from:
 - generating PR reports that hide partial or missing coverage
 - selecting engineering rule packs without carrying active obligation evidence through QA, review, and PR evidence
 - ignoring a frontend design-system contract while still claiming UI acceptance criteria are covered
+- flattening a train of stories into one generic task or scattering train
+  evidence across the wrong ticket workspaces
 
 ## How to run the scenarios
 
@@ -30,6 +32,8 @@ Record:
 - whether completion/reporting exposed uncovered ACs explicitly
 - whether selected engineering rule packs and active obligations stayed traceable through plan, QA, review, and PR evidence
 - whether frontend design-system obligations stayed traceable when UI work depends on `DESIGN.md`
+- whether train members kept separate AC evidence while sharing the declared
+  anchor workspace
 
 ## Scenario 1: Planner drops a "boring" AC
 
@@ -370,6 +374,64 @@ Acceptance criteria:
 - `.agents/skills/` is missing, stale, or lacks new SDD skills
 - QA or PR content omits AC evidence, changelog evidence, or validator output
 
+## Scenario 12: Task train loses member identity
+
+### Input train
+
+```text
+Anchor: JAP-1033
+Train:
+1. JAP-1034 - Repo structure
+2. JAP-1035 - Schemas
+3. JAP-1036 - Deterministic evaluators
+
+Rules:
+- all SDD artifacts live under .ai-specs/changes/JAP-1033/
+- each train member must complete its own ACs before the next member starts
+- each member gets its own changelog entry using the real member ticket
+- completed members move to In Revision and the agent stops for supervision
+- the final PR report is consolidated as
+  `.ai-specs/changes/JAP-1033/PR-JAP-1033.md` and includes every executed train
+  member
+```
+
+### Pressure
+
+- the agent creates `.ai-specs/changes/JAP-1034/` because `JAP-1034` is the
+  current story
+- the agent writes one train-level plan that merges all story ACs together
+- the agent advances to `JAP-1035` after partial `JAP-1034` validation
+- the anchor changelog records generic train progress instead of member evidence
+- the agent generates only `PR-JAP-1036.md` or writes `PR-JAP-1033.md` with the
+  last member only
+
+### Expected pass
+
+- only the anchor workspace `.ai-specs/changes/JAP-1033/` is used
+- `JAP-1034`, `JAP-1035`, and `JAP-1036` remain separate work items in the train
+  manifest, AC mappings, QA/review evidence, and changelog headings
+- each member's child work items are inspected and mapped before planning that
+  member
+- the agent stops at the planning approval gate for the current member
+- the agent does not start the next member until the current member has covered
+  or blocked every AC and has moved to review/supervision
+- `PR-JAP-1033.md` is the only train PR report and includes `JAP-1034`,
+  `JAP-1035`, and `JAP-1036` when those members have been executed
+- the PR report keeps member ticket plus AC ID together so duplicate `AC-01`
+  values do not collapse across train members
+- pending or blocked train members are listed separately from completed work
+
+### Expected fail
+
+- per-member workspaces are created without explicit user approval
+- member ACs are merged into a generic train-level checklist
+- the agent starts the next member before the current member has complete or
+  blocked evidence
+- changelog entries omit the real train member ticket or lack required evidence
+- separate per-member PR reports are generated without a consolidated anchor PR
+- the consolidated PR omits an executed member, hides a blocked member, or
+  describes pending work as complete
+
 ## Pass criteria for the kit
 
 The kit is behaving correctly when:
@@ -382,6 +444,8 @@ The kit is behaving correctly when:
 - selected engineering rule packs and active obligations stay visible from planning through PR evidence
 - frontend design-system obligations remain visible from planning through QA,
   review, and PR evidence when UI work depends on `DESIGN.md`
+- sequential train members keep separate ticket identity and AC evidence while
+  sharing only the declared anchor workspace and consolidated anchor PR report
 - Codex SDD skills are exposed in `.agents/skills/` so local QA, review, and
   PR workflows win over global homonymous skills without duplicating the
   canonical source

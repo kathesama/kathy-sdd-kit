@@ -174,9 +174,17 @@ $missing"
 expected_engineering_rule_packs() {
   cat <<'EOF'
 clean-architecture.mini.md
+clean-code.mini.md
+code-complete.mini.md
 domain-driven-design.mini.md
+domain-driven-design-distilled.mini.md
+implementing-domain-driven-design.mini.md
 patterns-of-enterprise-application-architecture.mini.md
+a-philosophy-of-software-design.mini.md
 refactoring.mini.md
+refactoring-guru.mini.md
+working-effectively-with-legacy-code.mini.md
+the-pragmatic-programmer.mini.md
 release-it.mini.md
 data-intensive.mini.md
 EOF

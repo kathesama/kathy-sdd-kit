@@ -23,7 +23,7 @@ Use this skill when a task changes or reviews:
 
 The skill is disabled unless the consuming API repository contains:
 
-`.ai-specs/config/api-contract-sync.json`
+`docs/contracts/api-contract-sync.json`
 
 Minimum config:
 
@@ -33,15 +33,15 @@ Minimum config:
   "target_repo_path": "D:/projects/react/juana-pwd-ui",
   "target_base_path": ".",
   "source_files": [
-    "docs/api-contract.md",
-    "contracts/api/capabilities.json",
-    "contracts/api/openapi"
+    "docs/contracts/api-contract.md",
+    "docs/contracts/capabilities.json",
+    "docs/contracts/api-contract.yml"
   ],
   "target_required_markers": [
     "AGENTS.md",
     "package.json"
   ],
-  "manifest_path": "contracts/api/api-contract-source.json",
+  "manifest_path": "docs/contracts/api-contract-source.json",
   "missing_source_policy": "fail"
 }
 ```
@@ -57,14 +57,14 @@ If the config file is absent, `update_api_contract` is not `true`, or
 
    ```sh
    sh .sdd-kit/ai-specs/skills/api-contract-sync/scripts/sync-api-contract.sh \
-     --config .ai-specs/config/api-contract-sync.json
+     --config docs/contracts/api-contract-sync.json
    ```
 
    Or use PowerShell on Windows:
 
    ```powershell
    powershell -NoProfile -File .sdd-kit/ai-specs/skills/api-contract-sync/scripts/sync-api-contract.ps1 `
-     -Config .ai-specs/config/api-contract-sync.json
+     -Config docs/contracts/api-contract-sync.json
    ```
 
    When running from a kit checkout directly, pass the consuming project root:
@@ -72,13 +72,13 @@ If the config file is absent, `update_api_contract` is not `true`, or
    ```sh
    sh ai-specs/skills/api-contract-sync/scripts/sync-api-contract.sh \
      --project-root D:/projects/ia/JuanaIA \
-     --config D:/projects/ia/JuanaIA/.ai-specs/config/api-contract-sync.json
+     --config D:/projects/ia/JuanaIA/docs/contracts/api-contract-sync.json
    ```
 
    ```powershell
    powershell -NoProfile -File ai-specs/skills/api-contract-sync/scripts/sync-api-contract.ps1 `
      -ProjectRoot D:/projects/ia/JuanaIA `
-     -Config D:/projects/ia/JuanaIA/.ai-specs/config/api-contract-sync.json
+     -Config D:/projects/ia/JuanaIA/docs/contracts/api-contract-sync.json
    ```
 
 3. Review the copied contract artifacts in the UI repository.
@@ -94,9 +94,9 @@ If the config file is absent, `update_api_contract` is not `true`, or
 
 Recommended source files:
 
-- `docs/api-contract.md` for human-readable endpoint inventory and auth notes
-- `contracts/api/capabilities.json` for machine-readable feature availability
-- `contracts/api/openapi/` for OpenAPI specs or generated client inputs
+- `docs/contracts/api-contract.md` for human-readable endpoint inventory and auth notes
+- `docs/contracts/capabilities.json` for machine-readable feature availability
+- `docs/contracts/api-contract.yml` for OpenAPI specs or generated client inputs
 
 Do not make the UI repository the source of truth for these files.
 
@@ -122,6 +122,9 @@ logic. If neither command is available, it fails before making changes.
 - Do not invent endpoint contracts. If source contract content is missing, fix
   the API contract first or set `missing_source_policy` to `warn` only for a
   temporary bootstrap.
+- Endpoint, Gateway route, request/response payload, status code, auth, scope,
+  header, or public API behavior changes must update all related canonical
+  contract artifacts under `docs/contracts/` together when they exist.
 - Do not edit generated contract files in the UI repository; change the API
   source and rerun sync.
 - Do not sync secrets, environment files, tokens, local credentials, build
@@ -137,7 +140,7 @@ Before reporting sync as complete, run at least:
 
 ```powershell
 sh .sdd-kit/ai-specs/skills/api-contract-sync/scripts/sync-api-contract.sh \
-  --config .ai-specs/config/api-contract-sync.json \
+  --config docs/contracts/api-contract-sync.json \
   --dry-run
 ```
 

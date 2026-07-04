@@ -30,8 +30,8 @@ Read, when present:
 - changed files, validation output, and CI logs provided by the user
 - relevant project docs, standards, ADRs, and glossary
 - `agent-behavior-standards.mdc` from the kit when reviewing diff scope and verification discipline
-- `complexity-review` from the kit when reviewing over-engineering and
-  acceptance-criteria scope discipline
+- `ai-specs/skills/complexity-review/SKILL.md` from the kit when reviewing
+  over-engineering and acceptance-criteria scope discipline
 - `design-system-standards.mdc` from the kit when reviewing frontend/UI work
 - root `DESIGN.md` or project-local design-system context when referenced by
   the frontend plan
@@ -85,8 +85,9 @@ For every added or changed implementation choice, ask:
 
 - Does the acceptance criterion require this code, dependency, abstraction,
   configuration, component, state, or extension point?
-- Does the standard library, language runtime, native platform, existing
-  component, or already-installed dependency already satisfy the need?
+- Does existing codebase behavior, the standard library, language runtime,
+  native platform, existing component, or already-installed dependency already
+  satisfy the need?
 - Is a port, interface, adapter, component extraction, or state boundary
   required by hexagonal architecture, frontend standards, ADRs, selected
   engineering rule packs, or validation needs?
@@ -218,6 +219,7 @@ Ready | Not ready
 - Flag speculative features, drive-by refactors, formatting churn, and unrelated cleanup that violate `agent-behavior-standards.mdc`.
 - Flag custom code, dependencies, abstractions, configuration, components,
   state, or extension points that violate the Complexity Decision Ladder.
+  Existing codebase behavior should be considered before adding new code.
 - Treat full-input materialization, lost batching/streaming behavior, unbounded loops, and metric cardinality growth as review risks even when tests pass.
 - Do not invent tests, CI results, or ticket links.
 - Output in English.

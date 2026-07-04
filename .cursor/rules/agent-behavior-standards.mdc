@@ -10,6 +10,10 @@ standards.
 
 - Surface material assumptions when ambiguity affects scope, safety, contracts, or validation.
 - Prefer the simplest change that satisfies the request and acceptance criteria.
+- Before writing custom code, check whether the repository already has a helper,
+  component, adapter, utility, or pattern that satisfies the need.
+- For bug fixes, prefer the shared root cause over path-specific symptom
+  patches and check sibling callers before adding repeated guards.
 - Keep changes surgical. Every changed line must trace to the request, validation, or cleanup caused by the change.
 - Do not add speculative abstractions, configuration, features, formatting churn, or unrelated cleanup.
 - Match the repository's existing style and structure.

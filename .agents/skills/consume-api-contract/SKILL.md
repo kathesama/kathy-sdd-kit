@@ -1,6 +1,6 @@
 ---
 name: consume-api-contract
-description: Use when planning or implementing frontend/UI screens, API clients, data fetching, mocked flows, permissions, or capability-gated UI in a repository that has docs/api-contract.md, contracts/api/capabilities.json, contracts/api/openapi, or contracts/api/api-contract-source.json.
+description: Use when planning or implementing frontend/UI screens, API clients, data fetching, mocked flows, permissions, or capability-gated UI in a repository that has docs/contracts/, docs/api-contract.md, contracts/api/capabilities.json, contracts/api/openapi, or an api-contract-source.json manifest.
 ---
 
 # Skill: Consume API Contract
@@ -16,10 +16,14 @@ fields while building frontend work.
 
 Look for sources in this order:
 
-1. `contracts/api/api-contract-source.json`
-2. `docs/api-contract.md`
-3. `contracts/api/capabilities.json`
-4. `contracts/api/openapi/**`
+1. `docs/contracts/api-contract-source.json`
+2. `contracts/api/api-contract-source.json` (legacy)
+3. `docs/contracts/api-contract.md`
+4. `docs/api-contract.md` (legacy)
+5. `docs/contracts/capabilities.json`
+6. `contracts/api/capabilities.json` (legacy)
+7. `docs/contracts/api-contract.yml`
+8. `contracts/api/openapi/**` (legacy)
 
 If `api-contract-source.json` exists, read it first to identify generated
 contract artifacts and the API source repository. Treat generated artifacts as

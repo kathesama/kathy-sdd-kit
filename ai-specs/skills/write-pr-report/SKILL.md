@@ -1,13 +1,19 @@
+---
+name: write-pr-report
+description: Use when local SDD evidence is ready for PR content, including single-ticket PR reports and consolidated task-train PR reports from an anchor workspace.
+---
+
 # Skill: Write PR Report
 
 ## Purpose
 
-Generate a complete, human-readable PR description from the implemented changes and the Implementation Spec while preserving the repository PR template structure.
+Generate a complete, human-readable PR description from implemented SDD evidence while preserving the repository PR template structure. Support both single-ticket reports and consolidated task-train reports.
 
 ## Usage
 
 ```
 /write-pr-report @[IMPL-spec].md
+/write-pr-report @[ANCHOR-task-train].md
 ```
 
 Default output location:
@@ -25,7 +31,8 @@ A PR description generated from the current local `.ai-specs/changes/{TICKET}/` 
 When `.github/pull_request_template.md` exists, the output must preserve that template exactly:
 
 - Keep all headings in the same order
-- Keep checklist items and comments unless filling them requires replacing placeholders
+- Keep checklist items and comments unless filling them requires replacing
+  template blanks
 - Fill existing sections instead of inventing a different report layout
 - Do not rename template headings
 
@@ -52,6 +59,54 @@ If no repository PR template exists, create a fallback PR report containing:
 7. Commit history only as a fallback for missing details, never as the main structure
 
 `PROJECT_ROOT` is the repository being worked on. If this kit is installed as `.sdd-kit`, do not resolve the PR template path inside `.sdd-kit/.github/`; use the consuming repository's `.github/pull_request_template.md`. The kit's `.github/pull_request_template.md` is a starter template that must be copied to the consuming repository root to be active.
+
+## Task Train Mode
+
+Use task train mode when any of these are true:
+
+- the input is `{ANCHOR_TICKET}-task-train.md`
+- `.ai-specs/changes/{ANCHOR_TICKET}/{ANCHOR_TICKET}-task-train.md` exists
+- `execute-task-train` is closing or handing off a train
+
+In task train mode, generate one consolidated PR report:
+
+```text
+.ai-specs/changes/{ANCHOR_TICKET}/PR-{ANCHOR_TICKET}.md
+```
+
+Do not create `PR-{STORY_TICKET}.md` files for individual train members unless
+the user explicitly changes the train policy.
+
+Use these sources in addition to the normal PR report sources:
+
+1. `{ANCHOR_TICKET}-task-train.md`
+2. `{ANCHOR_TICKET}-CHANGELOG.md`
+3. every executed member's `{STORY_TICKET}-implementation-spec.md`,
+   `{STORY_TICKET}-impl-backend.md`, or `{STORY_TICKET}-impl-frontend.md`
+4. every executed member's `QA-{STORY_TICKET}.md` and
+   `REVIEW-{STORY_TICKET}.md`
+5. tracker transition notes and blocker notes recorded in the manifest or
+   changelog
+
+The consolidated PR must include all executed train members. Preserve each
+member ticket beside its AC rows because multiple members may reuse IDs such as
+`AC-01`.
+
+Minimum train PR content:
+
+- **Train Coverage**: member ticket, title, status, QA evidence, review
+  evidence, tracker state, and notes
+- **Acceptance Criteria Coverage**: one row or bullet per member AC, including
+  member ticket, AC ID, status, and evidence
+- **Changes**: merged file list across all executed members, with member
+  attribution when the same file appears in multiple entries
+- **Testing / Validation**: per-member and train-level commands, including
+  validator output or explicit validation gaps
+- **Pending / Blocked Members**: train members not represented as completed
+  work
+
+Do not summarize only the last train member. Do not collapse duplicate AC IDs
+across members. Do not mark pending train members as done.
 
 ## Template Processing
 

@@ -92,16 +92,24 @@ Rules:
 | Pack | Selection | Reason | Active Obligations | Required Validation Impact |
 |---|---|---|---|---|
 | clean-architecture.mini.md | Not selected | No dependency boundary or adapter decision. | N/A | N/A |
+| clean-code.mini.md | Not selected | No naming, routine-shape, comment, or local-readability risk. | N/A | N/A |
+| code-complete.mini.md | Not selected | No construction, defensive-programming, debugging, or tuning risk. | N/A | N/A |
 | domain-driven-design.mini.md | Not selected | No domain language, invariant, aggregate, or bounded-context change. | N/A | N/A |
+| domain-driven-design-distilled.mini.md | Not selected | No subdomain, bounded-context, or context-mapping decision. | N/A | N/A |
+| implementing-domain-driven-design.mini.md | Not selected | No tactical DDD implementation boundary or event decision. | N/A | N/A |
 | patterns-of-enterprise-application-architecture.mini.md | Not selected | No enterprise application pattern choice. | N/A | N/A |
+| a-philosophy-of-software-design.mini.md | Not selected | No module-depth, information-hiding, or interface-complexity decision. | N/A | N/A |
 | refactoring.mini.md | Not selected | No behavior-preserving structural cleanup. | N/A | N/A |
+| refactoring-guru.mini.md | Not selected | No code smell diagnosis or refactoring technique selection. | N/A | N/A |
+| working-effectively-with-legacy-code.mini.md | Not selected | No weakly tested legacy seam or characterization risk. | N/A | N/A |
+| the-pragmatic-programmer.mini.md | Not selected | No source-of-truth drift, reversibility, automation, or feedback-loop risk. | N/A | N/A |
 | release-it.mini.md | Not selected | No production dependency, overload, deployment, or observability risk. | N/A | N/A |
 | data-intensive.mini.md | Not selected | No data ownership, consistency, event, cache, projection, or schema-evolution risk. | N/A | N/A |
 
 Rules:
 
 - Capture implementation-critical context that is not obvious from the ACs.
-- Record all six engineering rule packs exactly once.
+- Record every available engineering rule pack exactly once.
 - `Selection` must be exactly `Selected` or `Not selected`.
 - If a pack is `Selected`, `Reason` must explain why, `Active Obligations` must list check IDs from the pack's `Enforcement Contract`, and `Required Validation Impact` must name the validation it adds.
 - If a pack is `Selected`, reference the pack filename in `Implementation Mapping`, `Validation Plan`, or `Delivery Plan`.

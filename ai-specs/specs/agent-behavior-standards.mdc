@@ -34,16 +34,22 @@ agent changes scoped, simple, and verifiable.
 
 ## Complexity Decision Ladder
 
-Before writing custom code inside approved implementation scope, stop at the
-first rung that holds:
+After reading the task and tracing the real flow touched by the change, stop at
+the first rung that holds before writing custom code inside approved
+implementation scope:
 
 1. Does this need to exist at all? If no, skip it.
-2. Does the standard library or language runtime do it? Use it.
-3. Does a native platform feature do it? Use it.
-4. Does an already-installed dependency do it? Use it.
-5. Is it one line? Use the one line.
-6. Only then, write the minimum custom code that satisfies the acceptance
+2. Does this repository already have a helper, component, adapter, utility, or
+   pattern that does it? Reuse it.
+3. Does the standard library or language runtime do it? Use it.
+4. Does a native platform feature do it? Use it.
+5. Does an already-installed dependency do it? Use it.
+6. Is it one line? Use the one line.
+7. Only then, write the minimum custom code that satisfies the acceptance
    criteria.
+
+For bug fixes, prefer the shared root cause over a path-specific symptom patch.
+Check sibling callers before adding repeated guards or special cases.
 
 This ladder does not override hexagonal boundaries, port or interface
 requirements, TDD obligations, ADR decisions, selected engineering rule packs,

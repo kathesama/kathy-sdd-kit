@@ -9,14 +9,14 @@ Synchronizes API contract artifacts from an API repository into a UI repository.
 
 Options:
   --project-root, -ProjectRoot  API repository root. Defaults to current directory.
-  --config, -Config            Config path. Defaults to .ai-specs/config/api-contract-sync.json.
+  --config, -Config            Config path. Defaults to docs/contracts/api-contract-sync.json.
   --dry-run, -DryRun           Print planned writes without changing files.
   --help, -h                   Show this help.
 USAGE
 }
 
 project_root=$(pwd)
-config_path=".ai-specs/config/api-contract-sync.json"
+config_path="docs/contracts/api-contract-sync.json"
 dry_run=false
 
 while [ "$#" -gt 0 ]; do
@@ -213,7 +213,7 @@ if missing_policy not in ("fail", "warn"):
 
 clean_target_directories = bool_value(config_value(config_object, "clean_target_directories", False))
 markdown_header_enabled = bool_value(config_value(config_object, "markdown_header_enabled", True))
-manifest_path_raw = str(config_value(config_object, "manifest_path", "contracts/api/api-contract-source.json"))
+manifest_path_raw = str(config_value(config_object, "manifest_path", "docs/contracts/api-contract-source.json"))
 
 copied_files: list[str] = []
 missing_sources: list[str] = []

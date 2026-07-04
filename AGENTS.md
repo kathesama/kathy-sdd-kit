@@ -70,6 +70,7 @@ Use project-local context from the consuming repository first when it exists:
 - `docs/doc_architecture.md`
 - `docs/adr/`
 - `docs/GLOSSARY.md`
+- `docs/contracts/` for API contract artifacts and sync configuration when present
 - `DESIGN.md` for project-local visual identity when present
 - local package, build, test, and script configuration
 
@@ -141,9 +142,9 @@ forbidden until the user explicitly answers `approve`.
 
 Allowed planning gate responses:
 
-- `approve` — execute the plan exactly as written.
-- `change` — revise the plan/spec first, then present the approval gate again.
-- `deny` — stop ticket execution and do not modify code.
+- `approve` - execute the plan exactly as written.
+- `change` - revise the plan/spec first, then present the approval gate again.
+- `deny` - stop ticket execution and do not modify code.
 
 If the response is `change` or anything other than an explicit `approve`, do not
 start implementation.
@@ -154,6 +155,18 @@ start implementation.
 - Prefer local docs, existing scripts, package config, and nearby code over assumptions.
 - If the repository has framework-specific instructions, follow them before generic rules.
 - If project-specific ADRs exist, check relevant ADRs before changing architecture, contracts, or cross-service behavior.
+- If the repository has canonical API contract artifacts under
+  `docs/contracts/`, any endpoint, Gateway route, request/response payload,
+  status code, auth, scope, header, or public API behavior change must update
+  the relevant contract artifacts together. Do not update only one canonical
+  contract artifact when related artifacts exist.
+- API contract sync is optional and enabled only when the repository provides
+  `docs/contracts/api-contract-sync.json`. If that file exists and contract
+  sync is required, read it and run the `api-contract-sync` workflow from
+  `.sdd-kit/ai-specs/skills/api-contract-sync/`, preferably dry-run first, then
+  record sync evidence in the active ticket changelog. Do not use
+  `.ai-specs/config/api-contract-sync.json`; `.ai-specs/` is local ticket state
+  and is not the canonical place for repo-owned sync configuration.
 - For frontend/UI work, if root `DESIGN.md` exists, treat it as the
   project-local visual identity contract. If it is absent, inspect local design
   docs, Storybook, tokens, theme files, and existing UI conventions before

@@ -44,6 +44,10 @@ Codex may also have global skills with the same names as SDD workflows, such as
 `qa-ticket`, `pr-code-review`, or `write-pr-report`. For SDD work, prefer the
 project-local exposure under `.agents/skills/`.
 
+- Embedded SDD review lenses are skills too. When QA, planning, review, or
+  closure mentions `complexity-review` or `debt-harvest`, load the source
+  skill from `.sdd-kit/ai-specs/skills/{skill-name}/SKILL.md` if the
+  `.agents/skills/` exposure is absent or stale.
 - After adding or updating `.sdd-kit/`, run:
 
   ```powershell

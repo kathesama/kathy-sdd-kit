@@ -58,9 +58,17 @@
 | Pack | Selection | Reason | Active Obligations | Required Validation Impact |
 |---|---|---|---|---|
 | clean-architecture.mini.md | Not selected | Existing consumer and broker boundaries are unchanged. | N/A | N/A |
+| clean-code.mini.md | Not selected | No naming, routine-shape, comment, or local-readability risk. | N/A | N/A |
+| code-complete.mini.md | Not selected | No construction, defensive-programming, debugging, or tuning risk. | N/A | N/A |
 | domain-driven-design.mini.md | Not selected | No domain language or invariant change. | N/A | N/A |
+| domain-driven-design-distilled.mini.md | Not selected | No subdomain, bounded-context, or context-mapping decision. | N/A | N/A |
+| implementing-domain-driven-design.mini.md | Not selected | No tactical DDD implementation boundary or event decision. | N/A | N/A |
 | patterns-of-enterprise-application-architecture.mini.md | Not selected | No new persistence or transaction pattern choice. | N/A | N/A |
+| a-philosophy-of-software-design.mini.md | Not selected | No module-depth, information-hiding, or interface-complexity decision. | N/A | N/A |
 | refactoring.mini.md | Not selected | No behavior-preserving structural cleanup. | N/A | N/A |
+| refactoring-guru.mini.md | Not selected | No code smell diagnosis or refactoring technique selection. | N/A | N/A |
+| working-effectively-with-legacy-code.mini.md | Not selected | No weakly tested legacy seam or characterization risk. | N/A | N/A |
+| the-pragmatic-programmer.mini.md | Not selected | No source-of-truth drift, reversibility, automation, or feedback-loop risk. | N/A | N/A |
 | release-it.mini.md | Selected | Broker dependency can fail, stall, or retry. | REL-01, REL-02 | Validate bounded timeout, retry, and duplicate safety. |
 | data-intensive.mini.md | Selected | Event replay can duplicate writes if the consumer is not idempotent. | DI-01, DI-02 | Validate source of truth, replay, and idempotency behavior. |
 

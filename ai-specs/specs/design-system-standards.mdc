@@ -66,6 +66,10 @@ Recommended token groups:
 - `spacing`
 - `components`
 
+Tokens should use the DESIGN.md top-level schema. Nested token names are
+allowed when the project uses the DESIGN.md CLI; treat nested paths as
+dot-separated references such as `colors.background.light`.
+
 Recommended prose sections:
 
 1. `Overview`
@@ -143,15 +147,30 @@ a documented implementation risk.
 Use the smallest relevant evidence for the change:
 
 - `npx @google/design.md lint DESIGN.md` or an equivalent lint command when the
-  project uses the DESIGN.md CLI and the runtime is available.
+  project uses the DESIGN.md CLI and the runtime is available. On
+  Windows/PowerShell, prefer `npx -p @google/design.md designmd lint DESIGN.md`
+  to avoid the `.md` executable/file-association collision.
 - `npx @google/design.md diff DESIGN-before.md DESIGN.md` or equivalent token
-  comparison when a ticket modifies `DESIGN.md`.
+  comparison when a ticket modifies `DESIGN.md`. On Windows/PowerShell, prefer
+  `npx -p @google/design.md designmd diff DESIGN-before.md DESIGN.md`.
+- `npx -p @google/design.md designmd export --format css-tailwind DESIGN.md`
+  or an equivalent export check when the project consumes DESIGN.md tokens as a
+  Tailwind v4 `@theme` block.
+- `npx -p @google/design.md designmd export --format css-vars DESIGN.md` or
+  `npx -p @google/design.md designmd export --format css-vars --prefix app DESIGN.md`
+  when the project consumes DESIGN.md tokens as generic CSS custom properties.
+- `npx -p @google/design.md designmd export --format json-tailwind DESIGN.md`
+  for Tailwind v3 config output, or `--format dtcg` when the project consumes
+  W3C Design Tokens compatible JSON.
 - Component tests for token-driven class/style selection when practical.
 - Storybook states or screenshots for visual behavior that is hard to assert in
   unit tests.
 - Manual accessibility checks for keyboard, screen-reader, contrast, and focus
   behavior when automation is insufficient.
 - Responsive checks for impacted viewport sizes.
+- Review of linter warnings for unknown top-level keys, broken token
+  references, contrast issues, missing primary/typography tokens, duplicate
+  sections, and section-order drift.
 
 If a validation command cannot run, record the exact reason and the manual check
 that should cover the gap.

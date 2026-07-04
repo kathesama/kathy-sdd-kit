@@ -13,7 +13,9 @@ Current kit version: `0.6.0` (`VERSION`).
   Data Flow, API contract consumption, accessibility, validation, and
   design-system evidence.
 - Optional engineering rule packs for Clean Architecture, DDD, enterprise
-  patterns, refactoring, production readiness, and data-intensive work.
+  patterns, module design, clean-code construction discipline, refactoring,
+  pragmatic delivery judgment, legacy-code change safety, production readiness,
+  and data-intensive work.
 - Root `DESIGN.md` support for standardizing project-local visual identity
   contracts, with `docs/design-system/MASTER.md` as the preferred detailed
   design-system source.
@@ -21,8 +23,10 @@ Current kit version: `0.6.0` (`VERSION`).
   and consuming those artifacts without inventing endpoints or payload fields.
 - Reusable SDD skills: `agent-work-discipline`, `analyze-sdd-artifacts`,
   `api-contract-sync`, `close-ticket-workflow`, `consume-api-contract`,
-  `enrich-user-story`, `plan-backend-ticket`, `plan-frontend-ticket`,
-  `pr-code-review`, `qa-ticket`, `resolve-ticket-workspace`,
+  `complexity-review`, `debt-harvest`, `execute-task-train`,
+  `enrich-user-story`,
+  `plan-backend-ticket`, `plan-frontend-ticket`, `pr-code-review`,
+  `qa-ticket`, `resolve-ticket-workspace`,
   `select-engineering-rules`, `standardize-design-contract`,
   `validate-impl-spec`, `validate-pr-content`, `verify-ac-enforcement`, and
   `write-pr-report`.
@@ -61,12 +65,20 @@ ai-specs/                    <- canonical SDD framework source
   rules/
     engineering/
       README.md
+      a-philosophy-of-software-design.mini.md
       clean-architecture.mini.md
+      clean-code.mini.md
+      code-complete.mini.md
       data-intensive.mini.md
       domain-driven-design.mini.md
+      domain-driven-design-distilled.mini.md
+      implementing-domain-driven-design.mini.md
       patterns-of-enterprise-application-architecture.mini.md
       refactoring.mini.md
+      refactoring-guru.mini.md
       release-it.mini.md
+      the-pragmatic-programmer.mini.md
+      working-effectively-with-legacy-code.mini.md
   .agents/
     analyst-agent.md
     backend-agent.md
@@ -83,7 +95,10 @@ ai-specs/                    <- canonical SDD framework source
         sync-api-contract.ps1
         sync-api-contract.sh
     close-ticket-workflow/
+    complexity-review/
     consume-api-contract/
+    debt-harvest/
+    execute-task-train/
     enrich-user-story/
     plan-backend-ticket/
     plan-frontend-ticket/
@@ -150,8 +165,7 @@ Projects that consume this kit should keep ticket artifacts in a local, gitignor
 AGENTS.md
 DESIGN.md                    <- optional root visual identity contract for frontend/UI projects
 docs/design-system/MASTER.md <- optional detailed design-system source for UI projects
-docs/api-contract.md         <- optional copied API contract for frontend/UI projects
-contracts/api/               <- optional generated/copied API contract artifacts
+docs/contracts/              <- optional API contract artifacts and sync config
 .sdd-kit/                    <- mounted kathy-sdd-kit framework
 .agents/skills/              <- Codex-local SDD skill exposure
 .claude/skills/              <- Claude-local SDD skill exposure when needed
@@ -179,8 +193,8 @@ Recommended usage:
 - `ai-specs/rules/engineering/` rule packs are optional and loaded only when selected for the task
 - Frontend/UI work follows Component-Driven UI Architecture and State Ownership
   & Data Flow from `frontend-standards.mdc`
-- `docs/api-contract.md` and `contracts/api/`, when present, are frontend API
-  contract sources and should be consumed before API-backed UI planning
+- `docs/contracts/`, when present, contains optional API contract artifacts
+  and should be consumed before API-backed UI planning
 - `{TICKET}` is the canonical ticket/work-item key for the consuming project
 - Examples: `JAP-160`, `ENG-123`, `GH-42`, `160`, `task-160`
 - If a user gives ambiguous shorthand, resolve it using the consuming project's ticket policy before writing artifacts
@@ -472,6 +486,16 @@ hashes only when they are available.
 21. PR -> Review -> Merge              -> feature published
 ```
 
+For sequential trains of related stories or tickets, run
+`/execute-task-train [ANCHOR_TICKET]` before planning the first train member.
+The train uses `.ai-specs/changes/{ANCHOR_TICKET}/` as the single workspace,
+while each member keeps its own ticket identity, AC coverage, changelog entry,
+tracker transition, QA/review evidence, and stop gate before advancing.
+When PR content is requested for the train, generate one consolidated
+`.ai-specs/changes/{ANCHOR_TICKET}/PR-{ANCHOR_TICKET}.md` that includes every
+executed train member and separates pending or blocked members from completed
+work.
+
 ## Planning Approval Gate
 
 Planning and implementation are separate phases.
@@ -527,6 +551,9 @@ entry, or documented blocker before the approval gate.
 | `/analyze-sdd-artifacts [ID or path]` | Read-only semantic analysis across story, specs, changelog, QA, review, rule packs, and optional design-system evidence |
 | `/qa-ticket [ID or path]` | Validate implementation evidence against story/spec acceptance criteria, including regression-oriented risks |
 | `/pr-code-review [ID or path]` | Review local changes for correctness, regressions, security, tests, CI/readiness, and PR evidence |
+| `/complexity-review` | Run a read-only over-engineering review of the current implementation diff |
+| `/debt-harvest [ID]` | Append validated `sdd-simplification:` marker evidence to the ticket changelog |
+| `/execute-task-train [ANCHOR]` | Orchestrate a sequential ticket train under one anchor workspace and one consolidated PR report without losing per-story evidence |
 | `/close-ticket-workflow [ID]` | Apply the correct end-of-ticket validation and PR sequence |
 | `/verify-ac-enforcement` | Validate that the kit still enforces AC coverage end-to-end |
 | `/develop-backend @[plan].md` | Implement following the backend plan |
@@ -541,6 +568,8 @@ entry, or documented blocker before the approval gate.
 - The plan must map each AC to explicit implementation and validation
 - A task cannot be marked done without evidence per AC
 - The PR report must include status and evidence for every acceptance criterion
+- Task-train PR reports must consolidate every executed member under the anchor
+  PR file while preserving each member ticket beside its AC evidence
 - Checked PR validation and CI items must have matching evidence in the local ticket folder
 
 ## Agent Behavior and Engineering Rule Packs
@@ -551,13 +580,16 @@ changes surgical, and verify before claiming completion.
 
 Engineering rule packs live under `ai-specs/rules/engineering/` and are loaded
 on demand through `select-engineering-rules`. They provide focused technical
-lenses for Clean Architecture, Domain-Driven Design, Patterns of Enterprise
-Application Architecture, Refactoring, Release It!, and Designing
-Data-Intensive Applications. They do not override acceptance criteria, ADRs, or
-project-local instructions.
+lenses for Clean Architecture, Clean Code, Code Complete, Domain-Driven
+Design, Domain-Driven Design Distilled, Implementing Domain-Driven Design,
+Patterns of Enterprise Application Architecture, A Philosophy of Software
+Design, Refactoring, Refactoring Guru, Working Effectively with Legacy Code,
+The Pragmatic Programmer, Release It!, and Designing Data-Intensive
+Applications. They do not override acceptance criteria, ADRs, or project-local
+instructions.
 
-Implementation specs must list all six packs in the `Engineering Rule Packs`
-table under `Execution Notes for Implementer`. Selected packs require active
+Implementation specs must list every available pack in the `Engineering Rule
+Packs` table under `Execution Notes for Implementer`. Selected packs require active
 obligation IDs from the pack's `Enforcement Contract`, a non-`N/A` validation
 impact, and traceability through implementation mapping, validation, QA, review,
 and PR content. The validators block selected packs or active obligations that
@@ -622,11 +654,12 @@ The kit supports API-backed frontend work without making the UI repository the
 source of truth for backend contracts.
 
 - `api-contract-sync` runs from an API/backend repository with
-  `.ai-specs/config/api-contract-sync.json` and copies configured contract
-  artifacts into a frontend/UI repository.
-- Recommended copied artifacts are `docs/api-contract.md`,
-  `contracts/api/capabilities.json`, `contracts/api/openapi/**`, and
-  `contracts/api/api-contract-source.json`.
+  `docs/contracts/api-contract-sync.json` and copies configured contract
+  artifacts into a frontend/UI repository. If this file is absent, API
+  contract sync is disabled/no-op.
+- Recommended copied artifacts are `docs/contracts/api-contract.md`,
+  `docs/contracts/capabilities.json`, `docs/contracts/api-contract.yml`, and
+  `docs/contracts/api-contract-source.json`.
 - `consume-api-contract` runs in the frontend/UI repository before planning or
   implementing API-consuming screens, hooks, forms, permissions, mocks, or
   capability-gated UI.
@@ -670,3 +703,7 @@ to the kit repository itself; consuming projects do not need to copy it.
 - [andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills)
 - [google-labs-code/design.md](https://github.com/google-labs-code/design.md)
 - [github/spec-kit](https://github.com/github/spec-kit)
+- [ponytail](https://github.com/DietrichGebert/ponytail)
+
+See `docs/upstream-sources.md` for audited revisions, incorporated surfaces,
+candidate sources, and follow-up import decisions.

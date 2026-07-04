@@ -30,8 +30,8 @@ Read, when present:
 - completion evidence and validation output from `.ai-specs/changes/{TICKET}/`
 - relevant project docs, ADRs, glossary, or standards referenced by the spec
 - `agent-behavior-standards.mdc` from the kit when reviewing scope, simplicity, and verification discipline
-- `complexity-review` from the kit when reviewing over-engineering and
-  acceptance-criteria scope discipline
+- `ai-specs/skills/complexity-review/SKILL.md` from the kit when reviewing
+  over-engineering and acceptance-criteria scope discipline
 - `design-system-standards.mdc` from the kit when reviewing frontend/UI work
 - root `DESIGN.md` or project-local design-system context when referenced by
   the frontend plan
@@ -65,9 +65,10 @@ If the ticket cannot be resolved from input, branch, or local `.ai-specs` state,
 8. Run an automatic complexity review pass over the changed files and planned
    implementation evidence. Flag custom code, dependencies, abstractions,
    configuration, components, state, or extension points that exceed AC scope or
-   duplicate standard library, native platform, existing component, or
-   already-installed dependency behavior. Do not flag validation, security,
-   accessibility, error handling, or architecture boundaries required by SDD.
+   duplicate existing codebase behavior, standard library, native platform,
+   existing component, or already-installed dependency behavior. Do not flag
+   validation, security, accessibility, error handling, or architecture
+   boundaries required by SDD.
 9. If `sdd-simplification:` markers appear in ticket-scoped files, verify that
    each marker has a concrete upgrade path and that a debt-harvest changelog
    entry exists or is listed as a QA gap.
@@ -175,8 +176,9 @@ Ready | Not ready
   connected-component decision.
 - Flag speculative features, broad refactors, or unrelated changes that violate `agent-behavior-standards.mdc`.
 - Flag over-engineering that violates the Complexity Decision Ladder, including
-  custom code where standard library, native platform, existing components, or
-  already-installed dependencies would satisfy the AC.
+  custom code where existing codebase behavior, standard library, native
+  platform, existing components, or already-installed dependencies would
+  satisfy the AC.
 - Do not mark performance/observability side-channel changes as `Pass` until memory, batching, cardinality, and side-effect timing have been considered.
 - If evidence is missing, mark the AC as `Partial`, `Not Covered`, or `Blocked`.
 - Use the changelog as primary implementation evidence when present.

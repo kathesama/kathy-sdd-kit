@@ -88,9 +88,17 @@ validate_skill() {
 }
 
 validate_rule_pack "ai-specs/rules/engineering/clean-architecture.mini.md"
+validate_rule_pack "ai-specs/rules/engineering/clean-code.mini.md"
+validate_rule_pack "ai-specs/rules/engineering/code-complete.mini.md"
 validate_rule_pack "ai-specs/rules/engineering/domain-driven-design.mini.md"
+validate_rule_pack "ai-specs/rules/engineering/domain-driven-design-distilled.mini.md"
+validate_rule_pack "ai-specs/rules/engineering/implementing-domain-driven-design.mini.md"
 validate_rule_pack "ai-specs/rules/engineering/patterns-of-enterprise-application-architecture.mini.md"
+validate_rule_pack "ai-specs/rules/engineering/a-philosophy-of-software-design.mini.md"
 validate_rule_pack "ai-specs/rules/engineering/refactoring.mini.md"
+validate_rule_pack "ai-specs/rules/engineering/refactoring-guru.mini.md"
+validate_rule_pack "ai-specs/rules/engineering/working-effectively-with-legacy-code.mini.md"
+validate_rule_pack "ai-specs/rules/engineering/the-pragmatic-programmer.mini.md"
 validate_rule_pack "ai-specs/rules/engineering/release-it.mini.md"
 validate_rule_pack "ai-specs/rules/engineering/data-intensive.mini.md"
 
@@ -114,6 +122,14 @@ validate_skill "ai-specs/skills/select-engineering-rules/SKILL.md" "select-engin
 validate_skill "ai-specs/skills/agent-work-discipline/SKILL.md" "agent-work-discipline"
 validate_skill "ai-specs/skills/analyze-sdd-artifacts/SKILL.md" "analyze-sdd-artifacts"
 validate_skill "ai-specs/skills/standardize-design-contract/SKILL.md" "standardize-design-contract"
+validate_skill "ai-specs/skills/complexity-review/SKILL.md" "complexity-review"
+validate_skill "ai-specs/skills/debt-harvest/SKILL.md" "debt-harvest"
+validate_skill "ai-specs/skills/execute-task-train/SKILL.md" "execute-task-train"
+validate_skill "ai-specs/skills/write-pr-report/SKILL.md" "write-pr-report"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "## Consolidated Train PR"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "PR-{ANCHOR_TICKET}.md"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "all executed train members"
+require_text "ai-specs/skills/write-pr-report/SKILL.md" "## Task Train Mode"
 
 require_text "AGENTS.md" "agent-behavior-standards.mdc"
 require_text "CLAUDE.md" "agent-behavior-standards.mdc"

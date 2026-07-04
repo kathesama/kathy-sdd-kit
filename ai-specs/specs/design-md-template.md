@@ -15,11 +15,10 @@ description: Agent-facing design rules and summary for this product.
 sourceOfTruth:
   - docs/design-system/MASTER.md
 reviewedSources: []
-tokens:
-  colors: {}
-  typography: {}
-  rounded: {}
-  spacing: {}
+colors: {}
+typography: {}
+rounded: {}
+spacing: {}
 components: {}
 ---
 
@@ -57,8 +56,10 @@ brand guidelines.
 
 ## Colors
 
-Summarize color roles from the primary source. Record gaps instead of inventing
-values.
+Summarize color roles from the primary source. Define DESIGN.md color tokens at
+the top level in YAML front matter. Nested tokens may use dot-separated
+references in tooling, such as `colors.background.light`. Record gaps instead
+of inventing values.
 
 ## Typography
 
