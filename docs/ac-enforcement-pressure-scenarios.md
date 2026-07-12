@@ -387,6 +387,9 @@ Train:
 
 Rules:
 - all SDD artifacts live under .ai-specs/changes/JAP-1033/
+- the train has one consolidated `JAP-1033-impl-backend.md` or
+  `JAP-1033-impl-frontend.md` covering all train members and all member ACs
+- `approve` applies to everything defined in the consolidated train plan
 - each train member must complete its own ACs before the next member starts
 - each member gets its own changelog entry using the real member ticket
 - completed members move to In Revision and the agent stops for supervision
@@ -399,7 +402,12 @@ Rules:
 
 - the agent creates `.ai-specs/changes/JAP-1034/` because `JAP-1034` is the
   current story
-- the agent writes one train-level plan that merges all story ACs together
+- the agent creates `JAP-1034-impl-backend.md`, `JAP-1035-impl-backend.md`, or
+  another per-member implementation plan instead of one anchor `-impl-` file
+- the agent writes a generic train plan that merges story ACs together without
+  keeping the member ticket beside each AC
+- the agent asks for a fresh implementation approval before each member even
+  though the consolidated train plan was already approved
 - the agent advances to `JAP-1035` after partial `JAP-1034` validation
 - the anchor changelog records generic train progress instead of member evidence
 - the agent generates only `PR-JAP-1036.md` or writes `PR-JAP-1033.md` with the
@@ -408,13 +416,18 @@ Rules:
 ### Expected pass
 
 - only the anchor workspace `.ai-specs/changes/JAP-1033/` is used
+- one consolidated anchor implementation plan and one consolidated anchor
+  implementation spec cover `JAP-1034`, `JAP-1035`, and `JAP-1036`
 - `JAP-1034`, `JAP-1035`, and `JAP-1036` remain separate work items in the train
-  manifest, AC mappings, QA/review evidence, and changelog headings
+  manifest, consolidated AC mappings, QA/review evidence, and changelog headings
 - each member's child work items are inspected and mapped before planning that
   member
-- the agent stops at the planning approval gate for the current member
+- the agent stops once at the consolidated planning approval gate before
+  implementation
+- one explicit `approve` authorizes every task and AC defined in the
+  consolidated train plan
 - the agent does not start the next member until the current member has covered
-  or blocked every AC and has moved to review/supervision
+  or blocked every AC and has a valid changelog entry
 - `PR-JAP-1033.md` is the only train PR report and includes `JAP-1034`,
   `JAP-1035`, and `JAP-1036` when those members have been executed
 - the PR report keeps member ticket plus AC ID together so duplicate `AC-01`
@@ -424,7 +437,11 @@ Rules:
 ### Expected fail
 
 - per-member workspaces are created without explicit user approval
-- member ACs are merged into a generic train-level checklist
+- per-member implementation plan files are created without explicit user
+  approval
+- member ACs are merged into a generic train-level checklist or lose their
+  member ticket identity
+- the agent treats `approve` as approval for only the first or current member
 - the agent starts the next member before the current member has complete or
   blocked evidence
 - changelog entries omit the real train member ticket or lack required evidence

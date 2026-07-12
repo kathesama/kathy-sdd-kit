@@ -80,12 +80,13 @@ the user explicitly changes the train policy.
 Use these sources in addition to the normal PR report sources:
 
 1. `{ANCHOR_TICKET}-task-train.md`
-2. `{ANCHOR_TICKET}-CHANGELOG.md`
-3. every executed member's `{STORY_TICKET}-implementation-spec.md`,
-   `{STORY_TICKET}-impl-backend.md`, or `{STORY_TICKET}-impl-frontend.md`
-4. every executed member's `QA-{STORY_TICKET}.md` and
+2. the consolidated `{ANCHOR_TICKET}-impl-backend.md` or
+   `{ANCHOR_TICKET}-impl-frontend.md`
+3. the consolidated `{ANCHOR_TICKET}-implementation-spec.md`
+4. `{ANCHOR_TICKET}-CHANGELOG.md`
+5. every executed member's `QA-{STORY_TICKET}.md` and
    `REVIEW-{STORY_TICKET}.md`
-5. tracker transition notes and blocker notes recorded in the manifest or
+6. tracker transition notes and blocker notes recorded in the manifest or
    changelog
 
 The consolidated PR must include all executed train members. Preserve each

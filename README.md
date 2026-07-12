@@ -489,8 +489,15 @@ hashes only when they are available.
 For sequential trains of related stories or tickets, run
 `/execute-task-train [ANCHOR_TICKET]` before planning the first train member.
 The train uses `.ai-specs/changes/{ANCHOR_TICKET}/` as the single workspace,
-while each member keeps its own ticket identity, AC coverage, changelog entry,
-tracker transition, QA/review evidence, and stop gate before advancing.
+with one consolidated `{ANCHOR_TICKET}-impl-backend.md` or
+`{ANCHOR_TICKET}-impl-frontend.md` file and one consolidated
+`{ANCHOR_TICKET}-implementation-spec.md` covering every train member and every
+member AC. Each member still keeps its own ticket identity, AC coverage,
+changelog entry, tracker transition, and QA/review evidence.
+The train has one planning approval gate: `approve` authorizes everything
+defined in the consolidated train plan, not one task at a time. After approval,
+execute members sequentially and append a factual changelog entry when each
+member finishes.
 When PR content is requested for the train, generate one consolidated
 `.ai-specs/changes/{ANCHOR_TICKET}/PR-{ANCHOR_TICKET}.md` that includes every
 executed train member and separates pending or blocked members from completed
@@ -553,7 +560,7 @@ entry, or documented blocker before the approval gate.
 | `/pr-code-review [ID or path]` | Review local changes for correctness, regressions, security, tests, CI/readiness, and PR evidence |
 | `/complexity-review` | Run a read-only over-engineering review of the current implementation diff |
 | `/debt-harvest [ID]` | Append validated `sdd-simplification:` marker evidence to the ticket changelog |
-| `/execute-task-train [ANCHOR]` | Orchestrate a sequential ticket train under one anchor workspace and one consolidated PR report without losing per-story evidence |
+| `/execute-task-train [ANCHOR]` | Orchestrate a sequential ticket train under one anchor workspace, one consolidated implementation plan, and one consolidated PR report without losing per-story evidence |
 | `/close-ticket-workflow [ID]` | Apply the correct end-of-ticket validation and PR sequence |
 | `/verify-ac-enforcement` | Validate that the kit still enforces AC coverage end-to-end |
 | `/develop-backend @[plan].md` | Implement following the backend plan |
@@ -570,6 +577,10 @@ entry, or documented blocker before the approval gate.
 - The PR report must include status and evidence for every acceptance criterion
 - Task-train PR reports must consolidate every executed member under the anchor
   PR file while preserving each member ticket beside its AC evidence
+- Task-train implementation plans must consolidate all train members under the
+  anchor `-impl-` file; one `approve` applies to the whole consolidated plan
+- Each completed train member must append its own factual changelog entry under
+  the anchor changelog
 - Checked PR validation and CI items must have matching evidence in the local ticket folder
 
 ## Agent Behavior and Engineering Rule Packs

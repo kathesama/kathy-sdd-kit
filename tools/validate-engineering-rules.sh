@@ -129,7 +129,11 @@ validate_skill "ai-specs/skills/write-pr-report/SKILL.md" "write-pr-report"
 require_text "ai-specs/skills/execute-task-train/SKILL.md" "## Consolidated Train PR"
 require_text "ai-specs/skills/execute-task-train/SKILL.md" "PR-{ANCHOR_TICKET}.md"
 require_text "ai-specs/skills/execute-task-train/SKILL.md" "all executed train members"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "one consolidated implementation plan"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" 'An explicit `approve` approves the full consolidated train plan'
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "Every train member must have its own changelog entry"
 require_text "ai-specs/skills/write-pr-report/SKILL.md" "## Task Train Mode"
+require_text "ai-specs/skills/write-pr-report/SKILL.md" 'the consolidated `{ANCHOR_TICKET}-impl-backend.md`'
 
 require_text "AGENTS.md" "agent-behavior-standards.mdc"
 require_text "CLAUDE.md" "agent-behavior-standards.mdc"

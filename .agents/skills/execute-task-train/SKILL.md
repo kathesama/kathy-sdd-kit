@@ -1,6 +1,6 @@
 ---
 name: execute-task-train
-description: Use when a user asks Codex to plan, run, continue, or close a sequential train of related tickets, stories, subtasks, or Jira work items under one anchor ticket/workspace, especially when each train member must keep its own acceptance criteria, changelog entry, tracker status, validation, review gate, and consolidated PR evidence.
+description: Use when a user asks Codex to plan, run, continue, or close a sequential train of related tickets, stories, subtasks, or Jira work items under one anchor ticket/workspace, especially when all train members must be planned in one implementation plan while each member keeps its own acceptance criteria, changelog entry, tracker status, validation, review gate, and consolidated PR evidence.
 ---
 
 # Skill: Execute Task Train
@@ -8,9 +8,10 @@ description: Use when a user asks Codex to plan, run, continue, or close a seque
 ## Purpose
 
 Run a sequential train of related work items without losing per-story contract
-traceability. The train uses one anchor ticket/workspace for SDD artifacts while
-each train member keeps its real ticket identity, acceptance criteria, subtasks,
-validation evidence, changelog entry, tracker transition, and review gate.
+traceability. The train uses one anchor ticket/workspace and one consolidated
+implementation plan for all train members while each member keeps its real
+ticket identity, acceptance criteria, subtasks, validation evidence, changelog
+entry, tracker transition, and review gate.
 
 ## Required Inputs
 
@@ -65,7 +66,31 @@ Recommended train manifest:
 ```
 
 The manifest records train order, current status, tracker state, blocking
-dependencies, and the artifact paths used for each train member.
+dependencies, and the consolidated train artifact paths.
+
+Use one consolidated implementation plan file for the whole train:
+
+```text
+.ai-specs/changes/{ANCHOR_TICKET}/{ANCHOR_TICKET}-impl-backend.md
+.ai-specs/changes/{ANCHOR_TICKET}/{ANCHOR_TICKET}-impl-frontend.md
+```
+
+Create only the backend or frontend plan file that matches the train's primary
+surface. If the train truly spans both surfaces, keep one primary
+validator-facing `-impl-` file and add explicit per-surface sections inside it
+unless the user explicitly approves a split plan. Do not create
+`{STORY_TICKET}-impl-backend.md` or `{STORY_TICKET}-impl-frontend.md` files for
+individual train members.
+
+Use one companion implementation spec for the whole train:
+
+```text
+.ai-specs/changes/{ANCHOR_TICKET}/{ANCHOR_TICKET}-implementation-spec.md
+```
+
+The consolidated plan and companion spec must include every train member and
+every acceptance criterion from each member. Preserve the member ticket beside
+each AC so duplicate IDs such as `AC-01` cannot merge across members.
 
 Use the anchor changelog file:
 
@@ -89,68 +114,101 @@ Each changelog entry heading must use the real train member ticket, for example:
 
 Append only. Never rewrite prior train entries.
 
+## Planning And Approval
+
+Plan the whole train before implementation starts.
+
+1. Confirm the anchor ticket, ordered member tickets, titles, acceptance
+   criteria, child work items, blockers, and dependencies.
+2. Create or update the train manifest inside the anchor workspace.
+3. Create one consolidated `{ANCHOR_TICKET}-impl-backend.md` or
+   `{ANCHOR_TICKET}-impl-frontend.md` file that covers all train members.
+4. Create one consolidated `{ANCHOR_TICKET}-implementation-spec.md` companion
+   spec that covers all train members.
+5. Map every explicit member AC and every in-scope child requirement to
+   implementation, validation, completion evidence, and blocker status.
+6. Append only a factual planning entry to the anchor changelog.
+7. Run the implementation-spec validator against the consolidated anchor plan
+   path or anchor ticket, and run the changelog validator against the anchor
+   changelog.
+8. Stop once for `approve`, `change`, or `deny`.
+
+An explicit `approve` approves the full consolidated train plan exactly as
+written. It applies to every train member, AC, validation item, and delivery
+step defined in that plan. Do not ask for another planning approval before each
+member unless the plan changes, a blocker changes scope, or the user explicitly
+requests another gate.
+
+If the user answers `change`, revise the consolidated train plan/spec first and
+present the single approval gate again. If the user answers `deny`, stop the
+train and do not implement any member.
+
 ## Sequential Execution
 
-Process train members in the declared order.
+After the consolidated train plan is approved, process train members in the
+declared order.
 
 For each train member:
 
-1. Confirm the member ticket, title, acceptance criteria, child work items, and
-   blockers.
-2. Transition the member to `In Progress` when tracker write tools are available
+1. Transition the member to `In Progress` when tracker write tools are available
    and project policy allows it. If not available, record the manual transition
    needed.
-3. Create or update train planning artifacts inside the anchor workspace only.
-4. Apply the normal SDD planning gate for the current member:
-   - generate backend and/or frontend plan content as appropriate
-   - generate or update the companion implementation spec content
-   - map every explicit member AC and every in-scope child requirement
-   - append a factual planning entry to the anchor changelog
-   - run the relevant implementation-spec validator against the exact member
-     plan path, and the changelog validator against the exact anchor changelog
-     path
-   - stop for `approve`, `change`, or `deny`
-5. After explicit approval, implement only the approved current member.
-6. Complete every approved AC, subtask contract, validation item, and required
-   changelog entry for the current member before touching the next member.
-7. Run QA and code review for the current member using the anchor workspace
+2. Implement only the approved scope for that member from the consolidated plan.
+3. Complete or explicitly block every approved AC, subtask contract, validation
+   item, and dependency for the member before touching the next member.
+4. Run the member's validation, QA, and code review using anchor workspace
    evidence.
-8. Transition the member to `In Revision` when tracker write tools are
-   available and the member is ready for user supervision. If not available,
-   record the manual transition needed.
-9. Stop and report the current member result. Do not advance to the next member
-   until the user explicitly tells you to continue.
+5. Append a factual changelog entry for the completed member immediately after
+   finishing that member. The entry must use the real member ticket and must
+   include files changed, AC-specific evidence, validation results, tracker
+   transition evidence or manual gap, residual risks, and follow-ups.
+6. Validate the anchor changelog after the member entry is appended.
+7. Transition the member to `In Revision` or the project-equivalent review state
+   when tracker write tools are available and project policy allows it. If not
+   available, record the manual transition needed.
+8. Continue to the next member only when the current member has complete or
+   blocked evidence and the changelog entry is valid.
 
 ## Planning Artifact Policy
 
-Use filenames that keep the anchor workspace clear and preserve member identity.
-For member-specific artifacts inside the anchor workspace, prefer one of:
+Use filenames that keep the anchor workspace clear and preserve member identity
+without scattering train planning into per-member implementation plans.
+
+Required train-level artifacts:
 
 ```text
-{STORY_TICKET}-impl-backend.md
-{STORY_TICKET}-impl-frontend.md
-{STORY_TICKET}-implementation-spec.md
+{ANCHOR_TICKET}-task-train.md
+{ANCHOR_TICKET}-impl-backend.md or {ANCHOR_TICKET}-impl-frontend.md
+{ANCHOR_TICKET}-implementation-spec.md
+{ANCHOR_TICKET}-CHANGELOG.md
+PR-{ANCHOR_TICKET}.md
+```
+
+Allowed member-specific execution evidence:
+
+```text
 QA-{STORY_TICKET}.md
 REVIEW-{STORY_TICKET}.md
 ```
 
-If an existing consuming repository has a train naming convention, follow it.
-If validators only accept anchor-ticket filenames, keep the validator-facing
-files named with `{ANCHOR_TICKET}` and record the active member in the train
-manifest and changelog.
+Do not create member-specific `{STORY_TICKET}-impl-*` or
+`{STORY_TICKET}-implementation-spec.md` files unless the user explicitly changes
+the train artifact policy. Member identity belongs inside the consolidated
+anchor plan/spec, the train manifest, QA/review files, and changelog entries.
 
-When member-specific files are named with `{STORY_TICKET}` inside the anchor
-workspace, call validators with file paths instead of ticket keys so the tool
-does not resolve `.ai-specs/changes/{STORY_TICKET}/`:
+Validate the consolidated train plan with the anchor ticket or path:
 
 ```bash
-sh .sdd-kit/tools/validate-impl-spec.sh .ai-specs/changes/{ANCHOR_TICKET}/{STORY_TICKET}-impl-backend.md
+sh .sdd-kit/tools/validate-impl-spec.sh .ai-specs/changes/{ANCHOR_TICKET}/{ANCHOR_TICKET}-impl-backend.md
 sh .sdd-kit/tools/validate-changelog.sh .ai-specs/changes/{ANCHOR_TICKET}/{ANCHOR_TICKET}-CHANGELOG.md
 ```
 
-Never collapse multiple train members into a single generic plan unless the user
-explicitly requests a train-level planning artifact and each member still keeps
-separate AC coverage.
+Use the frontend plan path instead of the backend path when the train's primary
+surface is frontend.
+
+Never collapse multiple train members into a generic checklist. A single train
+plan is required, but each member must retain separate ticket identity, AC
+coverage, validation mapping, dependency notes, and completion evidence.
 
 ## Changelog Rules
 
@@ -164,6 +222,10 @@ For each train member, append entries that include:
 - tracker transition evidence or manual transition gap
 - blocker and dependency notes
 - residual risks and follow-ups
+
+Every train member must have its own changelog entry when it finishes, even
+though the train uses one consolidated implementation plan. Do not wait until
+the end of the train to write all member entries.
 
 Do not use the changelog as a second plan, QA report, PR report, or AC matrix.
 Use only factual evidence and the required changelog sections.
@@ -184,8 +246,7 @@ not only the most recent or currently active member.
 Before writing the consolidated PR:
 
 1. Validate the anchor changelog.
-2. Validate every executed member's implementation spec or validator-facing
-   plan path.
+2. Validate the consolidated anchor implementation plan and companion spec.
 3. Confirm every executed member has QA and code-review evidence, or record the
    explicit gap.
 4. Read the active repository PR template from the consuming project root when
@@ -249,7 +310,8 @@ When starting or continuing a train, report:
 - tracker transition performed or needed
 - consolidated PR path and validation status when closing or handing off the
   train
-- next gate: `approve`, `change`, `deny`, or user supervision before continuing
+- next gate: the single train approval gate before implementation, or the
+  current member execution status after approval
 
 Keep the progress view compact. A table with `Pending`, `In Progress`,
 `In Revision`, `Blocked`, and `Done` is enough.
@@ -261,9 +323,16 @@ Keep the progress view compact. A table with `Pending`, `In Progress`,
   QA, review, and tracker transitions.
 - Treat child work items and subtasks as in-scope contract unless explicitly
   documented out of scope.
+- Plan all train members in one consolidated anchor `-impl-` file and one
+  consolidated anchor implementation spec.
+- Do not create per-member implementation plan files for a train unless the
+  user explicitly changes the artifact policy.
+- Treat one explicit `approve` as approval for every train member and AC defined
+  in the consolidated plan.
+- Do not ask for per-member planning approval inside an already approved train
+  unless scope changes.
 - Complete one train member before starting the next.
-- Stop at every planning approval gate.
-- Stop after moving a completed member to review/supervision.
+- Append and validate a changelog entry after each train member finishes.
 - Do not create commits or PRs unless the user explicitly asks.
 - Generate only one consolidated local train PR report under the anchor
   workspace when PR content is requested.
