@@ -391,8 +391,16 @@ Rules:
   `JAP-1033-impl-frontend.md` covering all train members and all member ACs
 - `approve` applies to everything defined in the consolidated train plan
 - each train member must complete its own ACs before the next member starts
+- when a member finishes, only that member's ACs are marked covered/executed in
+  the consolidated plan/spec
 - each member gets its own changelog entry using the real member ticket
-- completed members move to In Revision and the agent stops for supervision
+- only the current member moves from TODO to IN PROGRESS when its execution
+  starts
+- completed members move from IN PROGRESS to IN REVISION before the next member
+  starts
+- future members remain in TODO until their turn in the user-provided sequence
+- QA and code review run once against the consolidated anchor plan when the plan
+  execution is ready for review
 - the final PR report is consolidated as
   `.ai-specs/changes/JAP-1033/PR-JAP-1033.md` and includes every executed train
   member
@@ -408,7 +416,16 @@ Rules:
   keeping the member ticket beside each AC
 - the agent asks for a fresh implementation approval before each member even
   though the consolidated train plan was already approved
+- the agent moves every Jira issue in the train to IN PROGRESS at the beginning
+  instead of only the current member
+- the agent starts `JAP-1035` before `JAP-1034` has moved to IN REVISION, or
+  skips the user-provided sequence
+- the agent creates `QA-JAP-1034.md` or `REVIEW-JAP-1034.md` as the normal flow
+  instead of consolidated `QA-JAP-1033.md` and `REVIEW-JAP-1033.md`
 - the agent advances to `JAP-1035` after partial `JAP-1034` validation
+- after finishing `JAP-1034`, the agent marks `JAP-1035 AC-01` or
+  `JAP-1036 AC-01` as covered because the plan is consolidated or a shared file
+  was touched
 - the anchor changelog records generic train progress instead of member evidence
 - the agent generates only `PR-JAP-1036.md` or writes `PR-JAP-1033.md` with the
   last member only
@@ -419,15 +436,25 @@ Rules:
 - one consolidated anchor implementation plan and one consolidated anchor
   implementation spec cover `JAP-1034`, `JAP-1035`, and `JAP-1036`
 - `JAP-1034`, `JAP-1035`, and `JAP-1036` remain separate work items in the train
-  manifest, consolidated AC mappings, QA/review evidence, and changelog headings
+  manifest, consolidated AC mappings, final QA/review evidence, and changelog
+  headings
 - each member's child work items are inspected and mapped before planning that
   member
 - the agent stops once at the consolidated planning approval gate before
   implementation
 - one explicit `approve` authorizes every task and AC defined in the
   consolidated train plan
+- only the current member is transitioned from TODO to IN PROGRESS when that
+  member starts execution
+- future members remain in TODO until their turn in the approved user-provided
+  sequence
 - the agent does not start the next member until the current member has covered
-  or blocked every AC and has a valid changelog entry
+  or blocked every AC, has a valid changelog entry, and has moved to IN REVISION
+  or recorded an explicit manual transition gap
+- completion evidence changes only for the current member's ACs; future member
+  ACs remain pending, blocked, or unchanged until their own execution step
+- final QA and code review are consolidated as `QA-JAP-1033.md` and
+  `REVIEW-JAP-1033.md` after the plan execution is ready for review
 - `PR-JAP-1033.md` is the only train PR report and includes `JAP-1034`,
   `JAP-1035`, and `JAP-1036` when those members have been executed
 - the PR report keeps member ticket plus AC ID together so duplicate `AC-01`
@@ -442,8 +469,13 @@ Rules:
 - member ACs are merged into a generic train-level checklist or lose their
   member ticket identity
 - the agent treats `approve` as approval for only the first or current member
+- the agent bulk-transitions train members to IN PROGRESS
+- the agent executes tasks out of the user-provided sequence
+- QA or code review runs as a required per-member gate in the normal train flow
 - the agent starts the next member before the current member has complete or
-  blocked evidence
+  blocked evidence and IN REVISION transition evidence
+- ACs from a different train member are marked covered/executed before that
+  member is the active task
 - changelog entries omit the real train member ticket or lack required evidence
 - separate per-member PR reports are generated without a consolidated anchor PR
 - the consolidated PR omits an executed member, hides a blocked member, or

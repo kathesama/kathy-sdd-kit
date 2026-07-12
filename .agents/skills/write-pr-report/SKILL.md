@@ -84,8 +84,7 @@ Use these sources in addition to the normal PR report sources:
    `{ANCHOR_TICKET}-impl-frontend.md`
 3. the consolidated `{ANCHOR_TICKET}-implementation-spec.md`
 4. `{ANCHOR_TICKET}-CHANGELOG.md`
-5. every executed member's `QA-{STORY_TICKET}.md` and
-   `REVIEW-{STORY_TICKET}.md`
+5. consolidated `QA-{ANCHOR_TICKET}.md` and `REVIEW-{ANCHOR_TICKET}.md`
 6. tracker transition notes and blocker notes recorded in the manifest or
    changelog
 
@@ -106,8 +105,10 @@ Minimum train PR content:
 - **Pending / Blocked Members**: train members not represented as completed
   work
 
-Do not summarize only the last train member. Do not collapse duplicate AC IDs
-across members. Do not mark pending train members as done.
+Only mark ACs as covered for the member whose execution evidence actually
+completed them. Do not summarize only the last train member. Do not collapse
+duplicate AC IDs across members. Do not mark pending train members or their ACs
+as done.
 
 ## Template Processing
 

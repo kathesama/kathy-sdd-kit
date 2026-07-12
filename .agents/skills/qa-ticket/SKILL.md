@@ -75,6 +75,27 @@ If the ticket cannot be resolved from input, branch, or local `.ai-specs` state,
 10. Identify partial coverage, missing tests, missing evidence, unaddressed risks, and follow-up work.
 11. Produce a QA report in the ticket folder.
 
+## Task Train Scope
+
+When QA runs for a task train, run it against the consolidated anchor plan after
+the approved plan execution is ready for review. Do not create per-member QA
+reports as part of the normal train flow.
+
+For a train:
+
+- use `{ANCHOR_TICKET}-impl-backend.md` or `{ANCHOR_TICKET}-impl-frontend.md`
+  and `{ANCHOR_TICKET}-implementation-spec.md` as the source of truth
+- create or update `QA-{ANCHOR_TICKET}.md`
+- evaluate every train member represented in the consolidated plan/spec
+- preserve the member ticket beside each AC in the QA coverage table
+- mark only ACs with execution evidence from their own member as `Covered`
+- keep pending, blocked, or unexecuted member ACs visible with truthful status
+- report a QA gap if AC rows in the consolidated plan/spec do not preserve the
+  member ticket beside the AC ID
+
+Use the consolidated anchor plan/spec as the source of truth, and keep member
+status explicit inside the consolidated QA report.
+
 ## Regression QA Pass
 
 QA must verify not only "does this match the plan?" but also "what did this plan fail to consider?"
@@ -153,6 +174,8 @@ Ready | Not ready
 ## Rules
 
 - Do not mark `Pass` without concrete evidence for every explicit AC.
+- In task trains, "every explicit AC" means every explicit AC in the
+  consolidated anchor plan, grouped by member ticket with truthful status.
 - Do not merge distinct ACs into one QA row.
 - Do not treat "tests passed" as AC evidence unless the relevant test/check is named.
 - Do not let the implementation plan's proposed approach suppress regression review; plans can contain incomplete assumptions.

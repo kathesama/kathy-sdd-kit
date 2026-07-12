@@ -493,11 +493,21 @@ with one consolidated `{ANCHOR_TICKET}-impl-backend.md` or
 `{ANCHOR_TICKET}-impl-frontend.md` file and one consolidated
 `{ANCHOR_TICKET}-implementation-spec.md` covering every train member and every
 member AC. Each member still keeps its own ticket identity, AC coverage,
-changelog entry, tracker transition, and QA/review evidence.
+changelog entry, and tracker transition.
 The train has one planning approval gate: `approve` authorizes everything
 defined in the consolidated train plan, not one task at a time. After approval,
 execute members sequentially and append a factual changelog entry when each
 member finishes.
+During execution, update completion evidence only for the current member's ACs
+inside the consolidated plan/spec. ACs from other train members remain pending,
+blocked, or unchanged until that member is the active task.
+When Jira is the tracker, execute only one task at a time in the user-provided
+sequence recorded in the plan: move the current task from `TODO` to
+`IN PROGRESS` when its execution starts, leave future tasks in `TODO`, then move
+the current task to `IN REVISION` after its implementation, validation, and
+changelog entry are complete.
+Run QA and code review once against the consolidated anchor plan when the
+approved plan execution is ready for review.
 When PR content is requested for the train, generate one consolidated
 `.ai-specs/changes/{ANCHOR_TICKET}/PR-{ANCHOR_TICKET}.md` that includes every
 executed train member and separates pending or blocked members from completed
@@ -581,6 +591,12 @@ entry, or documented blocker before the approval gate.
   anchor `-impl-` file; one `approve` applies to the whole consolidated plan
 - Each completed train member must append its own factual changelog entry under
   the anchor changelog
+- During task-train execution, only ACs belonging to the current member may be
+  marked as executed or covered in the consolidated plan/spec
+- Jira task trains must transition only the current task:
+  `TODO -> IN PROGRESS -> IN REVISION`, in the user-provided sequence
+- Task-train QA and code review run against the consolidated anchor plan after
+  execution is ready for review, not after each member
 - Checked PR validation and CI items must have matching evidence in the local ticket folder
 
 ## Agent Behavior and Engineering Rule Packs

@@ -1,6 +1,6 @@
 ---
 name: execute-task-train
-description: Use when a user asks Codex to plan, run, continue, or close a sequential train of related tickets, stories, subtasks, or Jira work items under one anchor ticket/workspace, especially when all train members must be planned in one implementation plan while each member keeps its own acceptance criteria, changelog entry, tracker status, validation, review gate, and consolidated PR evidence.
+description: Use when a user asks Codex to plan, run, continue, or close a sequential train of related tickets, stories, subtasks, or Jira work items under one anchor ticket/workspace, especially when all train members must be planned in one implementation plan while each member keeps its own acceptance criteria, changelog entry, tracker status, validation evidence, and consolidated QA/review/PR evidence.
 ---
 
 # Skill: Execute Task Train
@@ -11,7 +11,8 @@ Run a sequential train of related work items without losing per-story contract
 traceability. The train uses one anchor ticket/workspace and one consolidated
 implementation plan for all train members while each member keeps its real
 ticket identity, acceptance criteria, subtasks, validation evidence, changelog
-entry, tracker transition, and review gate.
+entry, and tracker transition. QA and code review run as consolidated gates when
+the approved plan execution is ready for review.
 
 ## Required Inputs
 
@@ -25,8 +26,8 @@ Before planning or executing a train, resolve:
   member
 - branch/workspace policy from the consuming repository
 - PR template and PR content policy from the consuming repository
-- tracker transition policy for `In Progress`, `In Revision`, `Done`, or local
-  project equivalents
+- Jira or tracker transition policy for `TODO`, `IN PROGRESS`, `IN REVISION`,
+  `Done`, or local project equivalents
 
 Read the local kit and project rules before writing artifacts:
 
@@ -143,31 +144,83 @@ If the user answers `change`, revise the consolidated train plan/spec first and
 present the single approval gate again. If the user answers `deny`, stop the
 train and do not implement any member.
 
+## Jira Ticket Flow
+
+When the train is executed against Jira, transition only the current train
+member. Do not bulk-transition the whole train.
+
+Default Jira flow for each train member:
+
+```text
+TODO -> IN PROGRESS -> IN REVISION
+```
+
+- Move the current member from `TODO` to `IN PROGRESS` when execution of that
+  member starts.
+- Keep future train members in `TODO` until their turn in the approved sequence.
+- Move the current member from `IN PROGRESS` to `IN REVISION` after that
+  member's approved scope is implemented, validated, and recorded in the anchor
+  changelog.
+- Do not move a member to `Done` as part of this skill unless the user or
+  project policy explicitly says the train executor owns the final close.
+- If tracker write tools are unavailable, record the required manual Jira
+  transition in the manifest, the member changelog entry, and the progress
+  report.
+- If a member is already in a compatible later state, record that observed Jira
+  state before continuing. If the observed state conflicts with the sequence or
+  blocks the required transition, stop and report the blocker.
+
 ## Sequential Execution
 
-After the consolidated train plan is approved, process train members in the
-declared order.
+After the consolidated train plan is approved, process train members one at a time in the exact sequence recorded in the approved plan and provided by the user.
 
 For each train member:
 
-1. Transition the member to `In Progress` when tracker write tools are available
-   and project policy allows it. If not available, record the manual transition
-   needed.
+1. Transition only the current member from `TODO` to `IN PROGRESS` when tracker
+   write tools are available and project policy allows it. If not available,
+   record the manual transition needed.
 2. Implement only the approved scope for that member from the consolidated plan.
-3. Complete or explicitly block every approved AC, subtask contract, validation
-   item, and dependency for the member before touching the next member.
-4. Run the member's validation, QA, and code review using anchor workspace
-   evidence.
+3. Complete or explicitly block only the approved ACs, subtask contracts,
+   validation items, and dependencies that belong to the current member before
+   touching the next member.
+4. Run the member's implementation validation required by the consolidated plan
+   using anchor workspace evidence. Do not run formal QA or code review for the
+   member unless the user explicitly requests a partial review.
 5. Append a factual changelog entry for the completed member immediately after
    finishing that member. The entry must use the real member ticket and must
    include files changed, AC-specific evidence, validation results, tracker
    transition evidence or manual gap, residual risks, and follow-ups.
 6. Validate the anchor changelog after the member entry is appended.
-7. Transition the member to `In Revision` or the project-equivalent review state
+7. Transition the member to `IN REVISION` or the project-equivalent review state
    when tracker write tools are available and project policy allows it. If not
    available, record the manual transition needed.
 8. Continue to the next member only when the current member has complete or
-   blocked evidence and the changelog entry is valid.
+   blocked evidence, the changelog entry is valid, and the Jira transition to
+   `IN REVISION` is complete or explicitly recorded as a manual transition gap.
+
+## Member-Scoped AC Evidence
+
+The consolidated plan/spec contains all train ACs, but execution evidence is
+member-scoped.
+
+When executing `{STORY_TICKET}`:
+
+- update `Completion Evidence` only for AC rows that belong to
+  `{STORY_TICKET}`
+- keep future members' AC rows as `Not Covered`, `Blocked`, or their existing
+  truthful status until those members are executed
+- do not mark another member's AC as `Covered` because the current member
+  touched a shared file, schema, dependency, fixture, or helper
+- if the current member unblocks or partially prepares another member, record
+  that as a dependency note, manifest update, or changelog note, not as executed
+  AC evidence for the other member
+- final QA and code review must still preserve member ticket beside each AC
+  when evaluating the consolidated plan, so executed, pending, blocked, and
+  untouched member ACs remain distinguishable
+
+Use the member ticket with every AC reference in the consolidated plan/spec,
+for example `JAP-1034 AC-01`, so duplicate `AC-01` rows from other train members
+cannot be marked executed accidentally.
 
 ## Planning Artifact Policy
 
@@ -184,17 +237,20 @@ Required train-level artifacts:
 PR-{ANCHOR_TICKET}.md
 ```
 
-Allowed member-specific execution evidence:
+Required consolidated review evidence after plan execution:
 
 ```text
-QA-{STORY_TICKET}.md
-REVIEW-{STORY_TICKET}.md
+QA-{ANCHOR_TICKET}.md
+REVIEW-{ANCHOR_TICKET}.md
 ```
 
 Do not create member-specific `{STORY_TICKET}-impl-*` or
 `{STORY_TICKET}-implementation-spec.md` files unless the user explicitly changes
 the train artifact policy. Member identity belongs inside the consolidated
-anchor plan/spec, the train manifest, QA/review files, and changelog entries.
+anchor plan/spec, the train manifest, consolidated QA/review files, and
+changelog entries. Do not create member-specific `QA-{STORY_TICKET}.md` or
+`REVIEW-{STORY_TICKET}.md` files unless the user explicitly requests a partial
+review outside the normal train flow.
 
 Validate the consolidated train plan with the anchor ticket or path:
 
@@ -230,6 +286,41 @@ the end of the train to write all member entries.
 Do not use the changelog as a second plan, QA report, PR report, or AC matrix.
 Use only factual evidence and the required changelog sections.
 
+## Final QA And Code Review
+
+Run formal QA and code review after the approved consolidated train plan has
+been executed to the review point, not after each individual member.
+
+Before final QA/review:
+
+1. Confirm every train member in the approved sequence is either executed or
+   explicitly blocked in the consolidated plan/spec, train manifest, and anchor
+   changelog.
+2. Validate the consolidated anchor implementation plan and companion spec.
+3. Validate the anchor changelog.
+4. Confirm each completed member has its own changelog entry and Jira
+   transition evidence or manual transition gap.
+
+Then run:
+
+```bash
+sh .sdd-kit/tools/validate-impl-spec.sh .ai-specs/changes/{ANCHOR_TICKET}/{ANCHOR_TICKET}-impl-backend.md
+/qa-ticket .ai-specs/changes/{ANCHOR_TICKET}/{ANCHOR_TICKET}-impl-backend.md
+/pr-code-review .ai-specs/changes/{ANCHOR_TICKET}/{ANCHOR_TICKET}-impl-backend.md
+```
+
+Use the frontend plan path instead of the backend path when the train's primary
+surface is frontend. The expected outputs are:
+
+```text
+QA-{ANCHOR_TICKET}.md
+REVIEW-{ANCHOR_TICKET}.md
+```
+
+The consolidated QA and review must evaluate the whole plan execution while
+preserving member ticket identity for each AC. They must not mark pending or
+blocked member ACs as covered, and they must not hide unexecuted train members.
+
 ## Consolidated Train PR
 
 When the user asks to close, prepare PR content, or hand off a task train,
@@ -247,15 +338,16 @@ Before writing the consolidated PR:
 
 1. Validate the anchor changelog.
 2. Validate the consolidated anchor implementation plan and companion spec.
-3. Confirm every executed member has QA and code-review evidence, or record the
-   explicit gap.
+3. Confirm consolidated QA and code-review evidence exists for the anchor plan,
+   or record the explicit gap.
 4. Read the active repository PR template from the consuming project root when
    it exists.
 
 The consolidated PR must include:
 
 - a `Train Coverage` or equivalent table listing every executed member ticket,
-  title, status, QA/review evidence, tracker state, and residual notes
+  title, status, consolidated QA/review evidence, tracker state, and residual
+  notes
 - acceptance-criteria coverage for every executed member, preserving the member
   ticket beside each AC so duplicate `AC-01` IDs do not merge across stories
 - files created, modified, and deleted across the train, with duplicate file
@@ -281,10 +373,10 @@ If the consuming repository is the kit itself, use:
 sh tools/validate-pr-content.sh .ai-specs/changes/{ANCHOR_TICKET}/PR-{ANCHOR_TICKET}.md
 ```
 
-If validation cannot cover member-specific train files, record that validator
-gap in the PR content and manually verify the `Train Coverage` and
-member-by-member AC coverage against the manifest, changelog, QA, and review
-files before handoff.
+If validation cannot cover the train artifact layout, record that validator gap
+in the PR content and manually verify the `Train Coverage` and member-by-member
+AC coverage against the manifest, changelog, consolidated QA, and consolidated
+review files before handoff.
 
 ## Blockers And Dependencies
 
@@ -304,10 +396,10 @@ When starting or continuing a train, report:
 - anchor ticket and anchor workspace
 - ordered train members and current member
 - tracker source used or validation gap
+- Jira transition performed or manual transition needed
 - current member AC count and child work items considered
 - artifacts created or modified
 - validations run and results
-- tracker transition performed or needed
 - consolidated PR path and validation status when closing or handing off the
   train
 - next gate: the single train approval gate before implementation, or the
@@ -331,8 +423,17 @@ Keep the progress view compact. A table with `Pending`, `In Progress`,
   in the consolidated plan.
 - Do not ask for per-member planning approval inside an already approved train
   unless scope changes.
-- Complete one train member before starting the next.
+- Execute exactly one train member at a time in the user-provided sequence from
+  the approved plan.
+- Do not start the next member until the current member is implemented,
+  validated, recorded in the changelog, and moved to `IN REVISION` or documented
+  with a manual transition gap.
+- Mark only the current member's ACs as executed in the consolidated plan/spec.
+  Do not update other members' ACs to `Covered` until their own execution step.
 - Append and validate a changelog entry after each train member finishes.
+- Run QA and code review once against the consolidated anchor plan when the
+  approved plan execution is ready for review, not after each member.
+- Do not transition future Jira tasks out of `TODO` before their turn.
 - Do not create commits or PRs unless the user explicitly asks.
 - Generate only one consolidated local train PR report under the anchor
   workspace when PR content is requested.

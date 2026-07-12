@@ -69,7 +69,7 @@ validate_rule_pack() {
   [ -z "$invalid_contract" ] || fail "invalid Enforcement Contract in $path:
 $invalid_contract"
 
-  if grep -Eq 'TODO|TBD|fill in|placeholder' "$path"; then
+  if grep -Eq 'TODO:|TBD|fill in|placeholder' "$path"; then
     fail "$path contains placeholder text"
   fi
 }
@@ -82,7 +82,7 @@ validate_skill() {
   require_text "$path" "name: $expected_name"
   require_text "$path" "description:"
 
-  if grep -Eq 'TODO|TBD|fill in|placeholder' "$path"; then
+  if grep -Eq 'TODO:|TBD|fill in|placeholder' "$path"; then
     fail "$path contains placeholder text"
   fi
 }
@@ -125,15 +125,29 @@ validate_skill "ai-specs/skills/standardize-design-contract/SKILL.md" "standardi
 validate_skill "ai-specs/skills/complexity-review/SKILL.md" "complexity-review"
 validate_skill "ai-specs/skills/debt-harvest/SKILL.md" "debt-harvest"
 validate_skill "ai-specs/skills/execute-task-train/SKILL.md" "execute-task-train"
+validate_skill "ai-specs/skills/qa-ticket/SKILL.md" "qa-ticket"
 validate_skill "ai-specs/skills/write-pr-report/SKILL.md" "write-pr-report"
 require_text "ai-specs/skills/execute-task-train/SKILL.md" "## Consolidated Train PR"
 require_text "ai-specs/skills/execute-task-train/SKILL.md" "PR-{ANCHOR_TICKET}.md"
 require_text "ai-specs/skills/execute-task-train/SKILL.md" "all executed train members"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "## Member-Scoped AC Evidence"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" 'update `Completion Evidence` only for AC rows that belong to'
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "Mark only the current member's ACs as executed"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "## Final QA And Code Review"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "not after each individual member"
 require_text "ai-specs/skills/execute-task-train/SKILL.md" "one consolidated implementation plan"
 require_text "ai-specs/skills/execute-task-train/SKILL.md" 'An explicit `approve` approves the full consolidated train plan'
 require_text "ai-specs/skills/execute-task-train/SKILL.md" "Every train member must have its own changelog entry"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "TODO -> IN PROGRESS -> IN REVISION"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "Do not bulk-transition the whole train"
+require_text "ai-specs/skills/execute-task-train/SKILL.md" "one at a time in the exact sequence"
+require_text "ai-specs/skills/qa-ticket/SKILL.md" "## Task Train Scope"
+require_text "ai-specs/skills/qa-ticket/SKILL.md" "Do not create per-member QA"
+require_text "ai-specs/skills/qa-ticket/SKILL.md" 'create or update `QA-{ANCHOR_TICKET}.md`'
 require_text "ai-specs/skills/write-pr-report/SKILL.md" "## Task Train Mode"
 require_text "ai-specs/skills/write-pr-report/SKILL.md" 'the consolidated `{ANCHOR_TICKET}-impl-backend.md`'
+require_text "ai-specs/skills/write-pr-report/SKILL.md" 'consolidated `QA-{ANCHOR_TICKET}.md` and `REVIEW-{ANCHOR_TICKET}.md`'
+require_text "ai-specs/skills/write-pr-report/SKILL.md" "Only mark ACs as covered for the member whose execution evidence actually"
 
 require_text "AGENTS.md" "agent-behavior-standards.mdc"
 require_text "CLAUDE.md" "agent-behavior-standards.mdc"
