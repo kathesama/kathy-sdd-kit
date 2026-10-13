@@ -45,7 +45,7 @@ interventions. A median runtime or measured cost increase above 20% requires an
 explicit tradeoff decision. Three trials per family do not establish statistical
 superiority; after tuning, use a separately frozen holdout.
 
-The current upgrade keeps VERSION at 0.6.0 until its ticket's full promotion
+The current upgrade keeps VERSION at 0.7.0 until its ticket's full promotion
 evidence is available. Unit tests, coverage, platform execution and configured CI
 are reported separately. A workflow file alone is not evidence that CI ran.
 

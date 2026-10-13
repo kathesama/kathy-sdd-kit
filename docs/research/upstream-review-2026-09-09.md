@@ -10,7 +10,7 @@ This is a research and adoption proposal, not an approved implementation specifi
 
 ## 1. Audit Boundary and Revision Evidence
 
-The local kit reports version `0.6.0`. The previous source register is dated July 4, 2026. This audit compares its recorded revisions with default-branch heads observed on September 9, 2026. All source-file links below are pinned to the inspected revision; release links describe published releases, not the entire current branch.
+The local kit reports version `0.7.0`. The previous source register is dated July 4, 2026. This audit compares its recorded revisions with default-branch heads observed on September 9, 2026. All source-file links below are pinned to the inspected revision; release links describe published releases, not the entire current branch.
 
 | Repository | Previous revision | Inspected revision | Head commit date, UTC | Commits since baseline |
 |---|---|---|---|---:|

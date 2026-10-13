@@ -26,4 +26,4 @@ independent review remain necessary for stronger trust.
 Scope changes invalidate approval. Interrupted operations remain unknown until
 explicit recovery. No missing runtime evidence becomes Covered. Release 0.7.0
 depends on complete evaluation and platform evidence; blocked evaluation leaves
-VERSION at 0.6.0. Scope and thresholds are defined in the approved ticket plan.
+VERSION at 0.7.0. Scope and thresholds are defined in the approved ticket plan.
