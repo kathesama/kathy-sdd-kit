@@ -3,7 +3,7 @@
 Portable **Spec-Driven Development (SDD)** kit for personal projects.
 Based on the [LIDR Academy](https://github.com/LIDR-academy/manual-SDD) framework.
 
-Current kit version: `0.6.0` (`VERSION`).
+Current kit version: `0.7.0` (`VERSION`).
 
 The working tree includes a contract-1 TDD/evidence upgrade under validation.
 It adds meaningful RED-before-implementation evidence, explicit SOLID review,
