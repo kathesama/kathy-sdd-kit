@@ -414,7 +414,7 @@ The kit source has a `VERSION` file. Plans and implementation specs should
 record the SDD kit version used to create them:
 
 ```md
-- **SDD Kit Version**: 0.6.0
+- **SDD Kit Version**: 0.7.0
 ```
 
 This helps teams diagnose behavior differences when repositories update the
