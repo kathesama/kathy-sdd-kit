@@ -7,6 +7,22 @@ on:
       - main
 
 jobs:
+  harness:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install development coverage tool
+        run: python -m pip install -r tools/harness-test-requirements.txt
+      - name: Run harness behavior and coverage checks
+        shell: bash
+        run: sh tools/test-harness.sh
+
   validate-kit:
     runs-on: ubuntu-latest
     steps:
@@ -19,6 +35,9 @@ jobs:
           sh -n tools/validate-impl-spec.sh
           sh -n tools/validate-pr-content.sh
           sh -n tools/validate-engineering-rules.sh
+
+      - name: Synchronize generated skill exposures
+        run: sh tools/sync-agent-skills.sh --write
 
       - name: Validate engineering rules and agent behavior standards
         run: |

@@ -76,6 +76,16 @@ Use project-local context from the consuming repository first when it exists:
 
 # Common Agent Rules
 
+## TDD and Evidence Contract
+
+Read `.sdd-kit/ai-specs/specs/tdd-evidence-contract.md` and
+`.sdd-kit/ai-specs/specs/engineering-quality-contract.md` before SDD planning,
+implementation or review. New plan/spec pairs carry `SDD Evidence Contract: 1`.
+Behavior changes require meaningful RED before implementation and the same test
+at GREEN. Review applicable SOLID principles. Required unresolved evidence blocks
+completion. The optional `run-sdd-harness` skill adds bounded execution; it does
+not authenticate approval or sandbox agent edits. Preserve project-local overrides.
+
 ## SDD Ticket Identity
 
 - `TICKET` is the canonical ticket/work-item key for the consuming project.

@@ -5,6 +5,34 @@ description: Use when implementation is complete or near complete and you need t
 
 # Skill: QA Ticket
 
+## TDD, Evidence and Design
+
+For contract-1 reports, include the label `TDD and Design Evidence` inside an
+appropriate existing report section, preserving any repository PR template.
+Follow it with a table: `AC | Applicability | Evidence | Design review`, one
+row per AC. Reference actual observations or explicit missing-evidence blockers;
+the report label and table never prove runtime execution by themselves.
+
+Read `ai-specs/specs/tdd-evidence-contract.md`,
+`ai-specs/specs/engineering-quality-contract.md` and, when running the optional
+controller, `ai-specs/specs/harness-evidence-contract.md`.
+
+- New plans and companion specs require `SDD Evidence Contract: 1` and the
+  identical per-AC `### TDD and Design Contract` table from the template.
+- Require behavior-specific RED before implementation, unchanged tests at
+  GREEN, and fresh regression verification. Characterization and non-executable
+  reviews use the applicability rules; missing setup is not an exemption.
+- Review applicable SRP, OCP, LSP, ISP and DIP without speculative abstractions.
+- Preserve evidence kind, observer, command, identity, chronology and freshness.
+  A structural validator or agent assertion cannot establish runtime success.
+- Keep Covered / Partial / Not Covered. Required missing, stale, contradictory
+  or unknown evidence blocks completion, including every in-scope child AC.
+- An unchanged approved scope reuses its explicit human approval on resume;
+  material scope/check changes require a revised plan and approval. Preserve
+  project overrides. No approval, Git or tracker write is inferred from this skill.
+- Optional `run-sdd-harness` and `converge-sdd` add bounded execution and gap
+  reporting. Convergence never replaces TDD or authorizes new requirements.
+
 ## Purpose
 
 Validate that an implementation satisfies the story and Implementation Spec end-to-end using evidence, not assumptions.
@@ -203,7 +231,7 @@ Ready | Not ready
   platform, existing components, or already-installed dependencies would
   satisfy the AC.
 - Do not mark performance/observability side-channel changes as `Pass` until memory, batching, cardinality, and side-effect timing have been considered.
-- If evidence is missing, mark the AC as `Partial`, `Not Covered`, or `Blocked`.
+- If evidence is missing, mark the AC as `Partial` or `Not Covered` and describe its blocker. Keep the canonical AC status values unchanged.
 - Use the changelog as primary implementation evidence when present.
 - Treat changelog sections that look like planning summaries, design documents, QA reports, PR reports, or AC matrices as invalid evidence unless they also follow the required changelog entry format.
 - Do not rewrite the changelog during QA; report malformed changelog evidence as a gap.

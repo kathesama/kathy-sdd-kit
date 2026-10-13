@@ -1,0 +1,2 @@
+# Development-only; the harness runtime has no third-party dependencies.
+coverage==7.13.5

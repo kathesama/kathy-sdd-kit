@@ -565,6 +565,43 @@ resolve_paths() {
 input=${1:-}
 resolve_paths "$input"
 
+# Contract 0 remains POSIX-only. Contract 1 adds structural TDD obligations;
+# this validator never turns a Markdown claim into observed runtime evidence.
+contract_rows() {
+  awk '
+    /^### TDD and Design Contract$/ { active=1; next }
+    active && /^#/ { exit }
+    active && /^\| AC-[0-9]/ { print }
+  ' "$1"
+}
+
+validate_tdd_contract() {
+  for spec in "$primary_path" "$implementation_spec_path"; do
+    [ -f "$spec" ] || fail "missing implementation spec: $spec"
+    if grep -q '^SDD Evidence Contract:' "$spec"; then
+      [ "$(grep -c '^SDD Evidence Contract:' "$spec")" -eq 1 ] || fail "duplicate TDD contract marker"
+      grep -qx 'SDD Evidence Contract: 1' "$spec" || fail "unsupported TDD evidence contract"
+      rows=$(contract_rows "$spec")
+      [ -n "$rows" ] || fail "missing TDD and Design Contract mapping in $spec"
+      printf '%s\n' "$rows" | awk -F'|' '
+        { for(i=2;i<=6;i++) gsub(/^[ \t]+|[ \t]+$/, "", $i)
+          if(NF!=8 || seen[$2]++ || $2 !~ /^AC-[0-9][0-9]+$/ ||
+             ($3!="test-first" && $3!="characterization" && $3!="non-executable") ||
+             $4=="" || $5=="" || $6=="" || $7 ~ /^[ \t]*$/) bad=1 }
+        END { exit bad }
+      ' || fail "invalid TDD mapping: expected AC, applicability, test, expected RED, design review, reason"
+      expected=$(section_rows "$spec" 'Acceptance Criteria' | cut -d '|' -f 2 | sed 's/ //g' | sort)
+      actual=$(printf '%s\n' "$rows" | cut -d '|' -f 2 | sed 's/ //g' | sort)
+      [ "$expected" = "$actual" ] || fail "TDD mapping must cover every AC exactly once"
+    fi
+  done
+  primary_marker=$(grep '^SDD Evidence Contract:' "$primary_path" || true)
+  companion_marker=$(grep '^SDD Evidence Contract:' "$implementation_spec_path" || true)
+  [ "$primary_marker" = "$companion_marker" ] || fail "TDD contract marker mismatch"
+  [ "$(contract_rows "$primary_path")" = "$(contract_rows "$implementation_spec_path")" ] || fail "TDD contract mapping mismatch"
+}
+validate_tdd_contract
+
 primary_ids=$(mktemp)
 companion_ids=$(mktemp)
 trap 'rm -f "$primary_ids" "$companion_ids"' EXIT HUP INT TERM

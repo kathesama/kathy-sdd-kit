@@ -7,10 +7,14 @@
 3. **Small tasks**: Baby steps, one thing at a time, never skip ahead
 4. **Type safety**: Fully typed code always (TypeScript / Java generics)
 5. **English only**: All code, comments, commits and docs in English
-6. **90%+ coverage**: Unit + integration tests across all layers
+6. **Coverage**: 80% default minimum, 90% target; stricter project/ticket requirements win
 7. **Incremental changes**: Small, focused, reviewable PRs
 
 ## Agent Work Discipline
+
+Apply `tdd-evidence-contract.md` and `engineering-quality-contract.md` throughout
+planning, implementation, QA and closure. Required unresolved ACs block a
+successful completion verdict even when their blocker is documented.
 
 - Surface material assumptions before acting when ambiguity affects scope, safety, contracts, or validation
 - Keep changes simple and surgical; every changed line must trace to the request, an acceptance criterion, validation, or cleanup caused by the change
@@ -69,9 +73,9 @@ Example: `feat(auth): add JWT refresh token endpoint`
   - an implementation mapping
   - a validation plan
   - completion evidence before the task is declared done
-- A task cannot be marked complete unless every explicit acceptance criterion is either:
-  - **Covered** with concrete evidence, or
-  - **Not Covered** with an explicit blocker or decision recorded
+- A task cannot be marked complete until every required acceptance criterion is
+  **Covered** with concrete evidence. Record unresolved criteria as **Partial**
+  or **Not Covered** with a blocker; documenting a blocker does not satisfy it.
 - Generic claims such as "ticket complete" or "tests passed" are not valid substitutes for per-AC evidence
 
 ## Regression Review Contract

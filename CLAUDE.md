@@ -6,6 +6,8 @@
 
 @.sdd-kit/ai-specs/specs/base-standards.mdc
 @.sdd-kit/ai-specs/specs/agent-behavior-standards.mdc
+@.sdd-kit/ai-specs/specs/tdd-evidence-contract.md
+@.sdd-kit/ai-specs/specs/engineering-quality-contract.md
 @.sdd-kit/ai-specs/specs/backend-standards.mdc
 @.sdd-kit/ai-specs/specs/frontend-standards.mdc
 @.sdd-kit/ai-specs/specs/design-system-standards.mdc

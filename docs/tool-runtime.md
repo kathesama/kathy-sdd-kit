@@ -6,6 +6,21 @@ the SDD gate.
 
 ## Supported Runtimes
 
+The optional `tools/sdd-harness.py` requires Python 3.11+ (standard library only).
+Run `python .sdd-kit/tools/sdd-harness.py --help` for the public commands.
+Development validation uses `python -m pip install -r tools/harness-test-requirements.txt`
+and `sh tools/test-harness.sh`; coverage.py is not a runtime dependency.
+Read `ai-specs/specs/harness-evidence-contract.md` before initializing a run.
+
+For captured Git-for-Windows commands that cannot find POSIX utilities, use
+`sh.exe -c 'PATH=/usr/bin:/bin:$PATH; export PATH; sh tools/test-harness.sh'`
+from the kit root. The shell fragment is fixed runtime setup, not task-content
+interpolation. Explicit ticket resolution no longer probes Git.
+
+Codex, Claude Code and Cursor skills provide cooperative workflow guidance.
+No native hooks, authenticated approval or identical host sandbox capability
+are implied. Validate actual runtime permissions before live agent evaluation.
+
 | Environment | Invocation |
 |---|---|
 | macOS / Linux | `sh .sdd-kit/tools/<tool>.sh ...` |

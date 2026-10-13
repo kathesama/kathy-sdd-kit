@@ -7,6 +7,16 @@ judgment.
 
 ## Adoption Principles
 
+New plan/spec pairs use `SDD Evidence Contract: 1` and the template's per-AC TDD
+and design table. Keep legacy unmarked artifacts readable with existing POSIX
+validators; do not retroactively label their passing tests as test-first.
+To use the optional harness on existing work, explicitly migrate the mapping,
+derive the execution projection and obtain approval for that contract.
+Preserve root project overrides and regenerate skill exposures with the existing
+sync tool. Python is needed only for the optional controller, not legacy gates.
+Read `ai-specs/specs/tdd-evidence-contract.md`, `engineering-quality-contract.md`
+and `harness-evidence-contract.md` for evidence, recovery and trust boundaries.
+
 - Keep the kit mounted at `.sdd-kit/`.
 - Keep ticket work artifacts local under `.ai-specs/changes/{TICKET}/`.
 - Preserve project-specific rules in root files.

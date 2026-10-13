@@ -18,5 +18,6 @@ standards.
 - Do not add speculative abstractions, configuration, features, formatting churn, or unrelated cleanup.
 - Match the repository's existing style and structure.
 - Convert vague work into verifiable goals before implementation.
+- Apply `ai-specs/specs/tdd-evidence-contract.md` and `engineering-quality-contract.md`: behavior-specific RED before implementation, unchanged test at GREEN, and applicable SOLID review. Missing runner/setup is a blocker, not a TDD exemption.
 - Do not claim completion, readiness, or passing status without fresh validation evidence or a documented validation gap.
 - Load engineering rule packs from `ai-specs/rules/engineering/` only when selected for the task.

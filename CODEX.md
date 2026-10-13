@@ -83,6 +83,12 @@ instructions.
 
 ## Workflow Expectations
 
+Apply `.sdd-kit/ai-specs/specs/tdd-evidence-contract.md` and
+`.sdd-kit/ai-specs/specs/engineering-quality-contract.md`. New specs require the
+contract-1 marker and per-AC TDD/design table. Use `run-sdd-harness` only after
+explicit approval; fresh evidence and applicable SOLID review remain mandatory
+with or without Python. Do not infer native hook enforcement from skill guidance.
+
 - Resolve `TICKET` as the canonical ticket/work-item key for the consuming
   project. Examples: `JAP-160`, `ENG-123`, `GH-42`, `160`.
 - If the user provides ambiguous shorthand, resolve it using the consuming

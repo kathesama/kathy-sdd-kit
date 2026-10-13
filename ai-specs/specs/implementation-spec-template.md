@@ -1,5 +1,7 @@
 # Implementation Spec Template
 
+SDD Evidence Contract: 1
+
 ## Story Context
 
 - **Story / Ticket**:
@@ -76,6 +78,19 @@ Rules:
 - If validation cannot be automated, state why
 
 ## Delivery Plan
+
+### TDD and Design Contract
+
+| AC | Applicability | Test identity | Expected RED | Design review | Reason |
+|---|---|---|---|---|---|
+| AC-01 | test-first | Named test | Behavior-specific assertion | Applicable SOLID principles | Behavior change |
+
+Use one row per AC in both specs. Applicability is `test-first`,
+`characterization`, or `non-executable`. For characterization, name the passing
+baseline; for non-executable work, name the review and explain why. Read
+`tdd-evidence-contract.md` and `engineering-quality-contract.md`.
+
+### Delivery sequence
 
 1. Step name (`AC-01`, `AC-02`)
 2. Step name (`AC-03`)

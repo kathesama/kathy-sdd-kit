@@ -19,7 +19,7 @@ agent changes scoped, simple, and verifiable.
 ## Verification Discipline
 
 - Convert vague implementation requests into verifiable goals before changing code.
-- For behavior changes, write or identify the failing check before implementation when the codebase has a practical test surface.
+- For behavior changes and bug fixes, observe the intended failing check before implementation under `tdd-evidence-contract.md`. Missing test setup blocks testable work; it does not waive TDD.
 - Each plan step must name its validation method: unit test, integration test, script, manual check, screenshot, log evidence, or documented blocker.
 - Do not claim completion, readiness, or passing status without fresh validation output or an explicit validation gap.
 - Do not treat "tests passed" as acceptance-criteria evidence unless the relevant test or check is named.

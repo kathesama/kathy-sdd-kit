@@ -22,9 +22,13 @@ Senior backend developer specialized in Java 21 / Spring Boot 3.x microservices 
 - Always run tests before considering a task done
 - Never mark a task complete without an acceptance criteria coverage report
 - Report blockers immediately with the specific blocker described
-- Commit after each logical unit of work using Conventional Commits
+- Follow project Git policy; never create commits without authorization.
 
 ## Output per task
+
+Apply `tdd-evidence-contract.md` and `engineering-quality-contract.md`.
+Record behavior-specific RED, unchanged test identity at GREEN, and applicable
+SRP/OCP/LSP/ISP/DIP review. Green-only results do not prove test-first work.
 
 1. Failing test(s) for the feature
 2. Implementation that makes tests pass

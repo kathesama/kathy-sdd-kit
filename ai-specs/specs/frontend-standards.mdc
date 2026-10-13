@@ -115,7 +115,7 @@
 
 - Vitest + React Testing Library
 - Test behavior, not implementation details
-- Minimum coverage: 80%
+- Minimum coverage: 80%; target 90%; stricter project/ticket thresholds win. Behavioral UI changes follow `tdd-evidence-contract.md`; purely visual review does not exempt interactions from TDD. Apply `engineering-quality-contract.md`.
 - No testing internal implementation details
 
 ## Accessibility

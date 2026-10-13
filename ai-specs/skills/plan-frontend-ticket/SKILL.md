@@ -5,6 +5,28 @@ description: Use when a frontend story is refined and you need an implementation
 
 # Skill: Plan Frontend Ticket
 
+## TDD, Evidence and Design
+
+Read `ai-specs/specs/tdd-evidence-contract.md`,
+`ai-specs/specs/engineering-quality-contract.md` and, when running the optional
+controller, `ai-specs/specs/harness-evidence-contract.md`.
+
+- New plans and companion specs require `SDD Evidence Contract: 1` and the
+  identical per-AC `### TDD and Design Contract` table from the template.
+- Require behavior-specific RED before implementation, unchanged tests at
+  GREEN, and fresh regression verification. Characterization and non-executable
+  reviews use the applicability rules; missing setup is not an exemption.
+- Review applicable SRP, OCP, LSP, ISP and DIP without speculative abstractions.
+- Preserve evidence kind, observer, command, identity, chronology and freshness.
+  A structural validator or agent assertion cannot establish runtime success.
+- Keep Covered / Partial / Not Covered. Required missing, stale, contradictory
+  or unknown evidence blocks completion, including every in-scope child AC.
+- An unchanged approved scope reuses its explicit human approval on resume;
+  material scope/check changes require a revised plan and approval. Preserve
+  project overrides. No approval, Git or tracker write is inferred from this skill.
+- Optional `run-sdd-harness` and `converge-sdd` add bounded execution and gap
+  reporting. Convergence never replaces TDD or authorizes new requirements.
+
 ## Purpose
 
 Generate a frontend Implementation Spec that treats acceptance criteria as a delivery contract, not loose guidance.
@@ -290,7 +312,7 @@ Only after an explicit `approve`:
 
 1. Read `{TICKET}-impl-frontend.md` and `{TICKET}-implementation-spec.md`.
 2. Execute the Delivery Plan in order.
-3. Follow TDD or component-first validation as appropriate: write failing test/check, verify failure, implement, verify pass.
+3. Use test-first validation for interactions, state and behavior. Pure visual work uses named visual review; pure refactoring uses passing characterization before and after. Follow `tdd-evidence-contract.md`; component-first work does not exempt executable behavior.
 4. Keep every change mapped to one or more AC IDs.
 5. After each subtask, append to `{TICKET}-CHANGELOG.md`.
 6. Update Completion Evidence only with concrete validation results such as tests, screenshots, Storybook states, or manual checks.

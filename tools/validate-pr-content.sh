@@ -405,6 +405,29 @@ validate_qa_review_status
 validate_engineering_rule_pack_traceability
 validate_design_system_traceability
 
+# Contract-1 reports carry explicit evidence references. This is structural
+# traceability only; QA must still inspect observations and current inputs.
+if grep -qx 'SDD Evidence Contract: 1' "$implementation_spec_path"; then
+  for report in "$qa_path" "$review_path" "$pr_path"; do
+    grep -Fq 'TDD and Design Evidence' "$report" || fail "missing TDD and Design Evidence in $report"
+    rows=$(awk '
+      /TDD and Design Evidence/ { active=1; next }
+      active && /^## / { exit }
+      active && /^\| AC-[0-9]/ { print }
+    ' "$report")
+    [ -n "$rows" ] || fail "missing per-AC TDD evidence rows in $report"
+    printf '%s\n' "$rows" | awk -F'|' '
+      { mode=$3; gsub(/^[ \t]+|[ \t]+$/, "", mode)
+        if (NF!=6 || (mode!="test-first" && mode!="characterization" && mode!="non-executable") || $4 ~ /^[ \t]*$/ || $5 ~ /^[ \t]*$/ ||
+            tolower($4) ~ /^[ \t]*(not covered|partial|unknown|missing|unavailable|pending|blocked|contradicting)/) bad=1 }
+      END { exit bad }
+    ' || fail "invalid or unresolved TDD and Design Evidence table in $report"
+    required=$(ac_ids_for_section "$implementation_spec_path" 'Acceptance Criteria' | sort -u)
+    actual=$(printf '%s\n' "$rows" | cut -d '|' -f 2 | sed 's/ //g' | sort -u)
+    [ "$required" = "$actual" ] || fail "TDD evidence must reference every AC in $report"
+  done
+fi
+
 info "OK: PR content is consistent with local SDD evidence"
 info "Ticket: $ticket"
 info "PR content: $pr_path"

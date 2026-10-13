@@ -34,7 +34,7 @@ infrastructure/  → adapters (DB, HTTP, Kafka, etc.)
 - Unit: JUnit 5 + Mockito (domain and application layers)
 - Integration: `@SpringBootTest` + Testcontainers
 - API: MockMvc or WebTestClient
-- Minimum coverage: 80%
+- Minimum coverage: 80%; target 90%; stricter project/ticket thresholds win. Apply `tdd-evidence-contract.md` and `engineering-quality-contract.md`.
 
 ## Security
 

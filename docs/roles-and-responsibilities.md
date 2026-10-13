@@ -5,6 +5,11 @@ person may play multiple roles, but the responsibilities stay separate.
 
 ## Human Approver
 
+Approval belongs to a stable scope and execution projection. An unchanged resume
+reuses that decision; materially changed scope/checks return to planning. Agents
+cannot create approval evidence from their own conclusion. JSON approval is a
+cooperative reference unless an independent host authenticates it.
+
 - Owns the final product and scope decision.
 - Reviews the planning gate summary.
 - Answers exactly one planning gate decision:
@@ -14,6 +19,11 @@ person may play multiple roles, but the responsibilities stay separate.
 - Decides whether `Partial`, `Not Covered`, `Blocked`, or out-of-scope items are acceptable.
 
 ## Analyst / Planner Agent
+
+Carry the contract-1 TDD/design mapping through QA, review and closure. Distinguish
+machine/manual observations from inference/assertion. Review applicable SOLID
+principles; missing evidence blocks required ACs. Convergence reports gaps but
+does not authorize remediation outside approved scope or replace runtime checks.
 
 - Resolves `{TICKET}` according to the consuming project's ticket policy.
 - Reads the parent work item and linked child work items when available.

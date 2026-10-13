@@ -30,11 +30,12 @@ validate_ticket() {
 
 ticket_input=${1:-}
 repo_root=$(pwd)
-branch_name=$(current_branch)
+branch_name=""
 
 if [ -n "$ticket_input" ]; then
   ticket=$ticket_input
 else
+  branch_name=$(current_branch)
   ticket=$(extract_ticket_from_branch "$branch_name")
 fi
 

@@ -30,6 +30,15 @@ Each acceptance criterion must include:
 
 ## Requirement Quality Scan
 
+For an uncertain idea, use `assess-idea` only when requested. Preserve the
+problem, evidence for and against, alternatives and go/clarify/kill decision.
+Already-refined tickets skip this optional step. Reuse existing answers and
+record material decisions; discovery never approves implementation.
+
+Check whether each requirement is unambiguous, independently testable, bounded
+and traceable to its source. Record contradictory evidence and unresolved
+blockers instead of silently converting assumptions into explicit requirements.
+
 Before writing the enriched story, perform a short clarification scan inspired
 by spec-kit's specification quality checks. Ask only when ambiguity blocks a
 safe, decision-closed output.

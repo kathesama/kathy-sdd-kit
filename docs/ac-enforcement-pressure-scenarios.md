@@ -17,6 +17,12 @@ Verify that the kit prevents agents from:
 
 ## How to run the scenarios
 
+The bounded harness pilot adds ten fixed families in
+`examples/harness-evals/scenarios.json`; follow `docs/harness-evaluation.md`.
+Report deterministic fixture checks, source review and live agent trials
+separately. Include positive controls so a tool that rejects everything cannot
+appear to enforce the workflow correctly. An unexecuted trial is not a pass.
+
 For each scenario:
 
 1. Run the workflow stage without recent kit changes, or with the suspected regression.
