@@ -1,6 +1,6 @@
 # ADR 0001: Optional cooperative evidence harness
 
-Status: accepted for implementation by the explicit approval of task-20260909-01.
+Status: accepted and implemented by the explicit approval of task-20260909-01.
 
 ## Context
 
@@ -24,6 +24,7 @@ independent review remain necessary for stronger trust.
 ## Consequences
 
 Scope changes invalidate approval. Interrupted operations remain unknown until
-explicit recovery. No missing runtime evidence becomes Covered. Release 0.7.0
-depends on complete evaluation and platform evidence; blocked evaluation leaves
-VERSION at 0.7.0. Scope and thresholds are defined in the approved ticket plan.
+explicit recovery. No missing runtime evidence becomes Covered. Version 0.7.0 is
+the current version on `main`. The evaluation protocol remains available for
+future comparative evidence; it is not a pending release gate for 0.7.0. Scope
+and thresholds are defined in the approved ticket plan.

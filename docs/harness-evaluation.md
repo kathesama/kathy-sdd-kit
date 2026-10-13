@@ -45,16 +45,18 @@ interventions. A median runtime or measured cost increase above 20% requires an
 explicit tradeoff decision. Three trials per family do not establish statistical
 superiority; after tuning, use a separately frozen holdout.
 
-The current upgrade keeps VERSION at 0.7.0 until its ticket's full promotion
-evidence is available. Unit tests, coverage, platform execution and configured CI
-are reported separately. A workflow file alone is not evidence that CI ran.
+Version 0.7.0 is the current kit version on `main`. This protocol is retained as
+reference guidance for future harness evaluations; it is not a pending release
+gate for 0.7.0. Unit tests, coverage, platform execution and configured CI are
+reported separately. A workflow file alone is not evidence that CI ran.
 
-## Current local preflight
+## Recorded local preflight
 
-The local CLI 0.136.0 authenticated successfully outside the restricted tool
-environment and returned a text smoke response. With workspace-write and apps,
+During the recorded preflight, the local CLI 0.136.0 authenticated successfully
+outside the restricted tool environment and returned a text smoke response.
+With workspace-write and apps,
 plugins, hooks, browser, computer-use, memories and multi-agent features disabled,
 its policy rejected even an inside-fixture shell write. No policy bypass was
-attempted. The live pilot remains blocked by that positive-control failure.
+attempted. The live pilot was blocked by that positive-control failure.
 The initial restricted `Not logged in` result was superseded by the authenticated
 check; do not diagnose this as missing user credentials.

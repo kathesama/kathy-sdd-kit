@@ -5,12 +5,13 @@ Based on the [LIDR Academy](https://github.com/LIDR-academy/manual-SDD) framewor
 
 Current kit version: `0.7.0` (`VERSION`).
 
-The working tree includes a contract-1 TDD/evidence upgrade under validation.
-It adds meaningful RED-before-implementation evidence, explicit SOLID review,
+Version 0.7.0 includes the contract-1 TDD/evidence upgrade. It adds meaningful
+RED-before-implementation evidence, explicit SOLID review,
 an optional bounded Python harness, convergence and optional idea assessment.
 See [the evidence contract](ai-specs/specs/harness-evidence-contract.md) and
-[evaluation gates](docs/harness-evaluation.md). This is not a 0.7.0 release claim;
-promotion remains gated on complete behavioral evidence.
+the [harness evaluation protocol](docs/harness-evaluation.md). Version 0.7.0 is
+the current version on `main`; the evaluation protocol is reference guidance,
+not a pending release gate.
 
 ## What is included?
 
